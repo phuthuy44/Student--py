@@ -1,4 +1,4 @@
-class DangNhap:
+class DangNhapDTO:
      def __init__(self,tenDangNhap,matKhau):
           self.tenDangNhap = tenDangNhap
           self.matKhau = matKhau
