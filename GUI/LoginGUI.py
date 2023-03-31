@@ -1,7 +1,6 @@
-import sys
+import sys,TrangChuGUI
 from PyQt5 import QtWidgets,uic,QtGui
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox,QWidget
 class FormLogin(QtWidgets.QMainWindow) :
      def __init__(self):
           super(FormLogin, self).__init__()
@@ -10,6 +9,7 @@ class FormLogin(QtWidgets.QMainWindow) :
           self.labelLogin.setPixmap(px)
           self.lineMatKhau.setEchoMode(QtWidgets.QLineEdit.Password )
           self.btnDangNhap.clicked.connect(self.LoginFunction)
+
      def LoginFunction(self):
           tenDangNhap = self.lineTenDangNhap.text()
           matKhau = self.lineMatKhau.text()
@@ -38,11 +38,28 @@ class FormLogin(QtWidgets.QMainWindow) :
                else:
                     self.textError.setText("Tên đăng nhập hoặc mâtk khẩu không đúng!")'''
                if tenDangNhap == 'admin' and matKhau =='1234':
-                    QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập thành công!')
+                    #QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập thành công!')
+                    #uic.loadUi("GUI/TrangChu.ui",self)
+                    trangChu = TrangChuGUI.TrangChu()
+                    widget.addWidget(trangChu)
+                    widget.setFixedSize(trangChu.width(),trangChu.height())
+                    widget.setCurrentIndex(widget.currentIndex()+1)
+                    
 
-     '''def msgButtonClick(self):
-          print("Button clicked is")'''
+               else:
+                    QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập khong thành công!')     
 app = QtWidgets.QApplication(sys.argv)
 formLogin = FormLogin()
-formLogin.show()
-app.exec()
+widget = QtWidgets.QStackedWidget()
+widget.addWidget(formLogin)
+#widget.setFixedHeight(500)
+#widget.setFixedWidth(800)
+widget.setFixedSize(formLogin.width(),formLogin.height())
+widget.show()
+#formLogin.show()
+try:
+     sys.exit(app.exec_())
+except:
+     print("Exiting!")
+#app.exec()
+     

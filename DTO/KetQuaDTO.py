@@ -1,13 +1,14 @@
 class KetQuaDTO:
-     def __init__(self,id,idHocSinh,idLopHoc,hocKy,namHoc,diemTB):
-          self.id = id
+     def __init__(self,idPhieuKQ,idHocSinh,idLopHoc,hocKy,namHoc,diemTB,idXepLoai):
+          self.idPhieuKQ = idPhieuKQ
           self.idHocSinh = idHocSinh
           self.idLopHoc = idLopHoc
           self.hocKy = hocKy
           self.namHoc = namHoc
           self.diemTB = diemTB
-     def getId(self):
-          return self.id
+          self.idXepLoai = idXepLoai
+     def getIdPhieuKQ(self):
+          return self.idPhieuKQ
      def getIdLopHoc(self):
           return self.idLopHoc
      def setHocKy(self, hocKy):
@@ -22,3 +23,5 @@ class KetQuaDTO:
           self.diemTB = diemTB
      def getDiemTB(self):
           return self.diemTB;
+     def getIdXepLoai(self):
+          return self.idXepLoai

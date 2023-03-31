@@ -1,5 +1,5 @@
 class StudentDTO:
-     def __init__(self,idHocSinh,hoTen,ngaySinh,gioiTinh,idLopHoc,diaChi,soDienThoai,diemTB,tenCha,tenMe,soDienThoaiCha, soDienThoaiMe):
+     def __init__(self,idHocSinh,hoTen,ngaySinh,gioiTinh,idLopHoc,diaChi,soDienThoai,tenCha,tenMe,soDienThoaiCha, soDienThoaiMe,hinhAnh):
           self.id = idHocSinh
           self.hoTen = hoTen
           self.ngaySinh = ngaySinh
@@ -7,11 +7,11 @@ class StudentDTO:
           self.idLopHoc = idLopHoc
           self.diaChi = diaChi
           self.soDienThoai = soDienThoai
-          self.diemTB = diemTB
           self.tenCha = tenCha
           self.tenMe = tenMe
           self.soDienThoaiCha = soDienThoaiCha
           self.soDienThoaiMe = soDienThoaiMe
+          self.hinhAnh = hinhAnh
      def getMssv(self):
           return self.id
      def setHoTen(self,HoTen):
@@ -38,8 +38,6 @@ class StudentDTO:
           return self.soDienThoai
      '''def setDiemTB(self, diemTB):
           self.diemTB = diemTB'''
-     def getDiemTB(self):
-          return self.diemTB
      def setTenCha(self, tenCha):
           self.tenCha = tenCha
      def getTenCha(self):
@@ -50,3 +48,7 @@ class StudentDTO:
           self.soDienThoaiCha = soDienThoaiCha
      def setSoDienThoaiMe(self, soDienThoaiMe):
           self.soDienThoaiMe = soDienThoaiMe
+     def setHinhAnh(self, hinhAnh):
+          self.hinhAnh = hinhAnh
+     def getHinhAnh(self):
+          return self.hinhAnh

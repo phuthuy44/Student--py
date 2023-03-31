@@ -1,13 +1,13 @@
-class KetQuaCTDTO:
-     def __init__(self,id,idMonHoc,diemKT1,diemKT2,diemGK,diemCuoiKy):
-          self.id = id
+class CTPhieuKQDTO:
+     def __init__(self,idPhieuKQ,idMonHoc,diemKT1,diemKT2,diemGK,diemCuoiKy):
+          self.idPhieuKQ = idPhieuKQ
           self.idMonHoc = idMonHoc
           self.diemKT1 = diemKT1
           self.diemKT2 = diemKT2
           self.diemGK = diemGK
           self.diemCuoiKy = diemCuoiKy
-     def getID(self):
-          return self.id
+     def getIdPhieuKQ(self):
+          return self.idPhieuKQ
      def getIdMonHoc(self):
           return self.idMonHoc
      def setDiemKT1(self, diemKT1):
