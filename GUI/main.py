@@ -1,4 +1,4 @@
-import sys,TrangChuGUI
+import sys
 from PyQt5 import QtWidgets,uic,QtGui
 from PyQt5.QtWidgets import QMessageBox,QWidget
 class FormLogin(QtWidgets.QMainWindow) :
@@ -40,21 +40,59 @@ class FormLogin(QtWidgets.QMainWindow) :
                if tenDangNhap == 'admin' and matKhau =='1234':
                     #QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập thành công!')
                     #uic.loadUi("GUI/TrangChu.ui",self)
-                    trangChu = TrangChuGUI.TrangChu()
+                    trangChu = TrangChu()
                     widget.addWidget(trangChu)
                     widget.setFixedSize(trangChu.width(),trangChu.height())
                     widget.setCurrentIndex(widget.currentIndex()+1)
-                    
+                    '''trangChu.show()
+                    self.accept()'''
 
                else:
                     QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập khong thành công!')     
+class TrangChu(QtWidgets.QMainWindow):
+     def __init__(self):
+          super(TrangChu,self).__init__()
+          uic.loadUi("GUI/TrangChu.ui",self)
+          self.stackedWidget.setCurrentIndex(0)
+          self.btnHocSinh.clicked.connect(self.stackHocSinh)
+          self.btnGiaoVien.clicked.connect(self.stackGiaoVien)    
+          self.btnDangXuat.clicked.connect(self.DangXuat)
+     def stackHocSinh(self):
+          self.stackedWidget.setCurrentIndex(1)
+     def stackGiaoVien(self):
+          self.stackedWidget.setCurrentIndex(2)
+     def DangXuat(self):
+          '''self.hide()
+          #widget.resize(formLogin.width(),formLogin.height())
+          widget.setCurrentIndex(0)
+          widget.setFixedSize(800,500)     
+          formLogin.lineTenDangNhap.setText(" ")
+          formLogin.lineMatKhau.setText("")'''
+          #widget.setCurrentIndex(0)
+          ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn đăng xuất khỏi hệ thống?Click a button", QMessageBox.Yes| QMessageBox.Cancel)
+               
+          if ret == QMessageBox.Yes:
+               self.hide()
+                    #widget.resize(formLogin.width(),formLogin.height())
+               formLogin.lineTenDangNhap.text()
+               formLogin.lineMatKhau.text()
+
+               widget.setCurrentIndex(0)
+          #formLogin.show()
+               widget.setFixedSize(800,500)     
+
+
+
+
+
+
 app = QtWidgets.QApplication(sys.argv)
 formLogin = FormLogin()
 widget = QtWidgets.QStackedWidget()
 widget.addWidget(formLogin)
 #widget.setFixedHeight(500)
 #widget.setFixedWidth(800)
-widget.setFixedSize(formLogin.width(),formLogin.height())
+widget.resize(formLogin.width(),formLogin.height())
 widget.show()
 #formLogin.show()
 try:
