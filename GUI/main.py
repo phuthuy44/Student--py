@@ -54,13 +54,19 @@ class TrangChu(QtWidgets.QMainWindow):
           super(TrangChu,self).__init__()
           uic.loadUi("GUI/TrangChu.ui",self)
           self.stackedWidget.setCurrentIndex(0)
+          self.btnHSPL.clicked.connect(self.stackHSPL)
           self.btnHocSinh.clicked.connect(self.stackHocSinh)
           self.btnGiaoVien.clicked.connect(self.stackGiaoVien)    
           self.btnNhanVien.clicked.connect(self.stackNhanVien)
           self.btnChucVu.clicked.connect(self.stackChucVu)
           self.btnQuyen.clicked.connect(self.stackQuyen)
+          self.btnLop.clicked.connect(self.stackLop)
           self.btnDangXuat.clicked.connect(self.DangXuat)
-
+          self.btnLopHoc.clicked.connect(self.stackLopHoc)
+          self.btnKhoi.clicked.connect(self.stackKhoi)
+          self.btnHKNH.clicked.connect(self.stackHKNH)
+     def stackHSPL(self):
+          self.stackedWidget.setCurrentIndex(10)
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
      def stackGiaoVien(self):
@@ -71,6 +77,14 @@ class TrangChu(QtWidgets.QMainWindow):
           self.stackedWidget.setCurrentIndex(4)
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(5)
+     def stackLop(self):
+          self.stackedWidget.setCurrentIndex(7)
+     def stackLopHoc(self):
+          self.stackedWidget.setCurrentIndex(6)
+     def stackKhoi(self):
+          self.stackedWidget.setCurrentIndex(8)
+     def stackHKNH(self):
+          self.stackedWidget.setCurrentIndex(9)
      def DangXuat(self):
           '''self.hide()
           #widget.resize(formLogin.width(),formLogin.height())

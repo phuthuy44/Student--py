@@ -47,12 +47,12 @@ mycursor.execute("""
                 idQuyenHan INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 tenQuyenHan VARCHAR(255) NOT NULL
                 )
-                    """)'''
+                    """)
 mycursor.execute("""
                     ALTER TABLE LopHoc
                     MODIFY COLUMN idLopHoc VARCHAR(255)
-                    """)
-mycursor.execute("""
+                    """)'''
+'''mycursor.execute("""
                     CREATE TABLE IF NOT EXISTS HocSinh(
                     idHocSinh INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     hoTen VARCHAR(255) NOT NULL,
@@ -65,6 +65,9 @@ mycursor.execute("""
                     soDine 
                     
                     )
-                """)
+                """)'''
+mycursor.execute('''
+                DROP DATABASE studentmanager
+                ''')
 
 mydb.close()
