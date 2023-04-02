@@ -56,11 +56,21 @@ class TrangChu(QtWidgets.QMainWindow):
           self.stackedWidget.setCurrentIndex(0)
           self.btnHocSinh.clicked.connect(self.stackHocSinh)
           self.btnGiaoVien.clicked.connect(self.stackGiaoVien)    
+          self.btnNhanVien.clicked.connect(self.stackNhanVien)
+          self.btnChucVu.clicked.connect(self.stackChucVu)
+          self.btnQuyen.clicked.connect(self.stackQuyen)
           self.btnDangXuat.clicked.connect(self.DangXuat)
+
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
+     def stackNhanVien(self):
+          self.stackedWidget.setCurrentIndex(3)
+     def stackChucVu(self):
+          self.stackedWidget.setCurrentIndex(4)
+     def stackQuyen(self):
+          self.stackedWidget.setCurrentIndex(5)
      def DangXuat(self):
           '''self.hide()
           #widget.resize(formLogin.width(),formLogin.height())
@@ -69,7 +79,7 @@ class TrangChu(QtWidgets.QMainWindow):
           formLogin.lineTenDangNhap.setText(" ")
           formLogin.lineMatKhau.setText("")'''
           #widget.setCurrentIndex(0)
-          ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn đăng xuất khỏi hệ thống?Click a button", QMessageBox.Yes| QMessageBox.Cancel)
+          ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn đăng xuất khỏi hệ thống?", QMessageBox.Yes| QMessageBox.Cancel)
                
           if ret == QMessageBox.Yes:
                self.hide()

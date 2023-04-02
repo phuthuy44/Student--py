@@ -23,7 +23,7 @@ mycursor.execute("""CREATE TABLE Khoi(
                 idMonHoc INT AUTO_INCREMENT PRIMARY KEY,
                 tenMonHoc VARCHAR(255) NOT NULL,
                 soTiet INT NOT NULL
-                                                )""")'''
+                                                )""")
 mycursor.execute("""
                 CREATE TABLE ChucVu(
                 idChucVu INT AUTO_INCREMENT PRIMARY KEY,
@@ -47,6 +47,24 @@ mycursor.execute("""
                 idQuyenHan INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 tenQuyenHan VARCHAR(255) NOT NULL
                 )
+                    """)'''
+mycursor.execute("""
+                    ALTER TABLE LopHoc
+                    MODIFY COLUMN idLopHoc VARCHAR(255)
                     """)
+mycursor.execute("""
+                    CREATE TABLE IF NOT EXISTS HocSinh(
+                    idHocSinh INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    hoTen VARCHAR(255) NOT NULL,
+                    ngaySinh datetime NOT NULL,
+                    gioiTinh VARCHAR(255) NOT NULL,
+                    diaChi VARCHAR(255) NOT NULL,
+                    idLopHoc VARCHAR(255) NOT NULL,
+                    soDienThoai varchar(255) NOT NULL,
+                    tenPhuHuynh VARCHAR(255) NOT NULL,
+                    soDine 
+                    
+                    )
+                """)
 
 mydb.close()
