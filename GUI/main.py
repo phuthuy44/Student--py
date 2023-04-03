@@ -65,6 +65,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnHKNH.clicked.connect(self.stackHKNH)
           self.btnMonHoc.clicked.connect(self.stackMonHoc)
           self.btnKetQua.clicked.connect(self.stackKetQua)
+          self.btnHocPhi.clicked.connect(self.stackHocPhi)
      #def stackHSPL(self):
           #self.stackedWidget.setCurrentIndex(10)
      def stackHocSinh(self):
@@ -76,14 +77,16 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackNhanVien(self):
           self.stackedWidget.setCurrentIndex(3)
      def stackQuyen(self):
-          self.stackedWidget.setCurrentIndex(5)
+          self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):
-          self.stackedWidget.setCurrentIndex(6)
+          self.stackedWidget.setCurrentIndex(5)
      def stackHKNH(self):
-          self.stackedWidget.setCurrentIndex(7)
+          self.stackedWidget.setCurrentIndex(6)
      def stackMonHoc(self):
-          self.stackedWidget.setCurrentIndex(8)
+          self.stackedWidget.setCurrentIndex(7)
      def stackKetQua(self):
+          self.stackedWidget.setCurrentIndex(8)
+     def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
      def DangXuat(self):
           '''self.hide()
