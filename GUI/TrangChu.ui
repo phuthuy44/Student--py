@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -3291,7 +3291,7 @@ border-radius:5px;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_7">
        <attribute name="title">
@@ -4131,7 +4131,7 @@ font: 12pt &quot;Tahoma&quot;;</string>
        <attribute name="title">
         <string>Chức vụ</string>
        </attribute>
-       <widget class="QTableWidget" name="tableWidget_30">
+       <widget class="QTableWidget" name="tableChucVu">
         <property name="geometry">
          <rect>
           <x>650</x>
@@ -4144,11 +4144,11 @@ font: 12pt &quot;Tahoma&quot;;</string>
          <string notr="true">border: 1px solid gray ;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>278</number>
+         <number>275</number>
         </attribute>
         <column>
          <property name="text">
-          <string>Mã chức vụ </string>
+          <string>Mã chức vụ</string>
          </property>
          <property name="font">
           <font>
@@ -4259,7 +4259,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_139">
+        <widget class="QPushButton" name="btnThemCV">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -4311,7 +4311,7 @@ QPushButton:hover{
           <string>Sửa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_141">
+        <widget class="QPushButton" name="btnXoaChucVu">
          <property name="geometry">
           <rect>
            <x>330</x>
@@ -4466,7 +4466,7 @@ color:blue;
           <string>Tên chức vụ </string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_129">
+        <widget class="QLineEdit" name="lineMaChucVu">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -4489,7 +4489,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_130">
+        <widget class="QLineEdit" name="lineTenChucVu">
          <property name="geometry">
           <rect>
            <x>180</x>

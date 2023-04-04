@@ -1,0 +1,1 @@
+selected = self.tableChucVu.selectedIndex()

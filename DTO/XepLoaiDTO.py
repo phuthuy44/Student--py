@@ -1,10 +1,12 @@
-class XepLoai:
-     def __init__(self,idXepLoai,tenXepLoai):
-          self.idXepLoai = idXepLoai
-          self.tenXepLoai = tenXepLoai
-     def getIdXepLoai(self):
-          return self.idXepLoai
-     def getTenXepLoai(self):
-          return self.tenXepLoai
-     def setTenXepLoai(self,tenXepLoai):
-          self.tenXepLoai = tenXepLoai
+class HanhKiemDTO:
+     def __init__(self,maHanhKiem,tenHanhKiem):
+          self.maHanhKiem= maHanhKiem
+          self.tenHanhKiem = tenHanhKiem
+     def setMaHanhKiem(self,maHanhKiem):
+          self.maHanhKiem= maHanhKiem
+     def getmaHanhKiem (self):
+          return self.maHanhKiem
+     def getTenHanhKiem(self):
+          return self.tenHanhKiem
+     def setTenHanhKiem(self,tenHanhKiem):
+          self.tenHanhKiem = tenHanhKiem

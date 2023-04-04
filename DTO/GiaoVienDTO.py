@@ -1,12 +1,13 @@
 class GiaoVienDTO :
-     def __init__(self,idGiaoVien,tenGV,gioiTinh,ngaySinh,diaChi,email,soDienThoai,hinhAnh):
-          self.idGiaoVien = idGiaoVien
+     def __init__(self,maGiaoVien,tenGV,gioiTinh,ngaySinh,diaChi,email,soDienThoai,chuyenMon,hinhAnh):
+          self.maGiaoVien = maGiaoVien
           self.tenGV = tenGV
           self.gioiTinh =gioiTinh
           self.ngaySinh = ngaySinh
           self.diaChi = diaChi
           self.email = email
           self.soDienThoai = soDienThoai
+          self.chuyenMon = chuyenMon
           self.hinhAnh = hinhAnh
      def getidGiaoVien(self):
           return self.idGiaoVien
@@ -34,7 +35,11 @@ class GiaoVienDTO :
           self.soDienThoai = soDienThoai
      def getSoDienThoai(self):
           return self.soDienThoai
-     def setHinhANh(self,hinhANh):
-          self.hinhANh = hinhANh
+     def setChuyenMon(self, chuyenMon):
+          self.chuyenMon = chuyenMon
+     def getChuyenMon(self):
+          return self.chuyenMon
+     def setHinhANh(self,hinhAnh):
+          self.hinhAnh = hinhAnh
      def getHinhANh(self):
-          return self.hinhANh
+          return self.hinhAnh

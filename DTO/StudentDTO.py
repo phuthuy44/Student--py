@@ -1,10 +1,10 @@
-class StudentDTO:
-     def __init__(self,idHocSinh,hoTen,ngaySinh,gioiTinh,idLopHoc,diaChi,soDienThoai,tenPhuHuynh,soDienThoaiPH,hinhAnh):
+class HocSinhDTO:
+     def __init__(self,idHocSinh,hoTen,ngaySinh,gioiTinh,email,diaChi,soDienThoai,tenPhuHuynh,soDienThoaiPH,hinhAnh):
           self.id = idHocSinh
           self.hoTen = hoTen
           self.ngaySinh = ngaySinh
           self.gioiTinh = gioiTinh
-          self.idLopHoc = idLopHoc
+          self.email = email
           self.diaChi = diaChi
           self.soDienThoai = soDienThoai
           self.tenPhuHuynh = tenPhuHuynh
@@ -20,10 +20,10 @@ class StudentDTO:
           self.ngaySinh = NgaySinh
      def getNgaySinh(self):
           return self.ngaySinh
-     def setGioiTinh(self,GioiTinh):
-          self.gioiTinh = GioiTinh
-     def getIdLopHoc(self):
-          return self.idLopHoc
+     def setEmail(self,email):
+          self.email= email
+     def getEmail(self):
+          return self.email
      def getGioiTinh(self):
           return self.gioiTinh
      def setDiaChi(self,DiaChi):
