@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1034,11 +1034,6 @@ border-radius:5px;
          </property>
          <item>
           <property name="text">
-           <string>Lớp</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Mã học sinh </string>
           </property>
          </item>
@@ -1118,7 +1113,7 @@ border-radius:5px;
           </font>
          </property>
          <property name="text">
-          <string>Lớp</string>
+          <string>Email</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="lineEdit_119">
