@@ -254,4 +254,55 @@ mycursor.execute('''
                ADD FOREIGN KEY (maKetQua) REFERENCES ketQua(maKetQua)
 
                     ''')
+mycursor.execute('''
+               CREATE TABLE chucVu(
+               maChucVu VARCHAR(6) NOT NULL PRIMARY KEY,
+               tenChucVu VARCHAR(30) NOT NULL
+               )
+''')
+mycursor.execute('''
+               CREATE TABLE cacKhoanPhi(
+               maPhi VARCHAR(6) NOT NULL PRIMARY KEY,
+               tenPhi VARCHAR(30) NOT NULL
+               )
+''')
+mycursor.execute('''
+               CREATE TABLE nhanVien(
+               maNhanVien VARCHAR(6) NOT NULL PRIMARY KEY,
+               tenNhanVien VARCHAR(30) NOT NULL,
+               ngaySinh DATETIME NOT NULL,
+               gioiTinh BIT,
+               diaChi VARCHAR(50) NOT NULL,
+               email VARCHAR(50) NOT NULL UNIQUE,
+               soDienThoai VARCHAR(15) NOT NULL,
+               maChucVu VARCHAR(6) NOT NULL,
+               hinhAnh VARCHAR(255),
+               CONSTRAINT fk_NHANVIEN_CHUCVU FOREIGN KEY (maChucVu) REFERENCES chucVu(maChucVu)
+               )
+                     ''')
+mycursor.execute('''
+               CREATE TABLE PhieuThanhToan(
+               maPhieu VARCHAR(6) NOT NULL PRIMARY KEY,
+               maNhanVien VARCHAR(6) NOT NULL,
+               maHocSinh varchar(6) NOT NULL,
+               maLop varchar(6) NOT NULL,
+               ngayDong DATETIME NOT NULL,
+               nguoiDong VARCHAR(50) NOT NULL,
+               thanhToan INT NOT NULL,
+               CONSTRAINT FK_PTT_NHANVIEN FOREIGN KEY (maNhanVien) REFERENCES nhanVien(maNhanVien),
+               CONSTRAINT FK_PTT_HOCSINH FOREIGN KEY (maHocSinh) REFERENCES hocSinh(maHocSinh),
+               CONSTRAINT FK_PTT_LOPHOC FOREIGN KEY (maLop) REFERENCES lop(maLop)
+               )
+''')
+mycursor.execute('''
+               CREATE TABLE chiTietPhieu(
+               maPhi VARCHAR(6) NOT NULL,
+               maPhieu VARCHAR(6) NOT NULL,
+               soTienDong INT NOT NULL,
+               PRIMARY KEY (maPhi,maPhieu),
+               CONSTRAINT fk_CTPHIEU_CACKHOANPHI FOREIGN KEY (maPhi) REFERENCES cacKhoanPhi(maPhi),
+               CONSTRAINT fk_CTPHIEU_PHIEU FOREIGN KEY (maPhieu) REFERENCES PhieuThanhToan(maPhieu)
+               )
+''')
+
 mydb.close()
