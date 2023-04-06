@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>9</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -778,6 +778,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -920,7 +923,7 @@ border:1px solid black;
 }</string>
          </property>
          <property name="text">
-          <string>hình ảnh </string>
+          <string/>
          </property>
         </widget>
         <widget class="QComboBox" name="comboBox_9">
@@ -1137,6 +1140,34 @@ border: 1px solid black;
          </property>
          <property name="text">
           <string/>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>880</x>
+           <y>240</y>
+           <width>151</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(31, 4, 89, 255), stop:1 rgba(255, 255, 255, 255));
+color:white;
+	font: 14pt &quot;Tahoma&quot;;
+border-radius:5px;
+border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 178, 102, 255), stop:0.55 rgba(235, 148, 61, 255), stop:0.98 rgba(0, 0, 0, 255), stop:1 rgba(0, 0, 0, 0))
+}
+QPushButton:hover{
+border:0.5px solid black;
+	background-color: yellow;
+color:black;
+	
+}</string>
+         </property>
+         <property name="text">
+          <string>Hình ảnh</string>
          </property>
         </widget>
        </widget>
@@ -1927,7 +1958,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_5">
        <attribute name="title">
@@ -2252,6 +2283,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -2365,8 +2399,8 @@ border: 1px solid black;
           <rect>
            <x>860</x>
            <y>40</y>
-           <width>181</width>
-           <height>191</height>
+           <width>171</width>
+           <height>181</height>
           </rect>
          </property>
          <property name="styleSheet">
@@ -2375,7 +2409,7 @@ border:1px solid black;
 }</string>
          </property>
          <property name="text">
-          <string>hình ảnh </string>
+          <string/>
          </property>
         </widget>
         <widget class="QComboBox" name="comboBox_50">
@@ -2626,6 +2660,34 @@ border-radius:5px;
            <string>Lịch sử</string>
           </property>
          </item>
+        </widget>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="geometry">
+          <rect>
+           <x>870</x>
+           <y>230</y>
+           <width>151</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(31, 4, 89, 255), stop:1 rgba(255, 255, 255, 255));
+color:white;
+	font: 14pt &quot;Tahoma&quot;;
+border-radius:5px;
+border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 178, 102, 255), stop:0.55 rgba(235, 148, 61, 255), stop:0.98 rgba(0, 0, 0, 255), stop:1 rgba(0, 0, 0, 0))
+}
+QPushButton:hover{
+border:0.5px solid black;
+	background-color: yellow;
+color:black;
+	
+}</string>
+         </property>
+         <property name="text">
+          <string>Hình ảnh</string>
+         </property>
         </widget>
        </widget>
        <widget class="QTableWidget" name="tableWidget_28">
@@ -3291,7 +3353,7 @@ border-radius:5px;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_7">
        <attribute name="title">
@@ -3795,6 +3857,34 @@ border-radius:5px;
            <string>Chức vụ</string>
           </property>
          </item>
+        </widget>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="geometry">
+          <rect>
+           <x>880</x>
+           <y>240</y>
+           <width>151</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(31, 4, 89, 255), stop:1 rgba(255, 255, 255, 255));
+color:white;
+	font: 14pt &quot;Tahoma&quot;;
+border-radius:5px;
+border-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 178, 102, 255), stop:0.55 rgba(235, 148, 61, 255), stop:0.98 rgba(0, 0, 0, 255), stop:1 rgba(0, 0, 0, 0))
+}
+QPushButton:hover{
+border:0.5px solid black;
+	background-color: yellow;
+color:black;
+	
+}</string>
+         </property>
+         <property name="text">
+          <string>Hình ảnh</string>
+         </property>
         </widget>
        </widget>
        <widget class="QGroupBox" name="groupBox_12">
@@ -4486,6 +4576,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -4554,7 +4647,7 @@ color:black;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_19">
        <attribute name="title">
@@ -4913,6 +5006,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -5091,7 +5187,14 @@ color: black;</string>
           </rect>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-color: rgb(170, 170, 127);</string>
+          <string notr="true">QLineEdit{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:5px;
+border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
+}</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_269">
@@ -5376,7 +5479,7 @@ color:black;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_9">
        <attribute name="title">
@@ -5667,6 +5770,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -5947,6 +6053,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -6166,7 +6275,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_11">
        <attribute name="title">
@@ -6240,6 +6349,9 @@ border: 1px solid black;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -6664,6 +6776,9 @@ color:black;</string>
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -6913,7 +7028,7 @@ QPushButton:hover{
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -6950,7 +7065,7 @@ border-radius:2px;</string>
           <string>GroupBox</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_137">
+        <widget class="QLineEdit" name="lineTenMonHoc">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -6964,13 +7079,14 @@ border-radius:2px;</string>
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(0, 0, 0);
 }</string>
          </property>
          <property name="text">
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_138">
+        <widget class="QLineEdit" name="lineMaMonHoc">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -6987,6 +7103,9 @@ border: 1px solid black;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -7044,7 +7163,7 @@ color: rgb(0, 0, 0);</string>
           <string>Số tiết</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_59">
+        <widget class="QComboBox" name="cboxHeSo">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -7067,7 +7186,7 @@ color: rgb(0, 0, 0);</string>
           </property>
          </item>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_139">
+        <widget class="QLineEdit" name="lineSoTiet">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -7081,6 +7200,7 @@ color: rgb(0, 0, 0);</string>
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(0, 0, 0);
 }</string>
          </property>
          <property name="text">
@@ -7105,7 +7225,7 @@ color: rgb(0, 0, 0);</string>
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_2">
+       <widget class="QTableWidget" name="tableMonHoc">
         <property name="geometry">
          <rect>
           <x>540</x>
@@ -7114,20 +7234,12 @@ color: rgb(0, 0, 0);</string>
           <height>691</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">font: 75 14pt &quot;Tahoma&quot;;</string>
+        </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>132</number>
+         <number>170</number>
         </attribute>
-        <column>
-         <property name="text">
-          <string>STT</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-        </column>
         <column>
          <property name="text">
           <string>Mã môn học</string>
@@ -7137,6 +7249,9 @@ color: rgb(0, 0, 0);</string>
            <family>Tahoma</family>
            <pointsize>14</pointsize>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
@@ -7149,6 +7264,9 @@ color: rgb(0, 0, 0);</string>
            <pointsize>14</pointsize>
           </font>
          </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
         </column>
         <column>
          <property name="text">
@@ -7160,6 +7278,9 @@ color: rgb(0, 0, 0);</string>
            <pointsize>14</pointsize>
           </font>
          </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
         </column>
         <column>
          <property name="text">
@@ -7170,6 +7291,9 @@ color: rgb(0, 0, 0);</string>
            <family>Tahoma</family>
            <pointsize>14</pointsize>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
        </widget>
@@ -7198,7 +7322,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_84">
+        <widget class="QPushButton" name="btnThemMonHoc">
          <property name="geometry">
           <rect>
            <x>40</x>
@@ -7224,7 +7348,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_85">
+        <widget class="QPushButton" name="btnCapNhatMonHoc">
          <property name="geometry">
           <rect>
            <x>200</x>
@@ -7247,10 +7371,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_86">
+        <widget class="QPushButton" name="btnXoaMonHoc">
          <property name="geometry">
           <rect>
            <x>360</x>
@@ -7904,7 +8028,7 @@ QPushButton:hover{
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_15">
        <attribute name="title">
@@ -7973,7 +8097,7 @@ color:blue;
           <string>Tên kết quả</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_140">
+        <widget class="QLineEdit" name="lineMaKetQua">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -7990,13 +8114,16 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_141">
+        <widget class="QLineEdit" name="lineTenKetQua">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8017,7 +8144,7 @@ border: 1px solid black;
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_34">
+       <widget class="QTableWidget" name="tableKetQua">
         <property name="geometry">
          <rect>
           <x>650</x>
@@ -8090,7 +8217,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_151">
+        <widget class="QPushButton" name="btnThemKQ">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -8116,7 +8243,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_152">
+        <widget class="QPushButton" name="btnCapNhatKetQua">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8139,10 +8266,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_153">
+        <widget class="QPushButton" name="btnXoaKetQua">
          <property name="geometry">
           <rect>
            <x>330</x>
@@ -8280,6 +8407,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -8743,6 +8873,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -9288,7 +9421,7 @@ font: 75 12pt &quot;Tahoma&quot;;</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_21">
        <attribute name="title">
@@ -9461,6 +9594,9 @@ color:blue;
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
          </property>
          <property name="text">
@@ -9775,6 +9911,9 @@ color:rgb(184, 184, 184);
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
           </property>
           <property name="text">
@@ -10038,6 +10177,9 @@ color:rgb(184, 184, 184);
 font: 16pt &quot;Tahoma&quot;;
 border-radius:5px;
 border: 1px solid black;
+	color: rgb(6, 6, 6);
+	background-color: ;
+	background-color: rgb(200, 200, 150);
 }</string>
           </property>
           <property name="text">

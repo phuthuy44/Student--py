@@ -67,6 +67,14 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnThemKhoanPhi.clicked.connect(self.addKhoanPhi)
           self.btnCapNhatKhoanPhi.clicked.connect(self.updateKhoanPhi)
           self.btnXoaKhoanPhi.clicked.connect(self.deleteKhoanPhi)
+
+          self.btnThemMonHoc.clicked.connect(self.addMonHoc)
+          self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
+          self.btnXoaMonHoc.clicked.connect(self.deleteMonHoc)
+
+          self.btnThemKQ.clicked.connect(self.addKetQua)
+          self.btnCapNhatKetQua.clicked.connect(self.updateKetQua)
+          self.btnXoaKetQua.clicked.connect(self.deleteKetQua)
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
      def stackGiaoVien(self):
@@ -99,8 +107,13 @@ class TrangChu(QtWidgets.QMainWindow):
                tenChucVu = self.tableChucVu.item(i,1).text()
                sql =" UPDATE chucvu SET tenChucVu = %s WHERE maChucVu =%s"
                val = (tenChucVu,maChucVu)
-               query.execute(sql,val)
-               db.commit()
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
           self.stackNhanVien()
           QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
 
@@ -159,8 +172,178 @@ class TrangChu(QtWidgets.QMainWindow):
           self.stackedWidget.setCurrentIndex(6)
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
+
+          query.execute("SELECT *FROM monhoc")
+          data = query.fetchall()
+          # populate the widget with the data from the database
+          self.tableMonHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(val)))
+
+          maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
+          self.lineMaMonHoc.setText(maMonHoc)
+     def addMonHoc(self):
+          lineTenMonHoc = self.lineTenMonHoc.text()
+          lineSoTiet = self.lineSoTiet.text()
+          cboxHeSo = self.cboxHeSo.currentText()
+
+          maMonHoc ="MH" + str(random.randint(0,999)).zfill(3)
+
+          if len(lineTenMonHoc)==0 and len(lineSoTiet)==0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               query.execute("SELECT * FROM monhoc WHERE tenMonHoc = %s", (lineTenMonHoc,))
+               check = query.fetchone()
+               if check is not None:
+                    QMessageBox.information(self,"Thông báo","Môn học này đã có trong danh sách!")
+               else:
+                    query.execute("INSERT INTO monhoc (maMonHoc, tenMonHoc,soTiet,heSo) VALUES (%s, %s,%s,%s)", (maMonHoc,lineTenMonHoc,lineSoTiet,cboxHeSo))
+                    try:              
+                    #query.execute(sql,val)
+                         db.commit()
+                    except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                         return
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+          self.lineTenMonHoc.clear()
+          self.lineSoTiet.clear()
+          self.stackMonHoc()
+     def updateMonHoc(self):
+          numRows = self.tableMonHoc.rowCount()
+          for i in range(numRows):
+               maMonHoc= self.tableMonHoc.item(i,0).text()
+               tenMonHoc = self.tableMonHoc.item(i,1).text()
+               soTietMonHoc = self.tableMonHoc.item(i,2).text()
+               heSoMonHoc = self.tableMonHoc.item(i,3).text()
+               sql =" UPDATE monhoc SET tenMonHoc = %s, soTiet = %s, heSo = %s WHERE maMonHoc =%s"
+               val = (tenMonHoc,soTietMonHoc,heSoMonHoc,maMonHoc)
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
+          self.stackMonHoc()
+          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+     
+     
+     def deleteMonHoc(self):
+          selected = self.tableMonHoc.selectedItems()
+          
+          if selected:
+               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+               if ret == QMessageBox.Yes:
+                    rows = set()
+                    for item in selected:
+                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
+                    rows = list(rows)  # chuyển set thành list
+                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
+                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
+                    for row in rows:
+                         maMonHoc = self.tableMonHoc.item(row, 0).text()
+                         self.tableMonHoc.removeRow(row)  # xóa dòng khỏi bảng
+                         sql = "DELETE FROM monhoc WHERE maMonHoc= %s"
+                         val = (maMonHoc,)
+                         try:              
+                              query.execute(sql,val)
+                              db.commit()
+                         except:
+                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return
+                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
+               
+
+          else:
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def stackKetQua(self):
           self.stackedWidget.setCurrentIndex(8)
+          
+          query.execute("SELECT *FROM ketqua")
+          data = query.fetchall()
+          self.tableKetQua.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    self.tableKetQua.setItem(i, j, QTableWidgetItem(str(val)))
+
+          maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
+          self.lineMaKetQua.setText(maKetQua)
+     def addKetQua(self):
+          lineTenKetQua = self.lineTenKetQua.text()
+          maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
+          if len(lineTenKetQua)==0 :
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               query.execute("SELECT * FROM ketqua WHERE tenKetQua = %s", (lineTenKetQua,))
+               check = query.fetchone()
+               if check is not None:
+                    QMessageBox.information(self,"Thông báo","Loại kết quả này đã có trong danh sách!")
+               else:
+                    query.execute("INSERT INTO ketqua (maKetQua, tenKetQUa) VALUES (%s, %s)", (maKetQua,lineTenKetQua))
+                    try:              
+                    #query.execute(sql,val)
+                         db.commit()
+                    except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                         return
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+          self.lineTenKetQua.clear()
+          self.stackKetQua()
+     def updateKetQua(self):
+          numRows = self.tableKetQua.rowCount()
+          for i in range(numRows):
+               maKetQua= self.tableKetQua.item(i,0).text()
+               tenKetQua = self.tableKetQua.item(i,1).text()
+               sql =" UPDATE ketqua SET tenKetQua = %s WHERE maKetQua =%s"
+               val = (tenKetQua,maKetQua)
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
+          self.stackKetQua()
+          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+     
+     def deleteKetQua(self):
+          selected = self.tableKetQua.selectedItems()
+          
+          if selected:
+               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+               if ret == QMessageBox.Yes:
+                    rows = set()
+                    for item in selected:
+                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
+                    rows = list(rows)  # chuyển set thành list
+                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
+                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
+                    for row in rows:
+                         maMonHoc = self.tableKetQua.item(row, 0).text()
+                         self.tableKetQua.removeRow(row)  # xóa dòng khỏi bảng
+                         sql = "DELETE FROM ketqua WHERE maKetQua= %s"
+                         val = (maMonHoc,)
+                         try:              
+                              query.execute(sql,val)
+                              db.commit()
+                         except:
+                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return
+                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
+               
+
+          else:
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
+
      def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
           query.execute("SELECT *FROM cackhoanphi")
@@ -211,10 +394,17 @@ class TrangChu(QtWidgets.QMainWindow):
                     QMessageBox.information(self,"Thông báo","Khoản phí này đã có trong danh sách!")
                else:
                     query.execute("INSERT INTO cackhoanphi (maPhi, tenPhi) VALUES (%s, %s)", (maPhi, lineTenKhoanPhi))
-                    db.commit()
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-                    self.lineTenMaPhi.clear()
-                    self.stackHocPhi()
+                    #db.commit()
+                    try:              
+                    #query.execute(sql,val)
+                         db.commit()
+                    except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                         return
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+          self.lineTenMaPhi.clear()
+          self.stackHocPhi()
      def updateKhoanPhi(self):
           numRows = self.tableKhoanPhi.rowCount()
           for i in range(numRows):
@@ -222,8 +412,13 @@ class TrangChu(QtWidgets.QMainWindow):
                tenPhi = self.tableKhoanPhi.item(i,1).text()
                sql =" UPDATE cackhoanphi SET tenPhi = %s WHERE maPhi =%s"
                val = (tenPhi,maPhi)
-               query.execute(sql,val)
-               db.commit()
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
           self.stackHocPhi()
           QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
      def deleteKhoanPhi(self):
@@ -244,8 +439,13 @@ class TrangChu(QtWidgets.QMainWindow):
                          self.tableKhoanPhi.removeRow(row)  # xóa dòng khỏi bảng
                          sql = "DELETE FROM cackhoanphi WHERE maPhi = %s"
                          val = (maPhi,)
-                         query.execute(sql,val)
-                         db.commit()
+                         try:              
+                              query.execute(sql,val)
+                              db.commit()
+                         except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                              return
                     QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
                
 
