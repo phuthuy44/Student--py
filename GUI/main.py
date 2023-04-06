@@ -86,6 +86,14 @@ class TrangChu(QtWidgets.QMainWindow):
 
           self.btnQuyDinh.clicked.connect(self.quyDinh)
           self.btnResetQuyDinh.clicked.connect(self.resetQuyDinh)
+
+          self.btnThemKhoi.clicked.connect(self.addKhoi)
+          self.btnCapNhatKhoi.clicked.connect(self.updateKhoi)
+          self.btnXoaKhoi.clicked.connect(self.deleteKhoi)
+
+          self.btnThemHocKy.clicked.connect(self.addHocKy)
+          self.btnCapNhatHocKy.clicked.connect(self.updateHocKy)
+          self.btnXoaHocKy.clicked.connect(self.deleteHocKy)
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
      def stackGiaoVien(self):
@@ -179,8 +187,128 @@ class TrangChu(QtWidgets.QMainWindow):
           self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):
           self.stackedWidget.setCurrentIndex(5)
+
+          maKhoi = "KH" + str(random.randint(0,999)).zfill(3)
+          self.lineMaKhoi.setText(maKhoi)
+
+          query.execute("SELECT *FROM khoilop")
+          data = query.fetchall()
+          # populate the widget with the data from the database
+          self.tableKhoi.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    self.tableKhoi.setItem(i, j, QTableWidgetItem(str(val)))
+
+     def addKhoi(self):
+          lineTenKhoi = self.lineTenKhoi.text()
+          maKhoi ="KH" + str(random.randint(0,999)).zfill(3)
+          if len(lineTenKhoi)==0 :
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               query.execute("SELECT * FROM khoilop WHERE tenKhoiLop = %s", (lineTenKhoi,))
+               check = query.fetchone()
+               if check is not None:
+                    QMessageBox.information(self,"Thông báo","Loại kết quả này đã có trong danh sách!")
+               else:
+                    query.execute("INSERT INTO khoilop (maKhoiLop, tenKhoiLop) VALUES (%s, %s)", (maKhoi,lineTenKhoi))
+                    try:              
+                    #query.execute(sql,val)
+                         db.commit()
+                    except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                         return
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+          self.lineTenKhoi.clear()
+          self.stackLop()
+     def updateKhoi(self):
+          numRows = self.tableKhoi.rowCount()
+          for i in range(numRows):
+               maKhoi= self.tableKhoi.item(i,0).text()
+               tenKhoi = self.tableKhoi.item(i,1).text()
+               sql =" UPDATE khoilop SET tenKhoiLop = %s WHERE maKhoiLop =%s"
+               val = (tenKhoi,maKhoi)
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
+          self.stackLop()
+          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+     
+     def deleteKhoi(self):
+          selected = self.tableKhoi.selectedItems()
+          
+          if selected:
+               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+               if ret == QMessageBox.Yes:
+                    rows = set()
+                    for item in selected:
+                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
+                    rows = list(rows)  # chuyển set thành list
+                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
+                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
+                    for row in rows:
+                         maKhoi = self.tableKhoi.item(row, 0).text()
+                         self.tableKhoi.removeRow(row)  # xóa dòng khỏi bảng
+                         sql = "DELETE FROM khoilop WHERE maKhoiLop= %s"
+                         val = (maKhoi,)
+                         try:              
+                              query.execute(sql,val)
+                              db.commit()
+                         except:
+                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return
+                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
+               
+
+          else:
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def stackHKNH(self):
           self.stackedWidget.setCurrentIndex(6)
+
+          lineMaHocKy = "HK" + str(random.randint(0,999)).zfill(3)
+          self.lineMaHocKy.setText(lineMaHocKy)
+          query.execute("SELECT *FROM hocky")
+          data = query.fetchall()
+          # populate the widget with the data from the database
+          self.tableHocKy.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    self.tableHocKy.setItem(i, j, QTableWidgetItem(str(val)))
+     def addHocKy(self):
+          lineTenHocKy = self.lineTenHocKy.text()
+          lineMaHocKy = "HK" + str(random.randint(0,999)).zfill(3)
+          cboxHeSoHocKy = self.cboxHeSoHocKy.currentText()
+          if len(lineTenHocKy)==0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               query.execute("SELECT * FROM hocky WHERE tenHocKy = %s", (lineTenHocKy,))
+               check = query.fetchone()
+               if check is not None:
+                    QMessageBox.information(self,"Thông báo","Môn học này đã có trong danh sách!")
+               else:
+                    query.execute("INSERT INTO hocky (maHocKy, tenHocKy,heSo) VALUES (%s, %s,%s)", (lineMaHocKy,lineTenHocKy,cboxHeSoHocKy))
+                    try:              
+                    #query.execute(sql,val)
+                         db.commit()
+                    except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                         return
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+          self.lineTenHocKy.clear()
+          self.stackHKNH()
+
+     def updateHocKy(self):
+          pass
+     def deleteHocKy(self):
+          pass
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
 
@@ -217,7 +345,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                          QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                          return
-               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
           self.lineTenMonHoc.clear()
           self.lineSoTiet.clear()
           self.stackMonHoc()
@@ -237,7 +365,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                     QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
                     return
-          self.stackMonHoc()
+               self.stackMonHoc()
           QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
      
      
@@ -297,6 +425,9 @@ class TrangChu(QtWidgets.QMainWindow):
           for i, row in enumerate(dataHanhKiem):
                for j, val in enumerate(row):
                     self.tableHanhKiem.setItem(i, j, QTableWidgetItem(str(val)))
+     
+          
+
 
           maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
           self.lineMaKetQua.setText(maKetQua)
@@ -325,7 +456,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                          QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                          return
-               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
           self.lineTenKetQua.clear()
           self.stackKetQua()
      def updateKetQua(self):
@@ -399,7 +530,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                          QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                          return
-               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
           self.lineTenHocLuc.clear()
           self.lineDiemCD.clear()
           self.lineDiemCT.clear()
@@ -475,7 +606,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                          QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                          return
-               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
           self.lineTenHanhKiem.clear()
           self.stackKetQua()
      def updateHanhKiem(self):
@@ -543,7 +674,11 @@ class TrangChu(QtWidgets.QMainWindow):
           QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
           self.stackKetQua()
      def resetQuyDinh(self):
-          pass
+          self.spinTuoitToiThieu.setValue(0)
+          self.spinTuoiToiDa.setValue(0)
+          self.spinLopToiThieu.setValue(0)
+          self.spinLopToiDa.setValue(0)
+          self.spinDiem.setValue(0)
 
      def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
@@ -603,7 +738,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                          QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                          return
-               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
           self.lineTenMaPhi.clear()
           self.stackHocPhi()
      def updateKhoanPhi(self):

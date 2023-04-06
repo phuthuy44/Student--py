@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -5479,7 +5479,7 @@ color:black;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_9">
        <attribute name="title">
@@ -6036,7 +6036,7 @@ color:blue;
           <string>Tên khối</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_131">
+        <widget class="QLineEdit" name="lineMaKhoi">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -6062,7 +6062,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_132">
+        <widget class="QLineEdit" name="lineTenKhoi">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -6083,7 +6083,7 @@ border: 1px solid black;
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_31">
+       <widget class="QTableWidget" name="tableKhoi">
         <property name="geometry">
          <rect>
           <x>650</x>
@@ -6156,7 +6156,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_138">
+        <widget class="QPushButton" name="btnThemKhoi">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -6182,7 +6182,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_143">
+        <widget class="QPushButton" name="btnCapNhatKhoi">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -6205,10 +6205,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_144">
+        <widget class="QPushButton" name="btnXoaKhoi">
          <property name="geometry">
           <rect>
            <x>330</x>
@@ -6275,7 +6275,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_11">
        <attribute name="title">
@@ -6312,7 +6312,7 @@ border-radius:2px;</string>
           <string>GroupBox</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_133">
+        <widget class="QLineEdit" name="lineTenHocKy">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -6332,7 +6332,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_134">
+        <widget class="QLineEdit" name="lineMaHocKy">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -6409,7 +6409,7 @@ color: rgb(0, 0, 0);</string>
           <string>Hệ số </string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_58">
+        <widget class="QComboBox" name="cboxHeSoHocKy">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -6433,7 +6433,7 @@ color: rgb(0, 0, 0);</string>
          </item>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_32">
+       <widget class="QTableWidget" name="tableHocKy">
         <property name="geometry">
          <rect>
           <x>610</x>
@@ -6504,7 +6504,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_80">
+        <widget class="QPushButton" name="btnThemHocKy">
          <property name="geometry">
           <rect>
            <x>40</x>
@@ -6530,7 +6530,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_81">
+        <widget class="QPushButton" name="btnCapNhatHocKy">
          <property name="geometry">
           <rect>
            <x>240</x>
@@ -6553,10 +6553,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_82">
+        <widget class="QPushButton" name="btnXoaHocKy">
          <property name="geometry">
           <rect>
            <x>430</x>

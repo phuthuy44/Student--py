@@ -1,1 +1,1 @@
-selected = self.tableChucVu.selectedIndex()
+          maKhoi ="KH" + str(random.randint(0,999)).zfill(3)

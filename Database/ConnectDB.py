@@ -6,6 +6,7 @@ mydb = mysql.connector.connect(
     database ="studentmanager"
 )
 mycursor = mydb.cursor()
+"""
 mycursor.execute('''
                  CREATE TABLE loaiNguoiDung(
                     maLoai VARCHAR(6) NOT NULL PRIMARY KEY,
@@ -304,5 +305,6 @@ mycursor.execute('''
                CONSTRAINT fk_CTPHIEU_PHIEU FOREIGN KEY (maPhieu) REFERENCES PhieuThanhToan(maPhieu)
                )
 ''')
-
+"""
+mycursor.execute('''ALTER TABLE hocky DROP CONSTRAINT CK_HOCKY''')
 mydb.close()
