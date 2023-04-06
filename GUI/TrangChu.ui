@@ -8028,7 +8028,7 @@ QPushButton:hover{
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab_15">
        <attribute name="title">
@@ -8390,7 +8390,7 @@ color:blue;
           <string>Tên học lực</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_142">
+        <widget class="QLineEdit" name="lineMaHocLuc">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -8416,7 +8416,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_143">
+        <widget class="QLineEdit" name="lineTenHocLuc">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8455,9 +8455,9 @@ border: 1px solid black;
           <string>Điểm cận trên</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_144">
+        <widget class="QLineEdit" name="lineDiemCD">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="geometry">
           <rect>
@@ -8478,7 +8478,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_145">
+        <widget class="QLineEdit" name="lineDiemCT">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8517,7 +8517,7 @@ border: 1px solid black;
           <string>Điểm cận dưới</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_146">
+        <widget class="QLineEdit" name="lineDiemKhongChe">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8582,7 +8582,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_155">
+        <widget class="QPushButton" name="btnThemHocLuc">
          <property name="geometry">
           <rect>
            <x>100</x>
@@ -8608,7 +8608,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_156">
+        <widget class="QPushButton" name="btnCapNhatHocLuc">
          <property name="geometry">
           <rect>
            <x>250</x>
@@ -8631,10 +8631,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_157">
+        <widget class="QPushButton" name="btnXoaHocLuc">
          <property name="geometry">
           <rect>
            <x>100</x>
@@ -8687,7 +8687,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_35">
+       <widget class="QTableWidget" name="tableHocLuc">
         <property name="geometry">
          <rect>
           <x>500</x>
@@ -8697,10 +8697,10 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">border: 1px solid gray ;</string>
+         <string notr="true">color: rgb(0, 0, 0);</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>144</number>
+         <number>140</number>
         </attribute>
         <column>
          <property name="text">
@@ -8782,11 +8782,6 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
           <set>AlignCenter</set>
          </property>
         </column>
-        <column>
-         <property name="text">
-          <string/>
-         </property>
-        </column>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_17">
@@ -8816,7 +8811,7 @@ color:blue;
 }</string>
         </property>
         <property name="title">
-         <string>KẾT QUẢ</string>
+         <string>HẠNH KIỂM</string>
         </property>
         <widget class="QLabel" name="label_265">
          <property name="geometry">
@@ -8856,7 +8851,7 @@ color:blue;
           <string>Tên hạnh kiểm</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_147">
+        <widget class="QLineEdit" name="lineMaHanhKiem">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -8882,7 +8877,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_148">
+        <widget class="QLineEdit" name="lineTenHanhKiem">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8928,7 +8923,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_159">
+        <widget class="QPushButton" name="btnThemHanhKiem">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -8954,7 +8949,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_160">
+        <widget class="QPushButton" name="btnCapNhatHanhKiem">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -8980,7 +8975,7 @@ QPushButton:hover{
           <string>Sửa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_161">
+        <widget class="QPushButton" name="btnXoaHanhKiem">
          <property name="geometry">
           <rect>
            <x>330</x>
@@ -9033,7 +9028,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_36">
+       <widget class="QTableWidget" name="tableHanhKiem">
         <property name="geometry">
          <rect>
           <x>650</x>
@@ -9149,7 +9144,7 @@ color:blue;
           <string>Độ tuổi tối đa của học sinh</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox">
+        <widget class="QSpinBox" name="spinTuoitToiThieu">
          <property name="geometry">
           <rect>
            <x>300</x>
@@ -9163,7 +9158,7 @@ color:blue;
 font: 75 12pt &quot;Tahoma&quot;;</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_2">
+        <widget class="QSpinBox" name="spinTuoiToiDa">
          <property name="geometry">
           <rect>
            <x>300</x>
@@ -9241,7 +9236,7 @@ color:blue;
           <string>Sỉ số tối đa trong một lớp</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_3">
+        <widget class="QSpinBox" name="spinLopToiThieu">
          <property name="geometry">
           <rect>
            <x>320</x>
@@ -9255,7 +9250,7 @@ color:blue;
 font: 75 12pt &quot;Tahoma&quot;;</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_4">
+        <widget class="QSpinBox" name="spinLopToiDa">
          <property name="geometry">
           <rect>
            <x>320</x>
@@ -9295,7 +9290,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_163">
+        <widget class="QPushButton" name="btnQuyDinh">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -9321,7 +9316,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Xác nhận</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_164">
+        <widget class="QPushButton" name="btnResetQuyDinh">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -9392,7 +9387,7 @@ color:blue;
           <string>Điểm tối thiểu cần đạt</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_5">
+        <widget class="QSpinBox" name="spinDiem">
          <property name="geometry">
           <rect>
            <x>380</x>
