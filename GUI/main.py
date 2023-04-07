@@ -291,7 +291,7 @@ class TrangChu(QtWidgets.QMainWindow):
                query.execute("SELECT * FROM hocky WHERE tenHocKy = %s", (lineTenHocKy,))
                check = query.fetchone()
                if check is not None:
-                    QMessageBox.information(self,"Thông báo","Môn học này đã có trong danh sách!")
+                    QMessageBox.information(self,"Thông báo","Loại học kỳ này đã có trong danh sách!")
                else:
                     query.execute("INSERT INTO hocky (maHocKy, tenHocKy,heSo) VALUES (%s, %s,%s)", (lineMaHocKy,lineTenHocKy,cboxHeSoHocKy))
                     try:              
@@ -306,9 +306,53 @@ class TrangChu(QtWidgets.QMainWindow):
           self.stackHKNH()
 
      def updateHocKy(self):
-          pass
+          numRows = self.tableHocKy.rowCount()
+          for i in range(numRows):
+               maHocKy= self.tableHocKy.item(i,0).text()
+               tenHocKy = self.tableHocKy.item(i,1).text()
+               heSoHocKy = self.tableHocKy.item(i,2).text()
+               sql =" UPDATE hocky SET tenHocKy = %s, heSo = %s WHERE maHocKy =%s"
+               val = (maHocKy,tenHocKy,heSoHocKy)
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
+               self.stackHKNH()
+          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+     
      def deleteHocKy(self):
-          pass
+          selected = self.tableHocKy.selectedItems()
+          if selected:
+               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+               if ret == QMessageBox.Yes:
+                    rows = set()
+                    for item in selected:
+                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
+                    rows = list(rows)  # chuyển set thành list
+                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
+                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
+                    for row in rows:
+                         maHocKy = self.tableHocKy.item(row, 0).text()
+                         self.tableHocKy.removeRow(row)  # xóa dòng khỏi bảng
+                         sql = "DELETE FROM hocky WHERE maHocKy= %s"
+                         val = (maHocKy,)
+                         try:              
+                              query.execute(sql,val)
+                              db.commit()
+                         except:
+                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return
+                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
+               
+
+          else:
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
 
