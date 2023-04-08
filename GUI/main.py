@@ -1,7 +1,9 @@
 import sys
 from PyQt5 import QtWidgets,uic,QtGui
+from PyQt5.QtCore import QDate
+from PyQt5.QtGui import QPixmap,QIcon
 import random
-from PyQt5.QtWidgets import QMessageBox,QTableWidgetItem
+from PyQt5.QtWidgets import QMessageBox,QTableWidgetItem,QFileDialog
 import mysql.connector
 db = mysql.connector.connect(
                host ="localhost",
@@ -44,6 +46,7 @@ class FormLogin(QtWidgets.QMainWindow) :
 class TrangChu(QtWidgets.QMainWindow):
      def __init__(self):
           super(TrangChu,self).__init__()
+          self.img_base64 = None 
           uic.loadUi("GUI/TrangChu.ui",self)
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
@@ -98,8 +101,119 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnThemNamHoc.clicked.connect(self.addNamHoc)
           self.btnCapNhatNamHoc.clicked.connect(self.updateNamHoc)
           self.btnXoaNamHoc.clicked.connect(self.deleteNamHoc)
+
+          self.btnThemHocSinh.clicked.connect(self.addHocSinh)
+          self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
+          self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
+          self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
+
+          maHocSinh="HS" + str(random.randint(0,9999)).zfill(2)
+          self.lineMaHocSinh.setText(maHocSinh)
+
+          query.execute("SELECT * FROM hocsinh")
+          data = query.fetchall()
+          # populate the widget with the data from the database
+          self.tableHocSinh.setRowCount(len(data))
+          for i, row in enumerate(data):
+               #self.tableHocSinh.insertRow(i)
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableHocSinh.setCellWidget(i, j,item)
+                    else:
+                         self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableHocSinh.verticalHeader().setDefaultSectionSize(50)
+
+          # populate the widget with the data from the database
+          self.tableHocSinh.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    self.tableHocSinh.setItem(i, j, QTableWidgetItem(str(val)))
+          self.tableHocSinh.itemSelectionChanged.connect(self.displayItemDataHocSinh)
+          
+     def displayItemDataHocSinh(self):     
+          selected = self.tableHocSinh.selectedItems()
+          if selected and len(selected) >= 9: 
+               lineMaHS = selected[0].text()
+               tenHocSinh = selected[1].text()
+               ngaySinh = selected[2].text()
+               gioitinh = selected[3].text()
+               email = selected[4].text()
+               diachi = selected[5].text()
+               tenphuhuynh = selected[6].text()
+               sodienthoai = selected[7].text()
+               hinhanh = selected[8].text()
+               self.lineMaHocSinh.setText(lineMaHS)
+               self.lineTenHocSinh.setText(tenHocSinh)
+               self.dateNgaySinhOfHS.setDate(QDate.fromString(ngaySinh,"dd/MM/yyyy"))
+               self.cboxGioiTinhOfHocSinh.?Item(gioitinh)
+               self.lineEmailOfHocSinh.setText(email)
+               self.lineDiaChiOfHocSinh.setText(diachi)
+               self.lineTenPhuHuynh.setText(tenphuhuynh)
+               self.lineSoDienThoaiOfPhuHuynh.setText(sodienthoai)
+               pixmap = QPixmap(hinhanh)
+               self.lblImageHocSinh.setPixmap(pixmap)
+               print("Hiển thị thông tin")
+
+     def getImageLabel(self,image):
+          imageLabel = QtWidgets.QLabel(self.centralwidget)
+          imageLabel.setText("")
+          imageLabel.setScaledContents(True)
+          pixmap = QtGui.QPixmap()
+          pixmap.loadFromData(image,'jpg')
+          imageLabel.setPixmap(pixmap)
+          return imageLabel
+                      
+     def addHocSinh(self):
+          lineTenHocSinh  = self.lineTenHocSinh.text()
+          dateNgaySinhOfHS = self.dateNgaySinhOfHS.date().toPyDate()
+          date = dateNgaySinhOfHS.strftime("%Y-%m-%d")
+          cboxGioiTinhOfHocSinh = self.cboxGioiTinhOfHocSinh.currentText()
+          lineEmailOfHocSinh = self.lineEmailOfHocSinh.text()
+          lineDiaChiOfHocSinh = self.lineDiaChiOfHocSinh.text()
+          lineTenPhuHuynh = self.lineTenPhuHuynh.text()
+          lineSoDienThoaiOfPhuHuynh = self.lineSoDienThoaiOfPhuHuynh.text()
+          img_base64 = self.img_base64
+          maHocSinh ="HS" + str(random.randint(0,9999)).zfill(2)
+          if len(lineTenHocSinh)==0 and len(lineEmailOfHocSinh) == 0 and len(lineDiaChiOfHocSinh) == 0 and len(lineTenPhuHuynh) == 0 and len(lineSoDienThoaiOfPhuHuynh) == 0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               query.execute("INSERT INTO hocsinh (maHocSinh , tenHocSinh,ngaySinh,gioitinh,email,diaChi,tenPhuHuynh,soDienThoai,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)", (maHocSinh,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64))
+               try:              
+                    #query.execute(sql,val)
+                    db.commit()
+                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                    db.rollback()
+          self.lineTenHocSinh.clear()
+          self.lineEmailOfHocSinh.clear()
+          self.lineDiaChiOfHocSinh.clear()
+          self.lineTenPhuHuynh.clear()
+          self.lineSoDienThoaiOfPhuHuynh.clear()
+          self.dateNgaySinhOfHS.clear()
+          self.lblImageHocSinh.clear()
+          self.stackHocSinh() 
+     def imageHocSinh(self):
+          choose = QFileDialog.getOpenFileName(None, 'HocSinh', '', 'img(*.*)')
+          # If the user did not select a file, return immediately
+          if not choose[0]:
+               return
+          with open(choose[0], 'rb') as f:
+               img_bytes = f.read()
+          px = QtGui.QPixmap(choose[0])
+          self.lblImageHocSinh.setPixmap(px)
+          self.img_base64 = img_bytes
+          
+     def updateHocSinh(self):
+          pass
+     def deleteHocSinh(self):
+          pass
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
      def stackNhanVien(self):
@@ -113,7 +227,6 @@ class TrangChu(QtWidgets.QMainWindow):
                for j, val in enumerate(row):
                     self.tableChucVu.setItem(i, j, QTableWidgetItem(str(val)))
 
-          #count = query.fetchone()[0]
           maChucVu = "CV" + str(random.randint(0, 999)).zfill(3)
           self.lineMaChucVu.setText(maChucVu)
           maNhanVien ="NV" + str(random.randint(0, 9999)).zfill(5)

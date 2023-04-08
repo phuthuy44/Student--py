@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -449,19 +449,21 @@ color: rgb(170, 170, 127);</string>
        <attribute name="title">
         <string>Học sinh</string>
        </attribute>
-       <widget class="QTableWidget" name="tableWidget">
+       <widget class="QTableWidget" name="tableHocSinh">
         <property name="geometry">
          <rect>
-          <x>10</x>
+          <x>0</x>
           <y>350</y>
-          <width>1201</width>
-          <height>361</height>
+          <width>1211</width>
+          <height>371</height>
          </rect>
         </property>
         <property name="styleSheet">
          <string notr="true">border: 1px solid gray;
 border- radius:2px;
-font: 12pt &quot;Tahoma&quot;;</string>
+font: 12pt &quot;Tahoma&quot;;
+color: rgb(0, 0, 0);
+font: 75 12pt &quot;Tahoma&quot;;</string>
         </property>
         <property name="alternatingRowColors">
          <bool>false</bool>
@@ -478,36 +480,6 @@ font: 12pt &quot;Tahoma&quot;;</string>
         <attribute name="verticalHeaderDefaultSectionSize">
          <number>50</number>
         </attribute>
-        <column>
-         <property name="text">
-          <string>STT</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
-         </property>
-         <property name="background">
-          <color>
-           <red>255</red>
-           <green>255</green>
-           <blue>255</blue>
-          </color>
-         </property>
-         <property name="foreground">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </property>
-        </column>
         <column>
          <property name="text">
           <string>Mã học sinh </string>
@@ -761,7 +733,7 @@ color:blue;
           <string>Địa chỉ </string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_29">
+        <widget class="QLineEdit" name="lineMaHocSinh">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -787,7 +759,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_30">
+        <widget class="QLineEdit" name="lineTenHocSinh">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -845,7 +817,7 @@ border: 1px solid black;
           <string>Tên cha/ mẹ</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_31">
+        <widget class="QLineEdit" name="lineDiaChiOfHocSinh">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -868,7 +840,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_32">
+        <widget class="QLineEdit" name="lineTenPhuHuynh">
          <property name="geometry">
           <rect>
            <x>550</x>
@@ -888,7 +860,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_33">
+        <widget class="QLineEdit" name="lineSoDienThoaiOfPhuHuynh">
          <property name="geometry">
           <rect>
            <x>550</x>
@@ -908,7 +880,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLabel" name="label_67">
+        <widget class="QLabel" name="lblImageHocSinh">
          <property name="geometry">
           <rect>
            <x>860</x>
@@ -920,13 +892,17 @@ border: 1px solid black;
          <property name="styleSheet">
           <string notr="true">QLabel{
 border:1px solid black;
+	border-color: rgb(170, 170, 127);
 }</string>
          </property>
          <property name="text">
           <string/>
          </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_9">
+        <widget class="QComboBox" name="cboxGioiTinhOfHocSinh">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -945,11 +921,6 @@ border-radius:5px;
          </property>
          <item>
           <property name="text">
-           <string>Giới tính </string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Nam </string>
           </property>
          </item>
@@ -959,7 +930,7 @@ border-radius:5px;
           </property>
          </item>
         </widget>
-        <widget class="QDateEdit" name="dateEdit_5">
+        <widget class="QDateEdit" name="dateNgaySinhOfHS">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -1119,7 +1090,7 @@ border-radius:5px;
           <string>Email</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_119">
+        <widget class="QLineEdit" name="lineEmailOfHocSinh">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -1142,7 +1113,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btnLayAnhOfHocSinh">
          <property name="geometry">
           <rect>
            <x>880</x>
@@ -1196,7 +1167,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_40">
+        <widget class="QPushButton" name="btnThemHocSinh">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -1222,7 +1193,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_41">
+        <widget class="QPushButton" name="btnCapNhatHocSinh">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -1245,10 +1216,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_42">
+        <widget class="QPushButton" name="btnXoaHocSinh">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -4647,7 +4618,7 @@ color:black;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_19">
        <attribute name="title">
@@ -5479,7 +5450,7 @@ color:black;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_9">
        <attribute name="title">

@@ -305,6 +305,8 @@ mycursor.execute('''
                CONSTRAINT fk_CTPHIEU_PHIEU FOREIGN KEY (maPhieu) REFERENCES PhieuThanhToan(maPhieu)
                )
 ''')
-mycursor.execute('''ALTER TABLE hocky DROP CONSTRAINT CK_HOCKY''')"""
+mycursor.execute('''ALTER TABLE hocky DROP CONSTRAINT CK_HOCKY''')
 mycursor.execute('''ALTER TABLE hocsinh MODIFY gioitinh VARCHAR(30)''')
+mycursor.execute('''ALTER TABLE hocsinh MODIFY hinhAnh BLOB''')"""
+mycursor.execute('''ALTER TABLE hocsinh MODIFY ngaySinh DATE''')
 mydb.close()
