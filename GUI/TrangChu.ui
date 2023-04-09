@@ -471,7 +471,7 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
          <number>0</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>150</number>
+         <number>145</number>
         </attribute>
         <attribute name="horizontalHeaderHighlightSections">
          <bool>true</bool>
@@ -537,7 +537,7 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
         </column>
         <column>
          <property name="text">
-          <string>Lớp học</string>
+          <string>Email</string>
          </property>
          <property name="font">
           <font>

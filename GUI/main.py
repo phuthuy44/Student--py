@@ -1,6 +1,6 @@
 import base64
 import sys
-import os
+import re
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -61,6 +61,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.MaHanhKiem = None
           self.maPhi = None
           self.maPhieu = None
+          self.email  = None
           uic.loadUi("GUI/TrangChu.ui",self)
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
@@ -196,8 +197,7 @@ class TrangChu(QtWidgets.QMainWindow):
           qimage = QtGui.QImage.fromData(image, '*.png *.jpg *.bmp')
           pixmap = QtGui.QPixmap.fromImage(qimage)
           imageLabel.setPixmap(pixmap)
-          return imageLabel
-                      
+          return imageLabel          
      def addHocSinh(self):
           lineTenHocSinh  = self.lineTenHocSinh.text()
           dateNgaySinhOfHS = self.dateNgaySinhOfHS.date().toPyDate()
@@ -208,38 +208,48 @@ class TrangChu(QtWidgets.QMainWindow):
           lineTenPhuHuynh = self.lineTenPhuHuynh.text()
           lineSoDienThoaiOfPhuHuynh = self.lineSoDienThoaiOfPhuHuynh.text()
           img_base64 = self.img_base64
-          #maHocSinh="HS" + str(random.randint(111,9999)).zfill(3)
           maHocSinh = self.maHocSinh
           if len(lineTenHocSinh)==0 and len(lineEmailOfHocSinh) == 0 and len(lineDiaChiOfHocSinh) == 0 and len(lineTenPhuHuynh) == 0 and len(lineSoDienThoaiOfPhuHuynh) == 0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM hocsinh WHERE email = %s",(lineEmailOfHocSinh,))
-               #sqlMaHS = query.execute("SELECT * FROM hoc WHERE maHocSinh = %s",(maHS,))
-               check = query.fetchone()
-               if check is not None:
-                    QMessageBox.information(self,"Thông báo","Email này đã tồn tại trong danh sách!")
+               query.execute("SELECT COUNT(*) FROM hocsinh WHERE maHocSinh = %s",(maHocSinh,))
+               checkMaHS = query.fetchone()
+               if checkMaHS[0]>0:
+                    self.stackHocSinh()
                else:
-                    query.execute("INSERT INTO hocsinh (maHocSinh , tenHocSinh,ngaySinh,gioitinh,email,diaChi,tenPhuHuynh,soDienThoai,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)", (maHocSinh,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64))
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-                         #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
-
-
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         db.rollback()
-          self.lineTenHocSinh.clear()
-          self.lineEmailOfHocSinh.clear()
-          self.lineDiaChiOfHocSinh.clear()
-          self.lineTenPhuHuynh.clear()
-          self.lineSoDienThoaiOfPhuHuynh.clear()
-          self.dateNgaySinhOfHS.clear()
-          self.lblImageHocSinh.clear()
+                    print("Email:", lineEmailOfHocSinh) 
+                    if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmailOfHocSinh):
+                         query.execute("SELECT * FROM hocsinh WHERE email = %s",(lineEmailOfHocSinh,))
+                         check = query.fetchone()
+                         if check is not None:
+                              QMessageBox.information(self,"Thông báo","Email này đã tồn tại trong danh sách!")
+                         else:
+                              print("Số điện thoai:",lineSoDienThoaiOfPhuHuynh)
+                              if  re.match(r"^\d{10}$", lineSoDienThoaiOfPhuHuynh):
+                                   query.execute("INSERT INTO hocsinh (maHocSinh , tenHocSinh,ngaySinh,gioitinh,email,diaChi,tenPhuHuynh,soDienThoai,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)", (maHocSinh,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64))
+                                   try:              
+                                        #query.execute(sql,val)
+                                        db.commit()
+                                        QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                   #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
+                                        self.lineTenHocSinh.clear()
+                                        self.lineEmailOfHocSinh.clear()
+                                        self.lineDiaChiOfHocSinh.clear()
+                                        self.lineTenPhuHuynh.clear()
+                                        self.lineSoDienThoaiOfPhuHuynh.clear()
+                                        self.dateNgaySinhOfHS.clear()
+                                        self.lblImageHocSinh.clear()
           
-          self.stackHocSinh() 
+                                        self.stackHocSinh()
+
+                                   except:
+                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                                        QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                                        db.rollback()
+                              else: 
+                                   QMessageBox.warning(self, "Cảnh bảo","Số điện thoại không hợp lệ")
+                    else:
+                         QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
      def imageHocSinh(self):
           choose = QFileDialog.getOpenFileName(None, 'HocSinh', '', 'FILE img (*.png *.jpg *.bmp)')
           # If the user did not select a file, return immediately
@@ -252,9 +262,56 @@ class TrangChu(QtWidgets.QMainWindow):
           self.img_base64 = img_bytes
           
      def updateHocSinh(self):
-          pass
+          numRows = self.tableHocSinh.rowCount()
+          for i in range(numRows):
+               maHocSinh = self.tableHocSinh.item(i,0).text()
+               tenHocSinh = self.tableHocSinh.item(i,1).text()
+               date = self.tableHocSinh.item(i,2).text()
+               gioiTinh = self.tableHocSinh.item(i,3).text()
+               email = self.tableHocSinh.item(i,4).text()
+               diachi = self.tableHocSinh.item(i,5).text()
+               tenPH = self.tableHocSinh.item(i,6).text()
+               soDT = self.tableHocSinh.item(i,7).text()
+               sql =" UPDATE hocsinh SET tenHocSinh = %s, ngaySinh = %s, gioitinh =%s, email= %s, diaChi = %s, tenPhuHuynh = %s,soDienThoai = %s WHERE maHocSinh =%s"
+               val = (tenHocSinh,date,gioiTinh,email,diachi,tenPH,soDT,maHocSinh)
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
+          self.stackHocSinh()
+          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+
      def deleteHocSinh(self):
-          pass
+          selected = self.tableHocSinh.selectedItems()
+          if selected:
+               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+               if ret == QMessageBox.Yes:
+                    rows = set()
+                    for item in selected:
+                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
+                    rows = list(rows)  # chuyển set thành list
+                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
+                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
+                    for row in rows:
+                         maHocSinh = self.tableHocSinh.item(row, 0).text()
+                         self.tableHocSinh.removeRow(row)  # xóa dòng khỏi bảng
+                         sql = "DELETE FROM hocsinh WHERE maHocSinh= %s"
+                         val = (maHocSinh,)
+                         try:
+                              query.execute(sql,val)
+                              db.commit()
+                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
+                         except:
+                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return               
+
+          else:
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
      def stackNhanVien(self):
@@ -314,10 +371,14 @@ class TrangChu(QtWidgets.QMainWindow):
                          self.tableChucVu.removeRow(row)  # xóa dòng khỏi bảng
                          sql = "DELETE FROM chucvu WHERE maChucVu = %s"
                          val = (maChucVu,)
-                         query.execute(sql,val)
-                         db.commit()
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
+                         try:
+                              query.execute(sql,val)
+                              db.commit()
+                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
+                         except:
+                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return  
 
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
@@ -419,12 +480,12 @@ class TrangChu(QtWidgets.QMainWindow):
                          try:              
                               query.execute(sql,val)
                               db.commit()
+                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
+
                          except:
                          # Hiển thị thông báo lỗi nếu truy vấn không thành công
                               QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
+                              return               
 
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
@@ -515,12 +576,12 @@ class TrangChu(QtWidgets.QMainWindow):
                          try:              
                               query.execute(sql,val)
                               db.commit()
+                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
+
                          except:
                          # Hiển thị thông báo lỗi nếu truy vấn không thành công
                               QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
+                              return               
 
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
