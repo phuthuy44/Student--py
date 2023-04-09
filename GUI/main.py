@@ -1,7 +1,9 @@
+import base64
 import sys
-from PyQt5 import QtWidgets,uic,QtGui
+import os
+from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
-from PyQt5.QtGui import QPixmap,QIcon
+from PyQt5.QtGui import QPixmap,QIcon,QImage
 import random
 from PyQt5.QtWidgets import QMessageBox,QTableWidgetItem,QFileDialog
 import mysql.connector
@@ -47,6 +49,18 @@ class TrangChu(QtWidgets.QMainWindow):
      def __init__(self):
           super(TrangChu,self).__init__()
           self.img_base64 = None 
+          self.maHocSinh=None
+          self.maChucVu = None
+          self.maNhanVien = None
+          self.maKhoi = None
+          self.maHocKy = None
+          self.maNamHoc = None
+          self.maMonHoc = None
+          self.maKetQua = None
+          self.MaHocLuc = None
+          self.MaHanhKiem = None
+          self.maPhi = None
+          self.maPhieu = None
           uic.loadUi("GUI/TrangChu.ui",self)
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
@@ -109,9 +123,10 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
 
-          maHocSinh="HS" + str(random.randint(0,9999)).zfill(2)
+          maHocSinh="HS" + str(random.randint(111,9999)).zfill(3)
+          #maHocSinh = self.maHocSinh
           self.lineMaHocSinh.setText(maHocSinh)
-
+          self.maHocSinh = maHocSinh
           query.execute("SELECT * FROM hocsinh")
           data = query.fetchall()
           # populate the widget with the data from the database
@@ -125,15 +140,17 @@ class TrangChu(QtWidgets.QMainWindow):
                          self.tableHocSinh.setCellWidget(i, j,item)
                     else:
                          self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
-          self.tableHocSinh.verticalHeader().setDefaultSectionSize(50)
+          self.tableHocSinh.verticalHeader().setDefaultSectionSize(180)
 
-          # populate the widget with the data from the database
+
+          '''# populate the widget with the data from the database
           self.tableHocSinh.setRowCount(len(data))
           for i, row in enumerate(data):
                for j, val in enumerate(row):
                     self.tableHocSinh.setItem(i, j, QTableWidgetItem(str(val)))
           self.tableHocSinh.itemSelectionChanged.connect(self.displayItemDataHocSinh)
           
+
      def displayItemDataHocSinh(self):     
           selected = self.tableHocSinh.selectedItems()
           if selected and len(selected) >= 9: 
@@ -148,22 +165,36 @@ class TrangChu(QtWidgets.QMainWindow):
                hinhanh = selected[8].text()
                self.lineMaHocSinh.setText(lineMaHS)
                self.lineTenHocSinh.setText(tenHocSinh)
-               self.dateNgaySinhOfHS.setDate(QDate.fromString(ngaySinh,"dd/MM/yyyy"))
-               self.cboxGioiTinhOfHocSinh.?Item(gioitinh)
+               self.dateNgaySinhOfHS.setDate(QDate.fromString(ngaySinh,"%d-%m-%Y"))
+               self.cboxGioiTinhOfHocSinh.setCurrentText(gioitinh)
                self.lineEmailOfHocSinh.setText(email)
                self.lineDiaChiOfHocSinh.setText(diachi)
                self.lineTenPhuHuynh.setText(tenphuhuynh)
                self.lineSoDienThoaiOfPhuHuynh.setText(sodienthoai)
-               pixmap = QPixmap(hinhanh)
-               self.lblImageHocSinh.setPixmap(pixmap)
-               print("Hiển thị thông tin")
-
+               #pixmap = QPixmap()
+               if isinstance(hinhanh, bytes): # kiểm tra kiểu dữ liệu
+                    pixmap = self.getImageLabel(hinhanh)
+                    if pixmap:
+                         self.lblImageHocSinh.setPixmap(pixmap)
+                    else:
+                         self.lblImageHocSinh.clear()
+          print("Hiển thị thông tin")
+     def getImageFromData(self, image_data):
+          try:
+               #byte_data = QtGui.QPixmaploadFromData(image_data,'jpg')
+               pixmap = QPixmap()
+               pixmap.loadFromData(image_data)
+               return pixmap
+          except:
+               return None'''
      def getImageLabel(self,image):
           imageLabel = QtWidgets.QLabel(self.centralwidget)
           imageLabel.setText("")
           imageLabel.setScaledContents(True)
-          pixmap = QtGui.QPixmap()
-          pixmap.loadFromData(image,'jpg')
+          '''pixmap = QtGui.QPixmap()
+          pixmap.loadFromData(image, 'jpg')'''
+          qimage = QtGui.QImage.fromData(image, '*.png *.jpg *.bmp')
+          pixmap = QtGui.QPixmap.fromImage(qimage)
           imageLabel.setPixmap(pixmap)
           return imageLabel
                       
@@ -177,20 +208,29 @@ class TrangChu(QtWidgets.QMainWindow):
           lineTenPhuHuynh = self.lineTenPhuHuynh.text()
           lineSoDienThoaiOfPhuHuynh = self.lineSoDienThoaiOfPhuHuynh.text()
           img_base64 = self.img_base64
-          maHocSinh ="HS" + str(random.randint(0,9999)).zfill(2)
+          #maHocSinh="HS" + str(random.randint(111,9999)).zfill(3)
+          maHocSinh = self.maHocSinh
           if len(lineTenHocSinh)==0 and len(lineEmailOfHocSinh) == 0 and len(lineDiaChiOfHocSinh) == 0 and len(lineTenPhuHuynh) == 0 and len(lineSoDienThoaiOfPhuHuynh) == 0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("INSERT INTO hocsinh (maHocSinh , tenHocSinh,ngaySinh,gioitinh,email,diaChi,tenPhuHuynh,soDienThoai,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)", (maHocSinh,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64))
-               try:              
+               query.execute("SELECT * FROM hocsinh WHERE email = %s",(lineEmailOfHocSinh,))
+               #sqlMaHS = query.execute("SELECT * FROM hoc WHERE maHocSinh = %s",(maHS,))
+               check = query.fetchone()
+               if check is not None:
+                    QMessageBox.information(self,"Thông báo","Email này đã tồn tại trong danh sách!")
+               else:
+                    query.execute("INSERT INTO hocsinh (maHocSinh , tenHocSinh,ngaySinh,gioitinh,email,diaChi,tenPhuHuynh,soDienThoai,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)", (maHocSinh,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64))
+                    try:              
                     #query.execute(sql,val)
-                    db.commit()
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                         db.commit()
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                         #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
 
-               except:
+
+                    except:
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                    db.rollback()
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                         db.rollback()
           self.lineTenHocSinh.clear()
           self.lineEmailOfHocSinh.clear()
           self.lineDiaChiOfHocSinh.clear()
@@ -198,9 +238,10 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineSoDienThoaiOfPhuHuynh.clear()
           self.dateNgaySinhOfHS.clear()
           self.lblImageHocSinh.clear()
+          
           self.stackHocSinh() 
      def imageHocSinh(self):
-          choose = QFileDialog.getOpenFileName(None, 'HocSinh', '', 'img(*.*)')
+          choose = QFileDialog.getOpenFileName(None, 'HocSinh', '', 'FILE img (*.png *.jpg *.bmp)')
           # If the user did not select a file, return immediately
           if not choose[0]:
                return
@@ -229,8 +270,10 @@ class TrangChu(QtWidgets.QMainWindow):
 
           maChucVu = "CV" + str(random.randint(0, 999)).zfill(3)
           self.lineMaChucVu.setText(maChucVu)
+          self.maChucVu = maChucVu
           maNhanVien ="NV" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaNhanVien.setText(maNhanVien)
+          self.maNhanVien = maNhanVien
 
      def updateChucVu(self):
           # `numRows = self.tableWidget.rowCount()` is getting the number of rows in the table widget
@@ -281,7 +324,7 @@ class TrangChu(QtWidgets.QMainWindow):
      def tabChucVu(self):
           #self.lineMaChucVu.setText(maChucVu)
           lineTenChucVu = self.lineTenChucVu.text()
-          maChucVu = "NV" + str(random.randint(0, 999)).zfill(3)
+          maChucVu = self.maChucVu
           if len(lineTenChucVu)== 0:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa nhập dữ liệu!")
           else:
@@ -307,7 +350,7 @@ class TrangChu(QtWidgets.QMainWindow):
 
           maKhoi = "KH" + str(random.randint(0,999)).zfill(3)
           self.lineMaKhoi.setText(maKhoi)
-
+          self.maKhoi= maKhoi
           query.execute("SELECT *FROM khoilop")
           data = query.fetchall()
           # populate the widget with the data from the database
@@ -318,7 +361,7 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def addKhoi(self):
           lineTenKhoi = self.lineTenKhoi.text()
-          maKhoi ="KH" + str(random.randint(0,999)).zfill(3)
+          maKhoi = self.maKhoi
           if len(lineTenKhoi)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
@@ -407,12 +450,14 @@ class TrangChu(QtWidgets.QMainWindow):
                     self.tableNamHoc.setItem(i, j, QTableWidgetItem(str(val)))
           lineMaHocKy = "HK" + str(random.randint(0,999)).zfill(3)
           self.lineMaHocKy.setText(lineMaHocKy)
+          self.maHocKy = lineMaHocKy
 
           lineMaNamHoc ="NH"+str(random.randint(0,9999)).zfill(6)
           self.lineMaNamHoc.setText(lineMaNamHoc)
+          self.maNamHoc = lineMaNamHoc
      def addHocKy(self):
           lineTenHocKy = self.lineTenHocKy.text()
-          lineMaHocKy = "HK" + str(random.randint(0,999)).zfill(3)
+          lineMaHocKy = self.maHocKy
           cboxHeSoHocKy = self.cboxHeSoHocKy.currentText()
           if len(lineTenHocKy)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
@@ -481,7 +526,7 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def addNamHoc(self):
           lineTenNamHoc = self.lineTenNamHoc.text()
-          maNamHoc="NH" + str(random.randint(0,9999)).zfill(6)
+          maNamHoc=self.maNamHoc
           if len(lineTenNamHoc)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
@@ -561,12 +606,13 @@ class TrangChu(QtWidgets.QMainWindow):
 
           maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
           self.lineMaMonHoc.setText(maMonHoc)
+          self.maMonHoc = maMonHoc
      def addMonHoc(self):
           lineTenMonHoc = self.lineTenMonHoc.text()
           lineSoTiet = self.lineSoTiet.text()
           cboxHeSo = self.cboxHeSo.currentText()
 
-          maMonHoc ="MH" + str(random.randint(0,999)).zfill(3)
+          maMonHoc =self.maMonHoc
 
           if len(lineTenMonHoc)==0 and len(lineSoTiet)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
@@ -677,15 +723,18 @@ class TrangChu(QtWidgets.QMainWindow):
 
           maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
           self.lineMaKetQua.setText(maKetQua)
+          self.maKetQua = maKetQua
 
           maHocLuc ="HL"+str(random.randint(0,999)).zfill(3)
           self.lineMaHocLuc.setText(maHocLuc)
+          self.MaHocLuc = maHocLuc
 
           maHanhKiem = "HK" + str(random.randint(0,999)).zfill(3)
           self.lineMaHanhKiem.setText(maHanhKiem)
+          self.MaHanhKiem = maHanhKiem
      def addKetQua(self):
           lineTenKetQua = self.lineTenKetQua.text()
-          maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
+          maKetQua =self.maKetQua
           if len(lineTenKetQua)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
@@ -758,7 +807,7 @@ class TrangChu(QtWidgets.QMainWindow):
           lineDiemCD = self.lineDiemCD.text()
           lineDiemCT = self.lineDiemCT.text()
           lineDiemKhongChe = self.lineDiemKhongChe.text()
-          maHocLuc ="HL"+str(random.randint(0,999)).zfill(3)
+          maHocLuc =self.MaHocLuc
           
           if len(lineTenHocLuc)==0 and len(lineDiemCD)==0 and len(lineDiemCT)==0 and len(lineDiemKhongChe)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
@@ -834,7 +883,7 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def addHanhKiem(self):
           lineTenHanhKiem = self.lineTenHanhKiem.text()
-          maHanhKiem = "HK" + str(random.randint(0,999)).zfill(3)
+          maHanhKiem = self.MaHanhKiem
           if len(lineTenHanhKiem)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
@@ -932,9 +981,10 @@ class TrangChu(QtWidgets.QMainWindow):
 
           maPhi = "PH" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaPhi.setText(maPhi)
-
+          self.maPhi = maPhi
           maPhieu = "HD" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaPhieu.setText(maPhieu)
+          self.maPhieu = maPhieu
           self.listKhoanPhi()
      def listKhoanPhi(self):
           query.execute("SELECT *FROM cackhoanphi")
@@ -960,7 +1010,7 @@ class TrangChu(QtWidgets.QMainWindow):
      def addKhoanPhi(self):
           #lineMaPhi
           lineTenKhoanPhi = self.lineTenMaPhi.text()
-          maPhi = "PH" + str(random.randint(0, 9999)).zfill(5)
+          maPhi = self.maPhi
           if len(lineTenKhoanPhi)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 

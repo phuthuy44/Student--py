@@ -461,9 +461,8 @@ color: rgb(170, 170, 127);</string>
         <property name="styleSheet">
          <string notr="true">border: 1px solid gray;
 border- radius:2px;
-font: 12pt &quot;Tahoma&quot;;
 color: rgb(0, 0, 0);
-font: 75 12pt &quot;Tahoma&quot;;</string>
+font: 75 14pt &quot;Tahoma&quot;;</string>
         </property>
         <property name="alternatingRowColors">
          <bool>false</bool>
@@ -881,6 +880,9 @@ border: 1px solid black;
          </property>
         </widget>
         <widget class="QLabel" name="lblImageHocSinh">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>860</x>
