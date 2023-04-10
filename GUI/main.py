@@ -61,7 +61,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.MaHanhKiem = None
           self.maPhi = None
           self.maPhieu = None
-          self.email  = None
+          self.maGiaoVien = None
           uic.loadUi("GUI/TrangChu.ui",self)
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
@@ -121,6 +121,11 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
           self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
           self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
+
+          self.btnThemGiaoVien.clicked.connect(self.addGiaoVien)
+          self.btnCapNhatGiaoVien.clicked.connect(self.updateGiaoVien)
+          self.btnXoaGiaoVien.clicked.connect(self.deleteGiaoVien)
+          self.btnGetImageGiaoVien.clicked.connect(self.imageHocSinh)
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
 
@@ -283,7 +288,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     else:
                          QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
      def imageHocSinh(self):
-          choose = QFileDialog.getOpenFileName(None, 'HocSinh', '', 'FILE img (*.png *.jpg *.bmp)')
+          choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
           # If the user did not select a file, return immediately
           if not choose[0]:
                return
@@ -291,6 +296,7 @@ class TrangChu(QtWidgets.QMainWindow):
                img_bytes = f.read()
           px = QtGui.QPixmap(choose[0])
           self.lblImageHocSinh.setPixmap(px)
+          self.lblImageGiaoVien.setPixmap(px)
           self.img_base64 = img_bytes
           
      def updateHocSinh(self):
@@ -346,6 +352,121 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
+          maGiaoVien = "GV" + str(random.randint(0,9999)).zfill(3)
+          self.lineMaGV.setText(maGiaoVien)
+          self.maGiaoVien = maGiaoVien
+          '''maMonHoc = self.maMonHoc
+          maChucVu = self.maChucVu'''
+          sqlGiaoVien = "SELECT maGiaoVien,tenGiaoVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,monhoc.tenMonHoc,chucvu.tenChucVu,hinhAnh FROM giaovien,monhoc,chucvu WHERE giaovien.maMonHoc = monhoc.maMonHoc AND giaovien.maChucVu = chucvu.maChucVu "
+          #value =(maMonHoc,maChucVu)
+          try:
+               query.execute(sqlGiaoVien)
+               data = query.fetchall()
+               self.tableGiaoVien.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    #self.tableHocSinh.insertRow(i)
+                    for j, val in enumerate(row):
+                         item = str(val)
+                         if j == 9:
+                              item = self.getImageLabel(val)
+                              self.tableGiaoVien.setCellWidget(i, j,item)
+                         else:
+                              self.tableGiaoVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+               self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180)
+          
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing query MYSQL query:",e)
+
+          sqlChuyenMon = "SELECT tenMonHoc FROM monhoc"
+          try:
+               query.execute(sqlChuyenMon)
+               data = query.fetchall()
+               for row in data:
+                    self.CboxChuyenMon.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing query MYSQL query:",e)
+          sqlChucVuInTabGiaoVien = "SELECT tenChucVu FROM chucvu"
+          try:
+               query.execute(sqlChucVuInTabGiaoVien)
+               data = query.fetchall()
+               for row in data:
+                    self.CboxChucVu.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing query MYSQL query:",e)
+     def addGiaoVien(self):
+          lineTenGV  = self.lineTenGV.text()
+          dateNgaySinhOfGV = self.DatBirthOfGV.date().toPyDate()
+          date = dateNgaySinhOfGV.strftime("%Y-%m-%d")
+          cboxGioiTinhOfGV = self.gioiTinhOfGV.currentText()
+          lineDiaChiOfGV = self.diaChiOfGV.text()          
+          lineEmailOfGV = self.emailOfGV.text()
+          lineSoDienThoaiOfGV = self.soDienThoaiOfGV.text()
+          CboxChuyenMon = self.CboxChuyenMon.currentText()
+          CboxChucVu = self.CboxChucVu.currentText()
+          img_base64 = self.img_base64
+          maGiaoVien = self.maGiaoVien
+          if len(lineTenGV)==0 and len(lineEmailOfGV) == 0 and len(lineDiaChiOfGV) == 0 and len(lineSoDienThoaiOfGV) == 0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               query.execute("SELECT COUNT(*) FROM giaovien WHERE maGiaoVien = %s",(maGiaoVien,))
+               checkMaGV = query.fetchone()
+               if checkMaGV[0]>0:
+                    self.stackGiaoVien()
+               else:
+                    print("Email:", lineEmailOfGV) 
+                    if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmailOfGV):
+                         query.execute("SELECT * FROM giaovien WHERE email = %s",(lineEmailOfGV,))
+                         check = query.fetchone()
+                         if check is not None:
+                              QMessageBox.information(self,"Thông báo","Email này đã tồn tại trong danh sách!")
+                         else:
+                              print("Số điện thoai:",lineSoDienThoaiOfGV)
+                              if  re.match(r"^\d{10}$", lineSoDienThoaiOfGV):
+                                   sqlGetMonHoc = "SELECT maMonHoc FROM monhoc WHERE tenMonHoc = %s"
+                                   val = (CboxChuyenMon,)
+                                   try : 
+                                        query.execute(sqlGetMonHoc, val)
+                                        maMonHoc = query.fetchone()[0]
+                                   except mysql.connector.errors.InternalError as e:
+                                        print("Error executing MySQL query:",e)
+                                   sqlGetChucVu = "SELECT maChucVu FROM chucvu WHERE tenChucVu = %s"
+                                   val = (CboxChucVu,)
+                                   try : 
+                                        query.execute(sqlGetChucVu, val)
+                                        maChucVu = query.fetchone()[0]
+                                   except mysql.connector.errors.InternalError as e:
+                                        print("Error executing MySQL query:",e)   
+                                   query.execute("INSERT INTO giaovien (maGiaoVien , tenGiaoVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,maMonHoc,maChucVu,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s,%s)", (maGiaoVien,lineTenGV,date,cboxGioiTinhOfGV,lineDiaChiOfGV,lineEmailOfGV,lineSoDienThoaiOfGV,maMonHoc,maChucVu,img_base64))
+                                   try:              
+                                        #query.execute(sql,val)
+                                        db.commit()
+                                        QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                   #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
+                                        self.lineTenGV.clear()
+                                        self.emailOfGV.clear()
+                                        self.diaChiOfGV.clear()
+                                        self.lineTenPhuHuynh.clear()
+                                        self.soDienThoaiOfGV.clear()
+                                        self.dateNgaySinhOfHS.clear()
+                                        self.lblImageGiaoVien.clear()
+                                        self.CboxChuyenMon.clear()
+                                        self.CboxChucVu.clear()     
+                                        self.stackGiaoVien()
+
+                                   except:
+                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                                        QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
+                                        db.rollback()
+                              else: 
+                                   QMessageBox.warning(self, "Cảnh bảo","Số điện thoại không hợp lệ")
+                    else:
+                         QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
+     
+     def updateGiaoVien(self):
+          pass
+     def deleteGiaoVien(self):
+          pass
+
      def stackNhanVien(self):
           self.stackedWidget.setCurrentIndex(3)
            # Generate a new unique ID for the new record

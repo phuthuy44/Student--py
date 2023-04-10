@@ -307,6 +307,10 @@ mycursor.execute('''
 ''')
 mycursor.execute('''ALTER TABLE hocky DROP CONSTRAINT CK_HOCKY''')
 mycursor.execute('''ALTER TABLE hocsinh MODIFY gioitinh VARCHAR(30)''')
-mycursor.execute('''ALTER TABLE hocsinh MODIFY hinhAnh BLOB''')"""
+mycursor.execute('''ALTER TABLE hocsinh MODIFY hinhAnh BLOB''')
 mycursor.execute('''ALTER TABLE hocsinh MODIFY ngaySinh DATE''')
+mycursor.execute('''ALTER TABLE giaovien MODIFY gioitinh VARCHAR(30)''')
+mycursor.execute('''ALTER TABLE giaovien MODIFY hinhAnh BLOB''')
+mycursor.execute('''ALTER TABLE giaovien MODIFY ngaySinh DATE''')"""
+mycursor.execute('''ALTER TABLE giaovien ADD maChucVu VARCHAR(6) AFTER maMonHoc''')
 mydb.close()

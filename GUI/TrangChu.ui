@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1571,7 +1571,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
          </rect>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>130</number>
+         <number>150</number>
         </attribute>
         <column>
          <property name="text">
@@ -1976,7 +1976,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_126">
+        <widget class="QPushButton" name="btnThemGiaoVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -2002,7 +2002,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_127">
+        <widget class="QPushButton" name="btnCapNhatGiaoVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -2025,10 +2025,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_128">
+        <widget class="QPushButton" name="btnXoaGiaoVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -2219,7 +2219,7 @@ color:blue;
          <property name="geometry">
           <rect>
            <x>430</x>
-           <y>50</y>
+           <y>30</y>
            <width>111</width>
            <height>31</height>
           </rect>
@@ -2238,7 +2238,7 @@ color:blue;
          <property name="geometry">
           <rect>
            <x>430</x>
-           <y>100</y>
+           <y>80</y>
            <width>111</width>
            <height>31</height>
           </rect>
@@ -2253,7 +2253,7 @@ color:blue;
           <string>Email </string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_120">
+        <widget class="QLineEdit" name="lineMaGV">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2279,7 +2279,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_121">
+        <widget class="QLineEdit" name="lineTenGV">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -2303,7 +2303,7 @@ border: 1px solid black;
          <property name="geometry">
           <rect>
            <x>430</x>
-           <y>150</y>
+           <y>130</y>
            <width>111</width>
            <height>31</height>
           </rect>
@@ -2318,11 +2318,11 @@ border: 1px solid black;
           <string>Số điện thoại </string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_122">
+        <widget class="QLineEdit" name="diaChiOfGV">
          <property name="geometry">
           <rect>
            <x>550</x>
-           <y>40</y>
+           <y>20</y>
            <width>261</width>
            <height>41</height>
           </rect>
@@ -2338,14 +2338,14 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_123">
+        <widget class="QLineEdit" name="emailOfGV">
          <property name="enabled">
           <bool>true</bool>
          </property>
          <property name="geometry">
           <rect>
            <x>550</x>
-           <y>90</y>
+           <y>70</y>
            <width>261</width>
            <height>41</height>
           </rect>
@@ -2361,11 +2361,11 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_124">
+        <widget class="QLineEdit" name="soDienThoaiOfGV">
          <property name="geometry">
           <rect>
            <x>550</x>
-           <y>140</y>
+           <y>120</y>
            <width>261</width>
            <height>41</height>
           </rect>
@@ -2381,7 +2381,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLabel" name="label_238">
+        <widget class="QLabel" name="lblImageGiaoVien">
          <property name="geometry">
           <rect>
            <x>860</x>
@@ -2398,8 +2398,11 @@ border:1px solid black;
          <property name="text">
           <string/>
          </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_50">
+        <widget class="QComboBox" name="gioiTinhOfGV">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -2427,7 +2430,7 @@ border-radius:5px;
           </property>
          </item>
         </widget>
-        <widget class="QDateEdit" name="dateEdit_14">
+        <widget class="QDateEdit" name="DatBirthOfGV">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -2572,7 +2575,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>430</x>
-           <y>200</y>
+           <y>180</y>
            <width>111</width>
            <height>31</height>
           </rect>
@@ -2587,11 +2590,11 @@ border-radius:5px;
           <string>Chuyên môn</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_52">
+        <widget class="QComboBox" name="CboxChuyenMon">
          <property name="geometry">
           <rect>
            <x>550</x>
-           <y>190</y>
+           <y>170</y>
            <width>261</width>
            <height>41</height>
           </rect>
@@ -2648,7 +2651,7 @@ border-radius:5px;
           </property>
          </item>
         </widget>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="btnGetImageGiaoVien">
          <property name="geometry">
           <rect>
            <x>870</x>
@@ -2676,20 +2679,63 @@ color:black;
           <string>Hình ảnh</string>
          </property>
         </widget>
+        <widget class="QLabel" name="label_276">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>230</y>
+           <width>111</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Chức Vụ</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="CboxChucVu">
+         <property name="geometry">
+          <rect>
+           <x>550</x>
+           <y>220</y>
+           <width>261</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Chức vụ</string>
+          </property>
+         </item>
+        </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_28">
+       <widget class="QTableWidget" name="tableGiaoVien">
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>360</y>
+          <y>350</y>
           <width>1211</width>
-          <height>361</height>
+          <height>371</height>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">border: 1px solid gray ;
+         <string notr="true">border: 1px solid gray;
 border- radius:2px;
-font: 12pt &quot;Tahoma&quot;;</string>
+color: rgb(0, 0, 0);
+font: 75 14pt &quot;Tahoma&quot;;</string>
         </property>
         <property name="alternatingRowColors">
          <bool>false</bool>
@@ -2698,7 +2744,7 @@ font: 12pt &quot;Tahoma&quot;;</string>
          <number>0</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>150</number>
+         <number>130</number>
         </attribute>
         <attribute name="horizontalHeaderHighlightSections">
          <bool>true</bool>
@@ -2706,36 +2752,6 @@ font: 12pt &quot;Tahoma&quot;;</string>
         <attribute name="verticalHeaderDefaultSectionSize">
          <number>50</number>
         </attribute>
-        <column>
-         <property name="text">
-          <string>STT</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
-         </property>
-         <property name="background">
-          <color>
-           <red>255</red>
-           <green>255</green>
-           <blue>255</blue>
-          </color>
-         </property>
-         <property name="foreground">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </property>
-        </column>
         <column>
          <property name="text">
           <string>Mã giáo viên </string>
@@ -2842,6 +2858,22 @@ font: 12pt &quot;Tahoma&quot;;</string>
           <font>
            <family>Tahoma</family>
            <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Chức Vụ</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="textAlignment">
