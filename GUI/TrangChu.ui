@@ -1369,7 +1369,7 @@ color:blue;
           <rect>
            <x>160</x>
            <y>40</y>
-           <width>221</width>
+           <width>251</width>
            <height>41</height>
           </rect>
          </property>
@@ -1389,7 +1389,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
           <rect>
            <x>160</x>
            <y>200</y>
-           <width>221</width>
+           <width>251</width>
            <height>41</height>
           </rect>
          </property>
@@ -1409,7 +1409,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
           <rect>
            <x>160</x>
            <y>120</y>
-           <width>221</width>
+           <width>251</width>
            <height>41</height>
           </rect>
          </property>
@@ -1467,7 +1467,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
           <rect>
            <x>160</x>
            <y>260</y>
-           <width>221</width>
+           <width>251</width>
            <height>41</height>
           </rect>
          </property>
@@ -1575,24 +1575,18 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
         </attribute>
         <column>
          <property name="text">
-          <string>STT</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </column>
-        <column>
-         <property name="text">
           <string>Mã học sinh</string>
          </property>
          <property name="font">
           <font>
            <family>Tahoma</family>
            <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
@@ -1603,7 +1597,12 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <font>
            <family>Tahoma</family>
            <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
@@ -1614,7 +1613,12 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <font>
            <family>Tahoma</family>
            <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
@@ -1625,7 +1629,12 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <font>
            <family>Tahoma</family>
            <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
@@ -1636,7 +1645,12 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <font>
            <family>Tahoma</family>
            <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
        </widget>

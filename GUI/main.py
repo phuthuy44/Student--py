@@ -194,13 +194,31 @@ class TrangChu(QtWidgets.QMainWindow):
                return None'''
      def displayInforInTabPhanLop(self):
           sqlNamHocInTabPhanLop = "SELECT tenNamHoc FROM namhoc"
-          dataNH = query.execute(sqlNamHocInTabPhanLop)
-          if dataNH is not None:
-               self.cBoxNH.clear()  # Xóa hết các lựa chọn cũ
-               for row in dataNH:
-                    self.cBoxNH.addItem(row[0])  # Hiển thị thông tin cột dữ liệu vào combobox
-          else:
-               print("Không có dữ liệu từ query")
+          try:
+               query.execute(sqlNamHocInTabPhanLop)
+               data = query.fetchall()
+               for row in data:
+                    self.cBoxNH.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          
+          sqlKhoiLopInTabPhanLop = "SELECT tenKhoiLop FROM khoilop "
+          try :
+               query.execute(sqlKhoiLopInTabPhanLop)
+               data = query.fetchall()
+               for row in data:
+                    self.cBoxKhoi.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+
+          sqlListHocSinhInTabPhanLop="SELECT tenHocSinh FROM hocsinh WHERE maHocSinh NOT IN (SELECT maHocSinh FROM phanlop,lop WHERE phanlop.maLop = lop.maLop)"
+          try: 
+               query.execute(sqlListHocSinhInTabPhanLop)
+               data = query.fetchall()
+               for row in data:
+                    self.cBoxHocSinh.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:",e)
           #sqlLopHocInTabPhanLop = "SELECT tenLop FROM n"
      def getImageLabel(self,image):
           imageLabel = QtWidgets.QLabel(self.centralwidget)
