@@ -5504,7 +5504,7 @@ color:black;
        <attribute name="title">
         <string>Lớp học</string>
        </attribute>
-       <widget class="QTableWidget" name="tableWidget_13">
+       <widget class="QTableWidget" name="tableLopHoc">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -5520,7 +5520,7 @@ color: rgb(0, 0, 0);
 font: 75 14pt &quot;Tahoma&quot;;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>190</number>
+         <number>197</number>
         </attribute>
         <column>
          <property name="text">
@@ -5632,7 +5632,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_77">
+        <widget class="QPushButton" name="btnThemLopHoc">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -5658,7 +5658,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_78">
+        <widget class="QPushButton" name="btnCapNhatLopHoc">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -5681,10 +5681,10 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Sửa</string>
+          <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_79">
+        <widget class="QPushButton" name="btnXoaLopHoc">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -5830,7 +5830,7 @@ color:blue;
           <string>Tên lớp </string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_70">
+        <widget class="QLineEdit" name="lineMaLop">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -5856,7 +5856,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_71">
+        <widget class="QLineEdit" name="lineTenlop">
          <property name="geometry">
           <rect>
            <x>560</x>
@@ -5914,7 +5914,7 @@ border: 1px solid black;
           <string>Năm học </string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_24">
+        <widget class="QComboBox" name="CboxNamHoc">
          <property name="geometry">
           <rect>
            <x>560</x>
@@ -5936,29 +5936,6 @@ border-radius:5px;
            <string>Năm học</string>
           </property>
          </item>
-        </widget>
-        <widget class="QLineEdit" name="lineEdit_73">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>140</y>
-           <width>261</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLineEdit{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:5px;
-border: 1px solid black;
-}</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
         </widget>
         <widget class="QLabel" name="label_138">
          <property name="geometry">
@@ -5998,7 +5975,7 @@ border: 1px solid black;
           <string>GVCN</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_25">
+        <widget class="QComboBox" name="cBoxGVCN">
          <property name="geometry">
           <rect>
            <x>560</x>
@@ -6021,7 +5998,7 @@ border-radius:5px;
           </property>
          </item>
         </widget>
-        <widget class="QComboBox" name="comboBox_41">
+        <widget class="QComboBox" name="CboxKhoiLop">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -6163,6 +6140,24 @@ color:black;
          </property>
          <property name="text">
           <string>Tìm kiếm </string>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBoxSiso">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>140</y>
+           <width>141</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
          </property>
         </widget>
        </widget>

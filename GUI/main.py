@@ -62,6 +62,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.maPhi = None
           self.maPhieu = None
           self.maGiaoVien = None
+          self.maLop = None
           uic.loadUi("GUI/TrangChu.ui",self)
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
@@ -126,6 +127,10 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnCapNhatGiaoVien.clicked.connect(self.updateGiaoVien)
           self.btnXoaGiaoVien.clicked.connect(self.deleteGiaoVien)
           self.btnGetImageGiaoVien.clicked.connect(self.imageGiaoVien)
+
+          self.btnThemLopHoc.clicked.connect(self.addLop)
+          self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
+          self.btnXoaLopHoc.clicked.connect(self.deleteLop)
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
 
@@ -267,24 +272,24 @@ class TrangChu(QtWidgets.QMainWindow):
                                    try:              
                                         #query.execute(sql,val)
                                         db.commit()
-                                        QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                        QMessageBox.information(self,"Thông báo",f"Thêm học sinh {lineTenHocSinh} vào danh sách thành công!")
                                    #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
-                                        self.lineTenHocSinh.clear()
-                                        self.lineEmailOfHocSinh.clear()
-                                        self.lineDiaChiOfHocSinh.clear()
-                                        self.lineTenPhuHuynh.clear()
-                                        self.lineSoDienThoaiOfPhuHuynh.clear()
-                                        self.dateNgaySinhOfHS.clear()
-                                        self.lblImageHocSinh.clear()
-          
-                                        self.stackHocSinh()
 
                                    except:
                               # Hiển thị thông báo lỗi nếu truy vấn không thành công
                                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                                         db.rollback()
+                                   self.lineTenHocSinh.clear()
+                                   self.lineEmailOfHocSinh.clear()
+                                   self.lineDiaChiOfHocSinh.clear()
+                                   self.lineTenPhuHuynh.clear()
+                                   self.lineSoDienThoaiOfPhuHuynh.clear()
+                                   self.dateNgaySinhOfHS.clear()
+                                   self.lblImageHocSinh.clear()
+     
+                                   self.stackHocSinh()
                               else: 
-                                   QMessageBox.warning(self, "Cảnh bảo","Số điện thoại không hợp lệ")
+                                   QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại{lineSoDienThoaiOfPhuHuynh} không hợp lệ")
                     else:
                          QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
      def imageHocSinh(self):
@@ -328,7 +333,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
                     return
           self.stackHocSinh()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+          QMessageBox.information(self,"Thông báo",f"Cập nhật dữ liệu cho học sinh có mã {maHocSinh} thành công!")
 
      def deleteHocSinh(self):
           selected = self.tableHocSinh.selectedItems()
@@ -401,6 +406,8 @@ class TrangChu(QtWidgets.QMainWindow):
                     self.CboxChucVu.addItem(row[0])
           except mysql.connector.errors.InternalError as e:
                print("Error executing query MYSQL query:",e)
+     def displayInforInTabPhanCong(self):
+          pass
      def addGiaoVien(self):
           lineTenGV  = self.lineTenGV.text()
           dateNgaySinhOfGV = self.DatBirthOfGV.date().toPyDate()
@@ -426,7 +433,7 @@ class TrangChu(QtWidgets.QMainWindow):
                          query.execute("SELECT * FROM giaovien WHERE email = %s",(lineEmailOfGV,))
                          check = query.fetchone()
                          if check is not None:
-                              QMessageBox.information(self,"Thông báo","Email này đã tồn tại trong danh sách!")
+                              QMessageBox.information(self,"Thông báo",f"Email {lineEmailOfGV} đã tồn tại trong danh sách!")
                          else:
                               print("Số điện thoai:",lineSoDienThoaiOfGV)
                               if  re.match(r"^\d{10}$", lineSoDienThoaiOfGV):
@@ -448,28 +455,27 @@ class TrangChu(QtWidgets.QMainWindow):
                                    try:              
                                         #query.execute(sql,val)
                                         db.commit()
-                                        QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                        QMessageBox.information(self,"Thông báo",f"Thêm giáo viên {lineTenGV} vào danh sách thành công!")
                                    #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
-                                        self.lineTenGV.clear()
-                                        self.emailOfGV.clear()
-                                        self.diaChiOfGV.clear()
-                                        self.lineTenPhuHuynh.clear()
-                                        self.soDienThoaiOfGV.clear()
-                                        self.dateNgaySinhOfHS.clear()
-                                        self.lblImageGiaoVien.clear()
-                                        self.CboxChuyenMon.clear()
-                                        self.CboxChucVu.clear()     
-                                        
 
                                    except:
                               # Hiển thị thông báo lỗi nếu truy vấn không thành công
                                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
                                         db.rollback()
+                                   self.lineTenGV.clear()
+                                   self.emailOfGV.clear()
+                                   self.diaChiOfGV.clear()
+                                   self.lineTenPhuHuynh.clear()
+                                   self.soDienThoaiOfGV.clear()
+                                   self.dateNgaySinhOfHS.clear()
+                                   self.lblImageGiaoVien.clear()
+                                   self.CboxChuyenMon.clear()
+                                   self.CboxChucVu.clear()     
+                                   self.stackGiaoVien()
                               else: 
-                                   QMessageBox.warning(self, "Cảnh bảo","Số điện thoại không hợp lệ")
+                                   QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại {lineSoDienThoaiOfGV} không hợp lệ")
                     else:
                          QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
-               self.stackGiaoVien()
      def updateGiaoVien(self):
           numRows = self.tableGiaoVien.rowCount()
           for i in range(numRows):
@@ -507,7 +513,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
                     return
           self.stackGiaoVien()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+          QMessageBox.information(self,"Thông báo",f"Cập nhật dữ liệu cho giáo viên có mã {maGiaoVien} thành công!")
 
      def deleteGiaoVien(self):
           selected = self.tableGiaoVien.selectedItems()
@@ -638,16 +644,196 @@ class TrangChu(QtWidgets.QMainWindow):
           maKhoi = "KH" + str(random.randint(0,999)).zfill(3)
           self.lineMaKhoi.setText(maKhoi)
           self.maKhoi= maKhoi
+          maLop = "LH" + str(random.randint(0,99)).zfill(3)
+          self.lineMaLop.setText(maLop)
+          self.maLop = maLop
           sqlKhoiLop = "SELECT *FROM khoilop"
-          query.execute(sqlKhoiLop)
-          data = query.fetchall()
-          query.nextset()
-          # populate the widget with the data from the database
-          self.tableKhoi.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableKhoi.setItem(i, j, QTableWidgetItem(str(val)))
+          try:
+               query.execute(sqlKhoiLop)
+               data = query.fetchall()
+               # populate the widget with the data from the database
+               self.tableKhoi.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableKhoi.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
 
+          self.displayInforInTabLopHoc()
+     def displayInforInTabLopHoc(self):
+          sqlNamHocInTabLopHoc = "SELECT tenNamHoc FROM namhoc ORDER BY tenNamHoc DESC"
+          try :
+               query.execute(sqlNamHocInTabLopHoc)
+               data = query.fetchall()
+               for row in data:
+                    self.CboxNamHoc.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+
+          sqlKhoiInTabLopHoc = "SELECT tenKhoiLop FROM khoilop ORDER BY tenKhoiLop ASC"
+          try:
+               query.execute(sqlKhoiInTabLopHoc)
+               data = query.fetchall()
+               for row in data:
+                    self.CboxKhoiLop.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          
+          sqlGiaoVienInTabLopHoc = "SELECT tenGiaoVien FROM giaovien"
+          try:
+               query.execute(sqlGiaoVienInTabLopHoc)
+               data = query.fetchall()
+               for row in data:
+                    self.cBoxGVCN.addItem(row[0])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          
+          sqlLopHoc = "SELECT maLop, tenLop, khoilop.tenKhoiLop, namhoc.tenNamHoc,siSo, giaovien.tenGiaoVien FROM lop,khoilop,namhoc,giaovien WHERE lop.maKhoiLop = khoilop.maKhoiLop AND lop.maNamHoc = namhoc.maNamHoc AND LOP.maGiaoVien = giaovien.maGiaoVien "
+          try:
+               query.execute(sqlLopHoc)
+               data = query.fetchall()
+               self.tableLopHoc.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableLopHoc.setItem(i,j,QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+     def addLop(self):
+          lineTenlop = self.lineTenlop.text()
+          CboxKhoiLop = self.CboxKhoiLop.currentText()
+          CboxNamHoc = self.CboxNamHoc.currentText()
+          spinBoxSiso = self.spinBoxSiso.value()
+          cBoxGVCN = self.cBoxGVCN.currentText()
+          maLop = self.maLop
+          if len(lineTenlop) == 0 or spinBoxSiso == 0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu! Sỉ số của lớp học phải lớn hơn 15")
+          else: 
+               query.execute("SELECT COUNT(*) FROM lop WHERE maLop = %s",(maLop,))
+               checkMaLop = query.fetchone()
+               if checkMaLop[0]>0:
+                    self.stackLop()
+               else:
+                    sqlGetKhoi = "SELECT maKhoiLop FROM khoilop WHERE tenKhoiLop = %s"
+                    val =(CboxKhoiLop,)
+                    try:
+                         query.execute(sqlGetKhoi,val)
+                         maKhoiLop = query.fetchone()[0]
+                    except mysql.connector.errors.InternalError as e:
+                         print("Error executing MySQL query:",e)
+                    sqlGetNamHoc = "SELECT maNamHoc FROM namhoc WHERE tenNamHoc = %s"
+                    val =(CboxNamHoc,)
+                    try:
+                         query.execute(sqlGetNamHoc,val)
+                         maNamHoc = query.fetchone()[0]
+                    except mysql.connector.errors.InternalError as e:
+                         print("Error executing MySQL query:",e)
+
+                    sqlGetGiaoVien = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
+                    val =(cBoxGVCN,)
+                    try:
+                         query.execute(sqlGetGiaoVien,val)
+                         maGiaoVien = query.fetchone()[0]
+                    except mysql.connector.errors.InternalError as e:
+                         print("Error executing MySQL query:",e)
+                    
+                    sqlCheckGVOfNamHoc = "SELECT COUNT(*) FROM lop WHERE maGiaoVien = %s AND maNamHoc = %s"
+                    val = (maGiaoVien,maNamHoc)
+                    query.execute(sqlCheckGVOfNamHoc, val)
+                    if query.fetchone()[0] >= 1:
+                         QMessageBox.warning(self, "Thông báo", f"Giáo viên {cBoxGVCN} đã quản lý lớp trong năm học {CboxNamHoc}. Không thể thêm lớp mới!")
+                    else:
+                         if spinBoxSiso < 15 and spinBoxSiso >= 45 :
+                              QMessageBox.warning(self, "Thông báo", "Sỉ số của lớp học tối thiểu là 15 học sinh và tối đa là 45 học sinh!")
+                         else:
+                              sqlLop = "INSERT INTO lop (maLop,tenLop,maKhoiLop,maNamHoc,siSo,maGiaoVien) VALUES (%s,%s,%s,%s,%s,%s)"   
+                              val =(maLop,lineTenlop,maKhoiLop,maNamHoc,spinBoxSiso,maGiaoVien)
+                              try:
+                                   query.execute(sqlLop,val)
+                                   db.commit()
+                                   QMessageBox.information(self,"Thông báo",f"Thêm {lineTenlop} do giáo viên {cBoxGVCN} quản lý vào danh sách thành công!")
+                              except Exception as e:
+                                   # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                                   QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công:",e)
+                                   db.rollback()
+                              self.lineTenlop.clear()
+                              self.spinBoxSiso.clear()
+                              self.CboxKhoiLop.clear()
+                              self.CboxNamHoc.clear()
+                              self.cBoxGVCN.clear()
+                              self.stackLop()                
+               
+     def updateLop(self):
+          numRows = self.tableLopHoc.rowCount()
+          for i in range(numRows):
+               maLopHoc = self.tableLopHoc.item(i,0).text()
+               tenLopHoc = self.tableLopHoc.item(i,1).text()
+               khoiLop = self.tableLopHoc.item(i,2).text()
+               namhoc = self.tableLopHoc.item(i,3).text()
+               spinBoxSiso = self.tableLopHoc.item(i,4).text()
+               GVCN = self.tableLopHoc.item(i,5).text()
+               sqlGetKhoiLop = "SELECT maKhoiLop FROM khoilop WHERE tenKhoiLop = %s"
+               val = (khoiLop,)
+               try : 
+                    query.execute(sqlGetKhoiLop, val)
+                    maKhoiLop = query.fetchone()[0]
+               except mysql.connector.errors.InternalError as e:
+                    print("Error executing MySQL query:",e)
+               sqlGetNamHoc = "SELECT maNamHoc FROM namHoc WHERE tenNamHoc = %s"
+               val = (namhoc,)
+               try : 
+                    query.execute(sqlGetNamHoc, val)
+                    maNamHoc = query.fetchone()[0]
+               except mysql.connector.errors.InternalError as e:
+                    print("Error executing MySQL query:",e)   
+               sqlGetGiaoVien = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
+               val = (GVCN,)
+               try : 
+                    query.execute(sqlGetGiaoVien, val)
+                    maGiaoVien = query.fetchone()[0]
+               except mysql.connector.errors.InternalError as e:
+                    print("Error executing MySQL query:",e)
+               
+               sql =" UPDATE lop SET tenLop = %s, maKhoiLop = %s, maNamHoc =%s, siSo= %s, maGiaoVien = %s WHERE maLop = %s"
+               val = (tenLopHoc,maKhoiLop,maNamHoc,spinBoxSiso,maGiaoVien,maLopHoc)
+               try:              
+                    query.execute(sql,val)
+                    db.commit()
+               except:
+                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+                    return
+          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+
+          self.stackLop()
+     def deleteLop(self):
+          selected = self.tableLopHoc.selectedItems()
+          if selected:
+               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+               if ret == QMessageBox.Yes:
+                    rows = set()
+                    for item in selected:
+                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
+                    rows = list(rows)  # chuyển set thành list
+                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
+                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
+                    for row in rows:
+                         maLop = self.tableLopHoc.item(row, 0).text()
+                         self.tableLopHoc.removeRow(row)  # xóa dòng khỏi bảng
+                         sql = "DELETE FROM lop WHERE maLop= %s"
+                         val = (maLop,)
+                         try:
+                              query.execute(sql,val)
+                              db.commit()
+                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
+                         except:
+                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
+                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+                              return               
+
+          else:
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+     
      def addKhoi(self):
           lineTenKhoi = self.lineTenKhoi.text()
           maKhoi = self.maKhoi
