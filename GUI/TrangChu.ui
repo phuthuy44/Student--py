@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1364,7 +1364,7 @@ color:blue;
           <string>Lớp học</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_60">
+        <widget class="QComboBox" name="cBoxNH">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1384,7 +1384,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
           </property>
          </item>
         </widget>
-        <widget class="QComboBox" name="comboBox_61">
+        <widget class="QComboBox" name="cBoxKhoi">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1404,7 +1404,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
           </property>
          </item>
         </widget>
-        <widget class="QComboBox" name="comboBox_62">
+        <widget class="QComboBox" name="cbBoxLopHoc">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1462,7 +1462,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
           <string>Học sinh</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_63">
+        <widget class="QComboBox" name="cBoxHocSinh">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1508,7 +1508,7 @@ color:blue;
         <property name="title">
          <string>CHỨC NĂNG </string>
         </property>
-        <widget class="QPushButton" name="pushButton_51">
+        <widget class="QPushButton" name="btnXoaHocSinhRemoveList">
          <property name="geometry">
           <rect>
            <x>220</x>
@@ -1534,7 +1534,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_56">
+        <widget class="QPushButton" name="btnThemHocSinhIntoList">
          <property name="geometry">
           <rect>
            <x>70</x>
@@ -1561,7 +1561,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_8">
+       <widget class="QTableWidget" name="tableListHocSinh">
         <property name="geometry">
          <rect>
           <x>440</x>

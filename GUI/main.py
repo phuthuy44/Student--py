@@ -128,22 +128,26 @@ class TrangChu(QtWidgets.QMainWindow):
           #maHocSinh = self.maHocSinh
           self.lineMaHocSinh.setText(maHocSinh)
           self.maHocSinh = maHocSinh
-          query.execute("SELECT * FROM hocsinh")
-          data = query.fetchall()
-          # populate the widget with the data from the database
-          self.tableHocSinh.setRowCount(len(data))
-          for i, row in enumerate(data):
-               #self.tableHocSinh.insertRow(i)
-               for j, val in enumerate(row):
-                    item = str(val)
-                    if j == 8:
-                         item = self.getImageLabel(val)
-                         self.tableHocSinh.setCellWidget(i, j,item)
-                    else:
-                         self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
-          self.tableHocSinh.verticalHeader().setDefaultSectionSize(180)
 
-
+          sqlHocSinh = "SELECT * FROM hocsinh"
+          try:
+               query.execute(sqlHocSinh)
+               data = query.fetchall()
+               # populate the widget with the data from the database
+               self.tableHocSinh.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    #self.tableHocSinh.insertRow(i)
+                    for j, val in enumerate(row):
+                         item = str(val)
+                         if j == 8:
+                              item = self.getImageLabel(val)
+                              self.tableHocSinh.setCellWidget(i, j,item)
+                         else:
+                              self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+               self.tableHocSinh.verticalHeader().setDefaultSectionSize(180)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          self.displayInforInTabPhanLop()
           '''# populate the widget with the data from the database
           self.tableHocSinh.setRowCount(len(data))
           for i, row in enumerate(data):
@@ -188,6 +192,16 @@ class TrangChu(QtWidgets.QMainWindow):
                return pixmap
           except:
                return None'''
+     def displayInforInTabPhanLop(self):
+          sqlNamHocInTabPhanLop = "SELECT tenNamHoc FROM namhoc"
+          dataNH = query.execute(sqlNamHocInTabPhanLop)
+          if dataNH is not None:
+               self.cBoxNH.clear()  # Xóa hết các lựa chọn cũ
+               for row in dataNH:
+                    self.cBoxNH.addItem(row[0])  # Hiển thị thông tin cột dữ liệu vào combobox
+          else:
+               print("Không có dữ liệu từ query")
+          #sqlLopHocInTabPhanLop = "SELECT tenLop FROM n"
      def getImageLabel(self,image):
           imageLabel = QtWidgets.QLabel(self.centralwidget)
           imageLabel.setText("")
@@ -317,14 +331,17 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackNhanVien(self):
           self.stackedWidget.setCurrentIndex(3)
            # Generate a new unique ID for the new record
-          query.execute("SELECT *FROM chucvu")
-          data = query.fetchall()
+          sqlChucVu  = "SELECT *FROM chucvu"
+          try : 
+               query.execute(sqlChucVu)
+               data = query.fetchall()
           # populate the widget with the data from the database
-          self.tableChucVu.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableChucVu.setItem(i, j, QTableWidgetItem(str(val)))
-
+               self.tableChucVu.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableChucVu.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
           maChucVu = "CV" + str(random.randint(0, 999)).zfill(3)
           self.lineMaChucVu.setText(maChucVu)
           self.maChucVu = maChucVu
@@ -412,8 +429,10 @@ class TrangChu(QtWidgets.QMainWindow):
           maKhoi = "KH" + str(random.randint(0,999)).zfill(3)
           self.lineMaKhoi.setText(maKhoi)
           self.maKhoi= maKhoi
-          query.execute("SELECT *FROM khoilop")
+          sqlKhoiLop = "SELECT *FROM khoilop"
+          query.execute(sqlKhoiLop)
           data = query.fetchall()
+          query.nextset()
           # populate the widget with the data from the database
           self.tableKhoi.setRowCount(len(data))
           for i, row in enumerate(data):
@@ -493,22 +512,28 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackHKNH(self):
           self.stackedWidget.setCurrentIndex(6)
           sqlHocKy = "SELECT * FROM hocky"
-          query.execute(sqlHocKy)
-          data = query.fetchall()
-          # populate the widget with the data from the database
-          self.tableHocKy.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableHocKy.setItem(i, j, QTableWidgetItem(str(val)))
-
           sqlNamHoc = "SELECT * FROM namhoc"
-          query.execute(sqlNamHoc)
-          dataNamHoc = query.fetchall()
+          try: 
+               query.execute(sqlHocKy)
+               data = query.fetchall()
+               self.tableHocKy.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableHocKy.setItem(i, j, QTableWidgetItem(str(val)))
+
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          try: 
+               query.execute(sqlNamHoc)
+               dataNamHoc = query.fetchall()
+               self.tableNamHoc.setRowCount(len(dataNamHoc))
+               for i, row in enumerate(dataNamHoc):
+                    for j, val in enumerate(row):
+                         self.tableNamHoc.setItem(i, j, QTableWidgetItem(str(val)))
+         
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e) 
           # populate the widget with the data from the database
-          self.tableNamHoc.setRowCount(len(dataNamHoc))
-          for i, row in enumerate(dataNamHoc):
-               for j, val in enumerate(row):
-                    self.tableNamHoc.setItem(i, j, QTableWidgetItem(str(val)))
           lineMaHocKy = "HK" + str(random.randint(0,999)).zfill(3)
           self.lineMaHocKy.setText(lineMaHocKy)
           self.maHocKy = lineMaHocKy
@@ -656,15 +681,17 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
-
-          query.execute("SELECT *FROM monhoc")
-          data = query.fetchall()
-          # populate the widget with the data from the database
-          self.tableMonHoc.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(val)))
-
+          sqlMonHoc="SELECT *FROM monhoc"
+          try:
+               query.execute(sqlMonHoc)
+               data = query.fetchall()
+               # populate the widget with the data from the database
+               self.tableMonHoc.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
           maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
           self.lineMaMonHoc.setText(maMonHoc)
           self.maMonHoc = maMonHoc
@@ -749,38 +776,48 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackKetQua(self):
           self.stackedWidget.setCurrentIndex(8)
           sqlKetQua = "SELECT *FROM ketqua"
-          query.execute(sqlKetQua)
-          data = query.fetchall()
-          self.tableKetQua.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableKetQua.setItem(i, j, QTableWidgetItem(str(val)))
+          try:
+               query.execute(sqlKetQua)
+               data = query.fetchall()
+               self.tableKetQua.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableKetQua.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
           sqlHocLuc = "SELECT *FROM hocluc "
-          query.execute(sqlHocLuc)
-          dataHocLuc= query.fetchall()
-          # populate the widget with the data from the database
-          self.tableHocLuc.setRowCount(len(dataHocLuc))
-          for i, row in enumerate(dataHocLuc):
-               for j, val in enumerate(row):
-                    self.tableHocLuc.setItem(i, j, QTableWidgetItem(str(val)))
-
+          try:
+               query.execute(sqlHocLuc)
+               dataHocLuc= query.fetchall()
+               # populate the widget with the data from the database
+               self.tableHocLuc.setRowCount(len(dataHocLuc))
+               for i, row in enumerate(dataHocLuc):
+                    for j, val in enumerate(row):
+                         self.tableHocLuc.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
           sqlHanhKiem = "SELECT * FROM hanhkiem"
-          query.execute(sqlHanhKiem)
-          dataHanhKiem = query.fetchall()
-          self.tableHanhKiem.setRowCount(len(dataHanhKiem))
-          for i, row in enumerate(dataHanhKiem):
-               for j, val in enumerate(row):
-                    self.tableHanhKiem.setItem(i, j, QTableWidgetItem(str(val)))
-     
+          try:
+               query.execute(sqlHanhKiem)
+               dataHanhKiem = query.fetchall()
+               self.tableHanhKiem.setRowCount(len(dataHanhKiem))
+               for i, row in enumerate(dataHanhKiem):
+                    for j, val in enumerate(row):
+                         self.tableHanhKiem.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          
           sqlQuyDinh ="SELECT MAX(tuoiCanDuoi),MAX(tuoiCanTren),MAX(siSoCanDuoi),MAX(siSoCanTren),MAX(diemDat) FROM quydinh  "
-          query.execute(sqlQuyDinh)
-          dataQuyDinh = query.fetchone()
-          self.spinTuoitToiThieu.setValue(dataQuyDinh[0])
-          self.spinTuoiToiDa.setValue(dataQuyDinh[1])
-          self.spinLopToiThieu.setValue(dataQuyDinh[2])
-          self.spinLopToiDa.setValue(dataQuyDinh[3])
-          self.spinDiem.setValue(dataQuyDinh[4])
-
+          try:
+               query.execute(sqlQuyDinh)
+               dataQuyDinh = query.fetchone()
+               self.spinTuoitToiThieu.setValue(dataQuyDinh[0])
+               self.spinTuoiToiDa.setValue(dataQuyDinh[1])
+               self.spinLopToiThieu.setValue(dataQuyDinh[2])
+               self.spinLopToiDa.setValue(dataQuyDinh[3])
+               self.spinDiem.setValue(dataQuyDinh[4])
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
 
           maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
           self.lineMaKetQua.setText(maKetQua)
@@ -1032,13 +1069,17 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
-          query.execute("SELECT *FROM cackhoanphi")
-          data = query.fetchall()
-          # populate the widget with the data from the database
-          self.tableKhoanPhi.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
+          sqlHocPhi = "SELECT *FROM cackhoanphi"
+          try:
+               query.execute(sqlHocPhi)
+               data = query.fetchall()
+               # populate the widget with the data from the database
+               self.tableKhoanPhi.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
 
           maPhi = "PH" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaPhi.setText(maPhi)
@@ -1048,13 +1089,17 @@ class TrangChu(QtWidgets.QMainWindow):
           self.maPhieu = maPhieu
           self.listKhoanPhi()
      def listKhoanPhi(self):
-          query.execute("SELECT *FROM cackhoanphi")
-          data = query.fetchall()
+          sqlListKhoanPhi = "SELECT *FROM cackhoanphi"
+          try:
+               query.execute(sqlListKhoanPhi)
+               data = query.fetchall()
           # populate the widget with the data from the database
-          self.tableListKhoanPhi.setRowCount(len(data))
-          for i, row in enumerate(data):
-               for j, val in enumerate(row):
-                    self.tableListKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
+               self.tableListKhoanPhi.setRowCount(len(data))
+               for i, row in enumerate(data):
+                    for j, val in enumerate(row):
+                         self.tableListKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
           self.tableListKhoanPhi.itemSelectionChanged.connect(self.displayItemData)
           
      def displayItemData(self):     
@@ -1178,4 +1223,5 @@ try:
 except:
      print("Exiting!")
 #app.exec()
+query.close()
      
