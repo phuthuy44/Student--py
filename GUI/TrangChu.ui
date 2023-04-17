@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>9</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -4432,7 +4432,7 @@ font: 12pt &quot;Tahoma&quot;;</string>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">border: 1px solid gray ;
+         <string notr="true">border: 1px solid black ;
 font: 14pt &quot;Tahoma&quot;;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
@@ -9923,7 +9923,8 @@ font: 75 12pt &quot;Tahoma&quot;;</string>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">border: 1px solid gray ;</string>
+         <string notr="true">border: 1px solid black ;
+font: 14pt &quot;Tahoma&quot;;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
          <number>278</number>
@@ -9961,7 +9962,7 @@ font: 75 12pt &quot;Tahoma&quot;;</string>
          </property>
         </column>
        </widget>
-       <widget class="QLineEdit" name="lineEdit_76">
+       <widget class="QLineEdit" name="lineTimKiemPhi">
         <property name="geometry">
          <rect>
           <x>240</x>
@@ -10088,7 +10089,7 @@ border: 1px solid black;
          </property>
         </widget>
        </widget>
-       <widget class="QPushButton" name="pushButton_94">
+       <widget class="QPushButton" name="btnTimKiemPhi">
         <property name="geometry">
          <rect>
           <x>690</x>
@@ -10218,7 +10219,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_103">
+        <widget class="QPushButton" name="btnClearPhi">
          <property name="geometry">
           <rect>
            <x>500</x>

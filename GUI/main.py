@@ -6,7 +6,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from BUS.ChucVuBUS import ChucVuBUS
 from DTO.ChucVuDTO import ChucVuDTO
-from DAO.ChucVuDAO import ChucVuDAO
+from BUS.CacKhoanPhiBUS import CacKhoanPhiBUS
+from DTO.CacKhoanPhi import CacKhoanPhi
+
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -84,16 +86,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnHocPhi.clicked.connect(self.stackHocPhi)
           '''Loadata'''
           '''Xu lý cac nut trong tabWidget'''  
-          self.btnThemCV.clicked.connect(self.tabChucVu)
-          self.btnXoaChucVu.clicked.connect(self.deleteChucVu)
-          self.btnCapNhatChucVu.clicked.connect(self.updateChucVu)
-          self.btnClearChucVu.clicked.connect(self.clear)
-          self.btnTimKiemCV.clicked.connect(self.findCV)
-          self.cbSortCV.activated.connect(self.fineSortASC)
-
-          self.btnThemKhoanPhi.clicked.connect(self.addKhoanPhi)
-          self.btnCapNhatKhoanPhi.clicked.connect(self.updateKhoanPhi)
-          self.btnXoaKhoanPhi.clicked.connect(self.deleteKhoanPhi)
 
           self.btnThemMonHoc.clicked.connect(self.addMonHoc)
           self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
@@ -555,9 +547,12 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def stackNhanVien(self):
           self.stackedWidget.setCurrentIndex(3)
-          '''maChucVu = "CV" + str(random.randint(0, 999)).zfill(3)
-          self.lineMaChucVu.setText(maChucVu)
-          self.maChucVu = maChucVu'''
+          self.btnThemCV.clicked.connect(self.tabChucVu)
+          self.btnXoaChucVu.clicked.connect(self.deleteChucVu)
+          self.btnCapNhatChucVu.clicked.connect(self.updateChucVu)
+          self.btnClearChucVu.clicked.connect(self.clear)
+          self.btnTimKiemCV.clicked.connect(self.findCV)
+          self.cbSortCV.activated.connect(self.fineSortASC)
           maNhanVien ="NV" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaNhanVien.setText(maNhanVien)
           self.maNhanVien = maNhanVien
@@ -675,6 +670,8 @@ class TrangChu(QtWidgets.QMainWindow):
      def clear(self):
           self.lineTenChucVu.clear()
           self.txtTimKiem.clear()
+          self.lineTenMaPhi.clear()
+          self.lineTimKiemPhi.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -1514,7 +1511,7 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
-          sqlHocPhi = "SELECT *FROM cackhoanphi"
+          '''sqlHocPhi = "SELECT *FROM cackhoanphi"
           try:
                query.execute(sqlHocPhi)
                data = query.fetchall()
@@ -1524,29 +1521,44 @@ class TrangChu(QtWidgets.QMainWindow):
                     for j, val in enumerate(row):
                          self.tableKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
           except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
+               print("Error executing MySQL query:", e)'''
 
-          maPhi = "PH" + str(random.randint(0, 9999)).zfill(5)
+          '''maPhi = "PH" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaPhi.setText(maPhi)
-          self.maPhi = maPhi
+          self.maPhi = maPhi'''
           maPhieu = "HD" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaPhieu.setText(maPhieu)
           self.maPhieu = maPhieu
-          self.listKhoanPhi()
-     def listKhoanPhi(self):
-          sqlListKhoanPhi = "SELECT *FROM cackhoanphi"
-          try:
-               query.execute(sqlListKhoanPhi)
-               data = query.fetchall()
-          # populate the widget with the data from the database
-               self.tableListKhoanPhi.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableListKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          self.tableListKhoanPhi.itemSelectionChanged.connect(self.displayItemData)
-          
+          self.btnThemKhoanPhi.clicked.connect(self.addKhoanPhi)
+          self.btnCapNhatKhoanPhi.clicked.connect(self.updateKhoanPhi)
+          self.btnXoaKhoanPhi.clicked.connect(self.deleteKhoanPhi)
+          self.btnClearPhi.clicked.connect(self.clear)
+          self.btnTimKiemPhi.clicked.connect(self.findPhi)
+          self.loadlistPhi()
+     def loadlistPhi(self):
+          phi = CacKhoanPhiBUS()
+          self.lineMaPhi.setText(str(CacKhoanPhiBUS.CheckgetID(self)))
+          listPhi = phi.getListPhi()
+          self.tableKhoanPhi.setRowCount(len(listPhi))
+          self.tableKhoanPhi.setColumnCount(len(listPhi[0]))
+
+          for i,row in enumerate(listPhi): 
+               for j,val in enumerate(row): 
+                    self.tableKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableKhoanPhi.rowCount()
+          for i in range(numRows):
+               self.tableKhoanPhi.item(i, 0).setFlags(self.tableKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableKhoanPhi.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          self.tableListKhoanPhi.setRowCount(len(listPhi))
+          self.tableListKhoanPhi.setColumnCount(len(listPhi[0]))
+          for i, row in enumerate(listPhi):
+               for j, val in enumerate(row):
+                    self.tableListKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableListKhoanPhi.rowCount()
+          for i in range(numRows):
+               self.tableListKhoanPhi.item(i, 0).setFlags(self.tableListKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListKhoanPhi.item(i, 1).setFlags(self.tableListKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+          self.tableListKhoanPhi.itemSelectionChanged.connect(self.displayItemData)    
      def displayItemData(self):     
           selected = self.tableListKhoanPhi.selectedItems()
           if selected and len(selected) >= 2: 
@@ -1554,81 +1566,85 @@ class TrangChu(QtWidgets.QMainWindow):
                tenPhi = selected[1].text()
                self.lineListMaPhi.setText(maPhi)
                self.lineListTenKhoanPhi.setText(tenPhi)
-          
-
-
-
      def addKhoanPhi(self):
           #lineMaPhi
+          phi = CacKhoanPhiBUS()
           lineTenKhoanPhi = self.lineTenMaPhi.text()
-          maPhi = self.maPhi
+          #maPhi = self.maPhi
+          addphi = CacKhoanPhi(None, lineTenKhoanPhi)
           if len(lineTenKhoanPhi)==0:
-               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM cackhoanphi WHERE tenPhi = %s", (lineTenKhoanPhi,))
-               check = query.fetchone()
-               if check is not None:
-                    QMessageBox.information(self,"Thông báo","Khoản phí này đã có trong danh sách!")
-               else:
-                    query.execute("INSERT INTO cackhoanphi (maPhi, tenPhi) VALUES (%s, %s)", (maPhi, lineTenKhoanPhi))
-                    #db.commit()
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenMaPhi.clear()
-          self.stackHocPhi()
+               if phi.checkPhiTonTai(lineTenKhoanPhi):
+                    QMessageBox.information(self,"Thông báo","Loại phí này đã có trong danh sách!")
+               else : 
+                    if phi.insertPhi(addphi):
+                         # The above code is printing a message that includes the ID and details of a
+                         # record that has been inserted into a database table or data structure. The
+                         # specific details of the record are contained in the variable `addphi`, and
+                         # the message is printed using the `print()` function in Python.
+                         print("Inserted record:", addphi.idCacKhoanPhi, addphi.tenPhi)
+                         QMessageBox.information(self,"Thông báo",f"Thêm phí có tên {lineTenKhoanPhi} vào danh sách thành công!")
+                         self.loadlistPhi()
+                         self.clear()
+                    else: 
+                         QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
      def updateKhoanPhi(self):
+          phi = CacKhoanPhiBUS()
           numRows = self.tableKhoanPhi.rowCount()
+          flag = True
           for i in range(numRows):
                maPhi= self.tableKhoanPhi.item(i,0).text()
                tenPhi = self.tableKhoanPhi.item(i,1).text()
-               sql =" UPDATE cackhoanphi SET tenPhi = %s WHERE maPhi =%s"
-               val = (tenPhi,maPhi)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackHocPhi()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               updatephi = CacKhoanPhi(maPhi,tenPhi)
+               
+               if not phi.updateListPhi(updatephi):
+                    flag = False
+          if flag: 
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistPhi()
+          else : 
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
      def deleteKhoanPhi(self):
           selected = self.tableKhoanPhi.selectedItems()
           
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         maPhi = self.tableKhoanPhi.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa chức vụ có mã {maPhi} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maPhi = self.tableKhoanPhi.item(row, 0).text()
-                         self.tableKhoanPhi.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM cackhoanphi WHERE maPhi = %s"
-                         val = (maPhi,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                         except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
-
+                         if ret == QMessageBox.Yes:
+                              phi = CacKhoanPhiBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if phi.deletePhi(maPhi):
+                                   for col in range(self.tableKhoanPhi.columnCount()):
+                                        item = self.tableKhoanPhi.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {maPhi} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistPhi()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
-
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+     def findPhi(self):
+          phi = CacKhoanPhiBUS()
+          txtTimKiem = self.lineTimKiemPhi.text()
+          list = phi.find(txtTimKiem)
+          rowcount = 0
+          self.tableKhoanPhi.clearContents()
+          self.tableKhoanPhi.rowCount()
+          if list is not None:
+               for row in list :
+                    self.tableKhoanPhi.setItem(rowcount, 0, QTableWidgetItem(row[0]))
+               #self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               #self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 200))
+                    self.tableKhoanPhi.setItem(rowcount, 1, QTableWidgetItem(row[1]))
+                    rowcount += 1
      def DangXuat(self):
           '''self.hide()
           #widget.resize(formLogin.width(),formLogin.height())
