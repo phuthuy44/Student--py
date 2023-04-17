@@ -8,6 +8,8 @@ from BUS.ChucVuBUS import ChucVuBUS
 from DTO.ChucVuDTO import ChucVuDTO
 from BUS.CacKhoanPhiBUS import CacKhoanPhiBUS
 from DTO.CacKhoanPhi import CacKhoanPhi
+from BUS.MonHocBUS import MonHocBUS
+from DTO.MonHocDTO import MonHocDTO
 
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
@@ -86,10 +88,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnHocPhi.clicked.connect(self.stackHocPhi)
           '''Loadata'''
           '''Xu lý cac nut trong tabWidget'''  
-
-          self.btnThemMonHoc.clicked.connect(self.addMonHoc)
-          self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
-          self.btnXoaMonHoc.clicked.connect(self.deleteMonHoc)
 
           self.btnThemKQ.clicked.connect(self.addKetQua)
           self.btnCapNhatKetQua.clicked.connect(self.updateKetQua)
@@ -672,6 +670,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.txtTimKiem.clear()
           self.lineTenMaPhi.clear()
           self.lineTimKiemPhi.clear()
+          self.lineTenMonHoc.clear()
+          self.lineSoTiet.clear()
+          self.txtTimKiem_2.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -1123,98 +1124,145 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
-          sqlMonHoc="SELECT *FROM monhoc"
-          try:
-               query.execute(sqlMonHoc)
-               data = query.fetchall()
-               # populate the widget with the data from the database
-               self.tableMonHoc.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
+          self.btnThemMonHoc.clicked.connect(self.addMonHoc)
+          self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
+          self.btnXoaMonHoc.clicked.connect(self.deleteMonHoc)
+          self.btnTimKiemCV_2.clicked.connect(self.findMon)
+          self.cbSortMH.activated.connect(self.findSortMonHoc)
+          self.cbSortHeSo.activated.connect(self.findHeSo)
+          self.cbSortST.activated.connect(self.findSoTiet)
+          self.pushButton_103.clicked.connect(self.clear)
+          '''maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
           self.lineMaMonHoc.setText(maMonHoc)
-          self.maMonHoc = maMonHoc
+          self.maMonHoc = maMonHoc'''
+          self.loadlistMonHoc()
+     def loadlistMonHoc(self):
+          monhoc = MonHocBUS()
+          self.lineMaMonHoc.setText(str(MonHocBUS.CheckgetID(self)))
+          listmonHoc = monhoc.getListMonHoc()
+          self.tableMonHoc.setRowCount(len(listmonHoc))
+          #self.tableMonHoc.setColumnCount(len(listmonHoc[0]))
+
+          for i,row in enumerate(listmonHoc): 
+               for j,val in enumerate(row): 
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableMonHoc.rowCount() 
+          for i in range(numRows):
+               self.tableMonHoc.item(i, 0).setFlags(self.tableMonHoc.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableMonHoc.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          
      def addMonHoc(self):
+          mon = MonHocBUS()
           lineTenMonHoc = self.lineTenMonHoc.text()
           lineSoTiet = self.lineSoTiet.text()
           cboxHeSo = self.cboxHeSo.currentText()
 
-          maMonHoc =self.maMonHoc
-
-          if len(lineTenMonHoc)==0 and len(lineSoTiet)==0:
+          #maMonHoc =self.maMonHoc
+          addMon = MonHocDTO(None, lineTenMonHoc, lineSoTiet, cboxHeSo)
+          if len(lineTenMonHoc) == 0 or len(lineSoTiet)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM monhoc WHERE tenMonHoc = %s", (lineTenMonHoc,))
-               check = query.fetchone()
-               if check is not None:
+               if mon.CheckTenMonHoc(lineTenMonHoc):
                     QMessageBox.information(self,"Thông báo","Môn học này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO monhoc (maMonHoc, tenMonHoc,soTiet,heSo) VALUES (%s, %s,%s,%s)", (maMonHoc,lineTenMonHoc,lineSoTiet,cboxHeSo))
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
+                    if mon.inser(addMon):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenMonHoc.clear()
-          self.lineSoTiet.clear()
-          self.stackMonHoc()
+                         print("Inserted record:", addMon.idMH, addMon.tenMH, addMon.soTiet,addMon.heSo)
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistMonHoc()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
      def updateMonHoc(self):
+          mon = MonHocBUS()
           numRows = self.tableMonHoc.rowCount()
+          flag = True
           for i in range(numRows):
                maMonHoc= self.tableMonHoc.item(i,0).text()
                tenMonHoc = self.tableMonHoc.item(i,1).text()
                soTietMonHoc = self.tableMonHoc.item(i,2).text()
                heSoMonHoc = self.tableMonHoc.item(i,3).text()
-               sql =" UPDATE monhoc SET tenMonHoc = %s, soTiet = %s, heSo = %s WHERE maMonHoc =%s"
-               val = (tenMonHoc,soTietMonHoc,heSoMonHoc,maMonHoc)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackMonHoc()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               updateMon = MonHocDTO(maMonHoc,tenMonHoc,soTietMonHoc,heSoMonHoc)
+               if not mon.updateMon(updateMon):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistMonHoc()
+          else : 
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
      
      
      def deleteMonHoc(self):
           selected = self.tableMonHoc.selectedItems()
-          
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableMonHoc.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa môn học có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maMonHoc = self.tableMonHoc.item(row, 0).text()
-                         self.tableMonHoc.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM monhoc WHERE maMonHoc= %s"
-                         val = (maMonHoc,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                         except:
-                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
-
+                         if ret == QMessageBox.Yes:
+                              mon = MonHocBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if mon.deleteMon(mamon):
+                                   for col in range(self.tableMonHoc.columnCount()):
+                                        item = self.tableMonHoc.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistMonHoc()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
-
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+     def findMon(self):
+          mon = MonHocBUS()
+          txtTimKiem_2 = self.txtTimKiem_2.text()
+          list = mon.find(txtTimKiem_2)
+          self.tableMonHoc.clearContents()
+          self.tableMonHoc.setRowCount(len(list))
+          for i, row in enumerate(list):
+               for j, item in enumerate(row):
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     
+     def findSortMonHoc(self):
+          mon = MonHocBUS()
+          self.tableMonHoc.clearContents()
+          order = self.cbSortMH.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = mon.findASC(order)
+          #self.tableChucVu.clearContents()
+          self.tableMonHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     
+     def findHeSo(self):
+          mon = MonHocBUS()
+          self.tableMonHoc.clearContents()
+          order = self.cbSortHeSo.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = mon.findHeSo(order)
+          #self.tableChucVu.clearContents()
+          self.tableMonHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     
+     def findSoTiet(self):
+          mon = MonHocBUS()
+          self.tableMonHoc.clearContents()
+          order = self.cbSortST.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = mon.findSoTiet(order)
+          #self.tableChucVu.clearContents()
+          self.tableMonHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     
      def stackKetQua(self):
           self.stackedWidget.setCurrentIndex(8)
           sqlKetQua = "SELECT *FROM ketqua"
@@ -1511,21 +1559,6 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
-          '''sqlHocPhi = "SELECT *FROM cackhoanphi"
-          try:
-               query.execute(sqlHocPhi)
-               data = query.fetchall()
-               # populate the widget with the data from the database
-               self.tableKhoanPhi.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableKhoanPhi.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)'''
-
-          '''maPhi = "PH" + str(random.randint(0, 9999)).zfill(5)
-          self.lineMaPhi.setText(maPhi)
-          self.maPhi = maPhi'''
           maPhieu = "HD" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaPhieu.setText(maPhieu)
           self.maPhieu = maPhieu
