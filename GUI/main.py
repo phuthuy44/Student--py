@@ -1,6 +1,12 @@
 import base64
 import sys
 import re
+import os
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+from BUS.ChucVuBUS import ChucVuBUS
+from DTO.ChucVuDTO import ChucVuDTO
+from DAO.ChucVuDAO import ChucVuDAO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -14,7 +20,7 @@ db = mysql.connector.connect(
                database ="studentmanager"
                )
 query = db.cursor()
-class FormLogin(QtWidgets.QMainWindow) :
+class FormLogin(QtWidgets.QMainWindow):
      def __init__(self):
           super(FormLogin, self).__init__()
           uic.loadUi("GUI/Form_Login.ui",self)
@@ -41,9 +47,8 @@ class FormLogin(QtWidgets.QMainWindow) :
                     widget.setCurrentIndex(widget.currentIndex()+1)
                     '''trangChu.show()
                     self.accept()'''
-
                else:
-                    QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập khong thành công!')  
+                    QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập không thành công!')  
 
 class TrangChu(QtWidgets.QMainWindow):
      def __init__(self):
@@ -82,6 +87,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnThemCV.clicked.connect(self.tabChucVu)
           self.btnXoaChucVu.clicked.connect(self.deleteChucVu)
           self.btnCapNhatChucVu.clicked.connect(self.updateChucVu)
+          self.btnClearChucVu.clicked.connect(self.clear)
+          self.btnTimKiemCV.clicked.connect(self.findCV)
+          self.cbSortCV.activated.connect(self.fineSortASC)
 
           self.btnThemKhoanPhi.clicked.connect(self.addKhoanPhi)
           self.btnCapNhatKhoanPhi.clicked.connect(self.updateKhoanPhi)
@@ -131,6 +139,8 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnThemLopHoc.clicked.connect(self.addLop)
           self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
           self.btnXoaLopHoc.clicked.connect(self.deleteLop)
+
+          self.loadlistCV()
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
 
@@ -545,93 +555,126 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def stackNhanVien(self):
           self.stackedWidget.setCurrentIndex(3)
-           # Generate a new unique ID for the new record
-          sqlChucVu  = "SELECT *FROM chucvu"
-          try : 
-               query.execute(sqlChucVu)
-               data = query.fetchall()
-          # populate the widget with the data from the database
-               self.tableChucVu.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableChucVu.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          maChucVu = "CV" + str(random.randint(0, 999)).zfill(3)
+          '''maChucVu = "CV" + str(random.randint(0, 999)).zfill(3)
           self.lineMaChucVu.setText(maChucVu)
-          self.maChucVu = maChucVu
+          self.maChucVu = maChucVu'''
           maNhanVien ="NV" + str(random.randint(0, 9999)).zfill(5)
           self.lineMaNhanVien.setText(maNhanVien)
           self.maNhanVien = maNhanVien
+          #self.fineSortASC()
+          self.loadlistCV()
 
-     def updateChucVu(self):
-          # `numRows = self.tableWidget.rowCount()` is getting the number of rows in the table widget
-          # `tableWidget` and assigning it to the variable `numRows`. This is used in the
-          # `updateChucVu()` and `deleteChucVu()` methods to iterate over all the rows in the table
-          # widget.
+     def fineSortASC(self):
+          cv = ChucVuBUS()
+          self.tableChucVu.clearContents()
+          order = self.cbSortCV.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = cv.findSortASC(order)
+          #self.tableChucVu.clearContents()
+          self.tableChucVu.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableChucVu.setItem(i, j, QTableWidgetItem(str(item)))
+     def loadlistCV(self):
+          chucvu = ChucVuBUS()
+          #chucvu.checkidChucVu()
+          self.lineMaChucVu.setText(str(ChucVuBUS.checkidChucVu(self)))
+          listChucVu = chucvu.getListCV()
+          # Đặt số lượng hàng và cột cho QTableWidget
+          self.tableChucVu.setRowCount(len(listChucVu))
+          self.tableChucVu.setColumnCount(len(listChucVu[0]))
+
+          for i,row in enumerate(listChucVu): 
+               for j,val in enumerate(row): 
+                    self.tableChucVu.setItem(i, j, QTableWidgetItem(str(val)))
           numRows = self.tableChucVu.rowCount()
           for i in range(numRows):
-               maChucVu = self.tableChucVu.item(i,0).text()
+               #maChucVu = self.tableChucVu.item(i, 0).text()
+               self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+     def updateChucVu(self):
+          chucVuBUS = ChucVuBUS()
+          numRows = self.tableChucVu.rowCount()
+          flag =  True
+          for i in range(numRows):
+               maChucVu = self.tableChucVu.item(i, 0).text()
+               #self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               #self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 200))
                tenChucVu = self.tableChucVu.item(i,1).text()
-               sql =" UPDATE chucvu SET tenChucVu = %s WHERE maChucVu =%s"
-               val = (tenChucVu,maChucVu)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackNhanVien()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               cv = ChucVuDTO(maChucVu, tenChucVu)
+               if not chucVuBUS.updateChucVu(cv):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistCV()
+          else:
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
 
      def deleteChucVu(self):
           selected = self.tableChucVu.selectedItems()
           
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         maChucVu = self.tableChucVu.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa chức vụ có mã {maChucVu} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maChucVu = self.tableChucVu.item(row, 0).text()
-                         self.tableChucVu.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM chucvu WHERE maChucVu = %s"
-                         val = (maChucVu,)
-                         try:
-                              query.execute(sql,val)
-                              db.commit()
-                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
-                         except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return  
-
+                         if ret == QMessageBox.Yes:
+                              chucVuBUS = ChucVuBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if chucVuBUS.deleteChucVu(maChucVu):
+                                   for col in range(self.tableChucVu.columnCount()):
+                                        item = self.tableChucVu.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {maChucVu} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistCV()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def tabChucVu(self):
           #self.lineMaChucVu.setText(maChucVu)
+          Chucvu = ChucVuBUS()
           lineTenChucVu = self.lineTenChucVu.text()
-          maChucVu = self.maChucVu
+          #maChucVu = self.maChucVu
+          chucvu = ChucVuDTO(None, lineTenChucVu)
           if len(lineTenChucVu)== 0:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa nhập dữ liệu!")
           else:
-               
-               query.execute("SELECT * FROM chucvu WHERE tenChucVu = %s", (lineTenChucVu,))
-               check = query.fetchone()
-               if check is not None:
+               if Chucvu.checkChucVuTonTai(lineTenChucVu):
                     QMessageBox.information(self,"Thông báo","Chức vụ này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO chucvu (maChucVu, tenChucVu) VALUES (%s, %s)", (maChucVu, lineTenChucVu))
-                    db.commit()
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-                    self.lineTenChucVu.clear()
-                    self.stackNhanVien()
+                    if Chucvu.addChucVu(chucvu):
+                         print("Inserted record:", chucvu.idChucVu, chucvu.tenChucVu)
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                         self.loadlistCV()
+                         self.clear()
+                    else:
+                         QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+
+     def findCV(self):
+          dd = ChucVuBUS()
+          txtTimKiem = self.txtTimKiem.text()
+          list = dd.find(txtTimKiem)
+          rowcount = 0
+          self.tableChucVu.clearContents()
+          self.tableChucVu.rowCount()
+          if list is not None:
+               for row in list :
+                    self.tableChucVu.setItem(rowcount, 0, QTableWidgetItem(row[0]))
+               #self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               #self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 200))
+                    self.tableChucVu.setItem(rowcount, 1, QTableWidgetItem(row[1]))
+                    rowcount += 1
+
+     def clear(self):
+          self.lineTenChucVu.clear()
+          self.txtTimKiem.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -713,54 +756,61 @@ class TrangChu(QtWidgets.QMainWindow):
                if checkMaLop[0]>0:
                     self.stackLop()
                else:
-                    sqlGetKhoi = "SELECT maKhoiLop FROM khoilop WHERE tenKhoiLop = %s"
-                    val =(CboxKhoiLop,)
-                    try:
-                         query.execute(sqlGetKhoi,val)
-                         maKhoiLop = query.fetchone()[0]
-                    except mysql.connector.errors.InternalError as e:
-                         print("Error executing MySQL query:",e)
-                    sqlGetNamHoc = "SELECT maNamHoc FROM namhoc WHERE tenNamHoc = %s"
-                    val =(CboxNamHoc,)
-                    try:
-                         query.execute(sqlGetNamHoc,val)
-                         maNamHoc = query.fetchone()[0]
-                    except mysql.connector.errors.InternalError as e:
-                         print("Error executing MySQL query:",e)
+                    sqlTenLop = "SELECT * FROM lop WHERE tenLopHoc = %s"
+                    val = (lineTenlop,)
+                    query.execute(sqlTenLop, val)
+                    checkTenLop = query.fetchone()
+                    if checkTenLop is not None:
+                          QMessageBox.information(self,"Thông báo",f"Lớp {lineTenlop} đã có trong danh sách!")
+                    else: 
+                         sqlGetKhoi = "SELECT maKhoiLop FROM khoilop WHERE tenKhoiLop = %s"
+                         val =(CboxKhoiLop,)
+                         try:
+                              query.execute(sqlGetKhoi,val)
+                              maKhoiLop = query.fetchone()[0]
+                         except mysql.connector.errors.InternalError as e:
+                              print("Error executing MySQL query:",e)
+                              sqlGetNamHoc = "SELECT maNamHoc FROM namhoc WHERE tenNamHoc = %s"
+                              val =(CboxNamHoc,)
+                         try:
+                              query.execute(sqlGetNamHoc,val)
+                              maNamHoc = query.fetchone()[0]
+                         except mysql.connector.errors.InternalError as e:
+                              print("Error executing MySQL query:",e)
 
-                    sqlGetGiaoVien = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
-                    val =(cBoxGVCN,)
-                    try:
-                         query.execute(sqlGetGiaoVien,val)
-                         maGiaoVien = query.fetchone()[0]
-                    except mysql.connector.errors.InternalError as e:
-                         print("Error executing MySQL query:",e)
+                         sqlGetGiaoVien = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
+                         val =(cBoxGVCN,)
+                         try:
+                              query.execute(sqlGetGiaoVien,val)
+                              maGiaoVien = query.fetchone()[0]
+                         except mysql.connector.errors.InternalError as e:
+                              print("Error executing MySQL query:",e)
                     
-                    sqlCheckGVOfNamHoc = "SELECT COUNT(*) FROM lop WHERE maGiaoVien = %s AND maNamHoc = %s"
-                    val = (maGiaoVien,maNamHoc)
-                    query.execute(sqlCheckGVOfNamHoc, val)
-                    if query.fetchone()[0] >= 1:
-                         QMessageBox.warning(self, "Thông báo", f"Giáo viên {cBoxGVCN} đã quản lý lớp trong năm học {CboxNamHoc}. Không thể thêm lớp mới!")
-                    else:
-                         if spinBoxSiso < 15 and spinBoxSiso >= 45 :
-                              QMessageBox.warning(self, "Thông báo", "Sỉ số của lớp học tối thiểu là 15 học sinh và tối đa là 45 học sinh!")
+                         sqlCheckGVOfNamHoc = "SELECT COUNT(*) FROM lop WHERE maGiaoVien = %s AND maNamHoc = %s"
+                         val = (maGiaoVien,maNamHoc)
+                         query.execute(sqlCheckGVOfNamHoc, val)
+                         if query.fetchone()[0] >= 1:
+                              QMessageBox.warning(self, "Thông báo", f"Giáo viên {cBoxGVCN} đã quản lý lớp trong năm học {CboxNamHoc}. Không thể thêm lớp mới!")
                          else:
-                              sqlLop = "INSERT INTO lop (maLop,tenLop,maKhoiLop,maNamHoc,siSo,maGiaoVien) VALUES (%s,%s,%s,%s,%s,%s)"   
-                              val =(maLop,lineTenlop,maKhoiLop,maNamHoc,spinBoxSiso,maGiaoVien)
-                              try:
-                                   query.execute(sqlLop,val)
-                                   db.commit()
-                                   QMessageBox.information(self,"Thông báo",f"Thêm {lineTenlop} do giáo viên {cBoxGVCN} quản lý vào danh sách thành công!")
-                              except Exception as e:
+                              if spinBoxSiso < 15 and spinBoxSiso >= 45 :
+                                   QMessageBox.warning(self, "Thông báo", "Sỉ số của lớp học tối thiểu là 15 học sinh và tối đa là 45 học sinh!")
+                              else:
+                                   sqlLop = "INSERT INTO lop (maLop,tenLop,maKhoiLop,maNamHoc,siSo,maGiaoVien) VALUES (%s,%s,%s,%s,%s,%s)"   
+                                   val =(maLop,lineTenlop,maKhoiLop,maNamHoc,spinBoxSiso,maGiaoVien)
+                                   try:
+                                        query.execute(sqlLop,val)
+                                        db.commit()
+                                        QMessageBox.information(self,"Thông báo",f"Thêm {lineTenlop} do giáo viên {cBoxGVCN} quản lý vào danh sách thành công!")
+                                   except Exception as e:
                                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                                   QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công:",e)
-                                   db.rollback()
-                              self.lineTenlop.clear()
-                              self.spinBoxSiso.clear()
-                              self.CboxKhoiLop.clear()
-                              self.CboxNamHoc.clear()
-                              self.cBoxGVCN.clear()
-                              self.stackLop()                
+                                        QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công:",e)
+                                        db.rollback()
+                                   self.lineTenlop.clear()
+                                   self.spinBoxSiso.clear()
+                                   self.CboxKhoiLop.clear()
+                                   self.CboxNamHoc.clear()
+                                   self.cBoxGVCN.clear()
+                                   self.stackLop()                
                
      def updateLop(self):
           numRows = self.tableLopHoc.rowCount()
