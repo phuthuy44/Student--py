@@ -10,7 +10,8 @@ from BUS.CacKhoanPhiBUS import CacKhoanPhiBUS
 from DTO.CacKhoanPhi import CacKhoanPhi
 from BUS.MonHocBUS import MonHocBUS
 from DTO.MonHocDTO import MonHocDTO
-
+from BUS.LoaiDiemBUS import LoaiDiemBUS
+from DTO.LoaiDiemDTO import LoaiDiemDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -673,6 +674,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineTenMonHoc.clear()
           self.lineSoTiet.clear()
           self.txtTimKiem_2.clear()
+          self.lineTenLoaiDiem.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -1132,6 +1134,10 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cbSortHeSo.activated.connect(self.findHeSo)
           self.cbSortST.activated.connect(self.findSoTiet)
           self.pushButton_103.clicked.connect(self.clear)
+          self.btnThemMonHoc_2.clicked.connect(self.addLoaiDiem)
+          self.btnCapNhatMonHoc_2.clicked.connect(self.updateLoaiDiem)
+          self.btnXoaMonHoc_2.clicked.connect(self.deleteLoaiDiem)
+          self.pushButton_105.clicked.connect(self.clear)
           '''maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
           self.lineMaMonHoc.setText(maMonHoc)
           self.maMonHoc = maMonHoc'''
@@ -1151,6 +1157,79 @@ class TrangChu(QtWidgets.QMainWindow):
                self.tableMonHoc.item(i, 0).setFlags(self.tableMonHoc.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableMonHoc.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
           
+          #LoaiDiem
+          loaidiem = LoaiDiemBUS()
+          self.lineLoaiDiem.setText(str(LoaiDiemBUS.CheckgetID(self)))
+          listdiem = loaidiem.getListLoaiDiem()
+          self.tableLoaiDiem.setRowCount(len(listdiem))
+          for i,row in enumerate(listdiem): 
+               for j,val in enumerate(row): 
+                    self.tableLoaiDiem.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableLoaiDiem.rowCount() 
+          for i in range(numRows):
+               self.tableLoaiDiem.item(i, 0).setFlags(self.tableMonHoc.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLoaiDiem.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+     def addLoaiDiem(self):
+          loaidiem = LoaiDiemBUS()
+          lineTenLoaiDiem = self. lineTenLoaiDiem.text()
+          cboxHeSo_2 = self.cboxHeSo_2.currentText()
+          addDiem = LoaiDiemDTO(None,lineTenLoaiDiem,cboxHeSo_2)
+          if len(lineTenLoaiDiem) == 0 :
+               QMessageBox.information(self,"Thông báo","Bạn chưa nhập đủ dữ liệu!")
+          else:
+               if loaidiem.ChecktenTonTai(lineTenLoaiDiem):
+                    QMessageBox.information(self,"Thông báo","Môn học này đã có trong danh sách!")
+               else:
+                    if loaidiem.insert(addDiem):
+                         print("Inserted record:", addDiem.maLoaiDiem, addDiem.tenLoaiDiem,addDiem.heSo)
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistMonHoc()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
+     def updateLoaiDiem(self):
+          loaidiem = LoaiDiemBUS()
+          numRows = self.tableLoaiDiem.rowCount()
+          flag = True
+          for i in range(numRows):
+               maLoaiDiem= self.tableLoaiDiem.item(i,0).text()
+               tenLoaiDiem= self.tableLoaiDiem.item(i,1).text()
+               heSoLoaiDiem= self.tableLoaiDiem.item(i,2).text()
+               update = LoaiDiemDTO(maLoaiDiem,tenLoaiDiem,heSoLoaiDiem)
+               if not loaidiem.update(update):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistMonHoc()
+          else : 
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
+
+     def deleteLoaiDiem(self):
+          selected = self.tableLoaiDiem.selectedItems()
+          if selected:
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableLoaiDiem.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa loại điểm có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+                         if ret == QMessageBox.Yes:
+                              loaidiem = LoaiDiemBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if loaidiem.delete(mamon):
+                                   for col in range(self.tableLoaiDiem.columnCount()):
+                                        item = self.tableLoaiDiem.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistMonHoc()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+          else:
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+     
      def addMonHoc(self):
           mon = MonHocBUS()
           lineTenMonHoc = self.lineTenMonHoc.text()
