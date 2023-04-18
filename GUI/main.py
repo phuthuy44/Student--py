@@ -18,6 +18,10 @@ from BUS.HocLucBUS import HocLucBUS
 from DTO.HocLucDTO import HocLucDTO
 from BUS.HanhKiemBUS import HanhKiemBUS
 from DTO.HanhKiemDTO import HanhKiemDTO
+from BUS.QuyDinhBUS import QuyDinhBUS
+from DTO.QuyDinhDTO import QuyDinhDTO
+from BUS.KhoiBUS import KhoiBUS
+from DTO.KhoiDTO import KhoiDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -95,16 +99,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnHocPhi.clicked.connect(self.stackHocPhi)
           '''Loadata'''
           '''Xu lý cac nut trong tabWidget'''  
-
-          
-          
-
-          self.btnQuyDinh.clicked.connect(self.quyDinh)
-          self.btnResetQuyDinh.clicked.connect(self.resetQuyDinh)
-
-          self.btnThemKhoi.clicked.connect(self.addKhoi)
-          self.btnCapNhatKhoi.clicked.connect(self.updateKhoi)
-          self.btnXoaKhoi.clicked.connect(self.deleteKhoi)
 
           self.btnThemHocKy.clicked.connect(self.addHocKy)
           self.btnCapNhatHocKy.clicked.connect(self.updateHocKy)
@@ -678,6 +672,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineDiemCT.clear()
           self.lineDiemKhongChe.clear()
           self.lineTenHanhKiem.clear()
+          self.lineTenKhoi.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -686,26 +681,34 @@ class TrangChu(QtWidgets.QMainWindow):
           self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):
           self.stackedWidget.setCurrentIndex(5)
-
-          maKhoi = "KH" + str(random.randint(0,999)).zfill(3)
-          self.lineMaKhoi.setText(maKhoi)
-          self.maKhoi= maKhoi
+          #khoi
+          self.btnThemKhoi.clicked.connect(self.addKhoi)
+          self.btnCapNhatKhoi.clicked.connect(self.updateKhoi)
+          self.btnXoaKhoi.clicked.connect(self.deleteKhoi)
+          self.pushButton_71.clicked.connect(self.clear)
+          #lop
+          
+          self.loadlistlop()
+          
           maLop = "LH" + str(random.randint(0,99)).zfill(3)
           self.lineMaLop.setText(maLop)
           self.maLop = maLop
-          sqlKhoiLop = "SELECT *FROM khoilop"
-          try:
-               query.execute(sqlKhoiLop)
-               data = query.fetchall()
-               # populate the widget with the data from the database
-               self.tableKhoi.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableKhoi.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-
           self.displayInforInTabLopHoc()
+     def loadlistlop(self):
+          khoi = KhoiBUS()
+          self.lineMaKhoi.setText(str(KhoiBUS.CheckgetID(self)))
+          listkhoi = khoi.getKhoi()
+          self.tableKhoi.setRowCount(len(listkhoi))
+          #self.tableMonHoc.setColumnCount(len(listmonHoc[0]))
+
+          for i,row in enumerate(listkhoi): 
+               for j,val in enumerate(row): 
+                    self.tableKhoi.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableKhoi.rowCount() 
+          for i in range(numRows):
+               self.tableKhoi.item(i, 0).setFlags(self.tableKhoi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableKhoi.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          
      def displayInforInTabLopHoc(self):
           sqlNamHocInTabLopHoc = "SELECT tenNamHoc FROM namhoc ORDER BY tenNamHoc DESC"
           try :
@@ -888,72 +891,62 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      
      def addKhoi(self):
+          khoi = KhoiBUS()
           lineTenKhoi = self.lineTenKhoi.text()
-          maKhoi = self.maKhoi
+          addKhoi = KhoiDTO(None,lineTenKhoi)
           if len(lineTenKhoi)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM khoilop WHERE tenKhoiLop = %s", (lineTenKhoi,))
-               check = query.fetchone()
-               if check is not None:
-                    QMessageBox.information(self,"Thông báo","Loại kết quả này đã có trong danh sách!")
+               if khoi.Checkten(lineTenKhoi):
+                    QMessageBox.information(self,"Thông báo","Khối này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO khoilop (maKhoiLop, tenKhoiLop) VALUES (%s, %s)", (maKhoi,lineTenKhoi))
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenKhoi.clear()
-          self.stackLop()
-     def updateKhoi(self):
-          numRows = self.tableKhoi.rowCount()
-          for i in range(numRows):
-               maKhoi= self.tableKhoi.item(i,0).text()
-               tenKhoi = self.tableKhoi.item(i,1).text()
-               sql =" UPDATE khoilop SET tenKhoiLop = %s WHERE maKhoiLop =%s"
-               val = (tenKhoi,maKhoi)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackLop()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+                    if khoi.insert(addKhoi):
+                         print("Inserted record:", addKhoi.idKhoi,addKhoi.tenKhoi)
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistlop()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
      
+     def updateKhoi(self):
+          khoi = KhoiBUS()
+          numRows = self.tableKhoi.rowCount()
+          flag = True
+          for i in range(numRows):
+               ma= self.tableKhoi.item(i,0).text()
+               ten= self.tableKhoi.item(i,1).text()
+               update = KhoiDTO(ma,ten)
+               if not khoi.update(update):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistlop()
+          else : 
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
+
      def deleteKhoi(self):
           selected = self.tableKhoi.selectedItems()
-          
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableKhoi.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa khối có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maKhoi = self.tableKhoi.item(row, 0).text()
-                         self.tableKhoi.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM khoilop WHERE maKhoiLop= %s"
-                         val = (maKhoi,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-
-                         except:
-                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return               
-
+                         if ret == QMessageBox.Yes:
+                              khoi = KhoiBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if khoi.delete(mamon):
+                                   for col in range(self.tableKhoi.columnCount()):
+                                        item = self.tableKhoi.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistlop()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
 
@@ -1363,34 +1356,11 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnCapNhatHanhKiem.clicked.connect(self.updateHanhKiem)
           self.btnXoaHanhKiem.clicked.connect(self.deleteHanhKiem)
           self.pushButton_99.clicked.connect(self.clear)
-          self.loadlistKQ()
-          
-          sqlHanhKiem = "SELECT * FROM hanhkiem"
-          try:
-               query.execute(sqlHanhKiem)
-               dataHanhKiem = query.fetchall()
-               self.tableHanhKiem.setRowCount(len(dataHanhKiem))
-               for i, row in enumerate(dataHanhKiem):
-                    for j, val in enumerate(row):
-                         self.tableHanhKiem.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          
-          sqlQuyDinh ="SELECT MAX(tuoiCanDuoi),MAX(tuoiCanTren),MAX(siSoCanDuoi),MAX(siSoCanTren),MAX(diemDat) FROM quydinh  "
-          try:
-               query.execute(sqlQuyDinh)
-               dataQuyDinh = query.fetchone()
-               self.spinTuoitToiThieu.setValue(dataQuyDinh[0])
-               self.spinTuoiToiDa.setValue(dataQuyDinh[1])
-               self.spinLopToiThieu.setValue(dataQuyDinh[2])
-               self.spinLopToiDa.setValue(dataQuyDinh[3])
-               self.spinDiem.setValue(dataQuyDinh[4])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
+          #QuyDinh
+          self.btnQuyDinh.clicked.connect(self.quyDinh)
+          self.btnResetQuyDinh.clicked.connect(self.resetQuyDinh)
 
-          maHanhKiem = "HK" + str(random.randint(0,999)).zfill(3)
-          self.lineMaHanhKiem.setText(maHanhKiem)
-          self.MaHanhKiem = maHanhKiem
+          self.loadlistKQ()
      def loadlistKQ(self):
           #ketqua
           ketqua = KetQuaBUS()
@@ -1431,7 +1401,14 @@ class TrangChu(QtWidgets.QMainWindow):
           for i in range(numRows):
                self.tableHanhKiem.item(i, 0).setFlags(self.tableHanhKiem.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableHanhKiem.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
-         
+          #QuyDinh 
+          qd = QuyDinhBUS()
+          quydinhlist = qd.get()
+          self.spinTuoitToiThieu.setValue(quydinhlist[0][0])
+          self.spinTuoiToiDa.setValue(quydinhlist[0][1])
+          self.spinLopToiThieu.setValue(quydinhlist[0][2])
+          self.spinLopToiDa.setValue(quydinhlist[0][3])
+          self.spinDiem.setValue(quydinhlist[0][4])     
      def addKetQua(self):
           kq = KetQuaBUS()
           lineTenKetQua = self.lineTenKetQua.text()
@@ -1618,16 +1595,19 @@ class TrangChu(QtWidgets.QMainWindow):
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def quyDinh(self):
+          qd = QuyDinhBUS()
           spinTuoitToiThieu = self.spinTuoitToiThieu.value()
           spinTuoiToiDa = self.spinTuoiToiDa.value()
           spinLopToiThieu = self.spinLopToiThieu.value()
           spinLopToiDa = self.spinLopToiDa.value()
           spinDiem = self.spinDiem.value()
-          query.fetchall()
-          query.execute("INSERT INTO quydinh (tuoiCanDuoi, tuoiCanTren,siSoCanDuoi,siSoCanTren,diemDat) VALUES (%s, %s,%s,%s,%s)", (spinTuoitToiThieu,spinTuoiToiDa,spinLopToiThieu,spinLopToiDa,spinDiem))
-          db.commit()
-          QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.stackKetQua()
+          addQuyDinh = QuyDinhDTO(spinTuoitToiThieu,spinTuoiToiDa,spinLopToiThieu,spinLopToiDa,spinDiem)
+          if qd.insert(addQuyDinh):
+               print("Insert record:",addQuyDinh.tuoiCD,addQuyDinh.tuoiCT,addQuyDinh.siSoCD,addQuyDinh.tuoiCT,addQuyDinh.diemDat)
+               QMessageBox.information(self,"Thông báo","Cập nhật quy định mới thành công!")
+               self.loadlistKQ()
+          else:
+               QMessageBox.information(self,"Thông báo","Cập nhật quy định mới không thành công!")
      def resetQuyDinh(self):
           self.spinTuoitToiThieu.setValue(0)
           self.spinTuoiToiDa.setValue(0)
