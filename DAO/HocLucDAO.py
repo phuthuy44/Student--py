@@ -3,11 +3,11 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 import mysql.connector
-from DTO.LoaiDiemDTO import LoaiDiemDTO
-class LoaiDiemDAO:
+from DTO.HocLucDTO import HocLucDTO
+class HocLucDAO:
      def __init__(self):
           pass
-     def getlistDanhSach(self):
+     def getlistdanhsach(self):
           list = []
           try : 
                mydb = mysql.connector.connect(
@@ -17,11 +17,11 @@ class LoaiDiemDAO:
                     database ="studentmanager"
                )
                query = mydb.cursor()
-               sqlPhi  = "SELECT *FROM loaidiem"
-               query.execute(sqlPhi)
+               sql = "SELECT *FROM hocluc"
+               query.execute(sql)
                rows = query.fetchall()
                for row in rows:
-                    phi= (row[0],row[1],row[2])
+                    phi= (row[0],row[1],row[2],row[3],row[4])
                     list.append(phi)
                print(list)
           except mysql.connector.errors.InternalError as e:
@@ -31,7 +31,7 @@ class LoaiDiemDAO:
                mydb.close()
           return list
      def CheckgetID(self):
-          sqlGetMa = "SELECT CONCAT('LD', LPAD(COALESCE(MAX(SUBSTR(maLoaiDiem, 3)), 0) + 1, 3, '0')) FROM loaidiem"
+          sqlGetMa = "SELECT CONCAT('HL', LPAD(COALESCE(MAX(SUBSTR(maHocLuc, 3)), 0) + 1, 3, '0')) FROM hocluc"
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",
@@ -53,7 +53,7 @@ class LoaiDiemDAO:
                mydb.close()
           return False
      def CheckTenTonTai(ten):
-          sqlCheck = "SELECT * FROM loaidiem WHERE tenLoai = %s"
+          sqlCheck = "SELECT * FROM hocluc WHERE tenHocLuc = %s"
           val = (ten,)
           try:
                mydb = mysql.connector.connect(
@@ -75,9 +75,9 @@ class LoaiDiemDAO:
                query.close()
                mydb.close()
           return False
-     def update(dd: LoaiDiemDTO):
-          sqlCapNhat = "UPDATE loaidiem SET tenLoai = %s, heSo = %s WHERE maLoaiDiem =%s"
-          data = (dd.tenLoaiDiem,dd.heSo,dd.maLoaiDiem)
+     def update(dd: HocLucDTO):
+          sqlCapNhat = "UPDATE hocluc SET tenHocLuc= %s,diemCanDuoi = %s, diemCanTren = %s, diemKhongChe =%s WHERE maHocLuc=%s"
+          data = (dd.tenHL,dd.diemCanDuoi,dd.diemCanTren,dd.diemKhongChe,dd.maHL)
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",
@@ -98,7 +98,7 @@ class LoaiDiemDAO:
                mydb.close()
           return False
      def delete(ma):
-          sqlDelete = "DELETE FROM loaidiem WHERE maLoaiDiem= %s"
+          sqlDelete = "DELETE FROM hocluc WHERE maHocLuc= %s"
           val = (ma,)
           try:
                mydb = mysql.connector.connect(
@@ -119,10 +119,10 @@ class LoaiDiemDAO:
                query.close()
                mydb.close()
           return False
-     def insertMon(self,dd:LoaiDiemDTO):
-          sqlInsert ="INSERT INTO loaidiem (maLoaiDiem, tenLoai,heSo) VALUES (%s, %s,%s)"
-          idPhi = self.CheckgetID()  # generate new unique ID
-          val = (idPhi,dd.tenLoaiDiem,dd.heSo)
+     def insert(self,dd:HocLucDTO):
+          sqlInsert ="INSERT INTO hocluc (maHocLuc, tenHocLuc,diemCanDuoi,diemCanTren,diemKhongChe) VALUES (%s, %s,%s,%s,%s)"
+          id = self.CheckgetID()  # generate new unique ID
+          val = (id,dd.tenHL, dd.diemCanDuoi, dd.diemCanTren, dd.diemKhongChe)
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",
