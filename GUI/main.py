@@ -16,6 +16,8 @@ from BUS.KetQuaBUS import KetQuaBUS
 from DTO.KetQuaDTO import KetQuaDTO
 from BUS.HocLucBUS import HocLucBUS
 from DTO.HocLucDTO import HocLucDTO
+from BUS.HanhKiemBUS import HanhKiemBUS
+from DTO.HanhKiemDTO import HanhKiemDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -95,9 +97,7 @@ class TrangChu(QtWidgets.QMainWindow):
           '''Xu lý cac nut trong tabWidget'''  
 
           
-          self.btnThemHanhKiem.clicked.connect(self.addHanhKiem)
-          self.btnCapNhatHanhKiem.clicked.connect(self.updateHanhKiem)
-          self.btnXoaHanhKiem.clicked.connect(self.deleteHanhKiem)
+          
 
           self.btnQuyDinh.clicked.connect(self.quyDinh)
           self.btnResetQuyDinh.clicked.connect(self.resetQuyDinh)
@@ -677,6 +677,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineDiemCD.clear()
           self.lineDiemCT.clear()
           self.lineDiemKhongChe.clear()
+          self.lineTenHanhKiem.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -1358,6 +1359,10 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnXoaHocLuc.clicked.connect(self.deleteHocLuc)
           self.pushButton_97.clicked.connect(self.clear)
           #HanhKiem
+          self.btnThemHanhKiem.clicked.connect(self.addHanhKiem)
+          self.btnCapNhatHanhKiem.clicked.connect(self.updateHanhKiem)
+          self.btnXoaHanhKiem.clicked.connect(self.deleteHanhKiem)
+          self.pushButton_99.clicked.connect(self.clear)
           self.loadlistKQ()
           
           sqlHanhKiem = "SELECT * FROM hanhkiem"
@@ -1406,7 +1411,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineMaHocLuc.setText(str(HocLucBUS.CheckgetID(self)))
           listmonHoc = hocluc.getlistHocLuc()
           self.tableHocLuc.setRowCount(len(listmonHoc))
-          self.tableMonHoc.setColumnCount(len(listmonHoc[0]))
 
           for i,row in enumerate(listmonHoc): 
                for j,val in enumerate(row): 
@@ -1415,7 +1419,19 @@ class TrangChu(QtWidgets.QMainWindow):
           for i in range(numRows):
                self.tableHocLuc.item(i, 0).setFlags(self.tableHocLuc.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableHocLuc.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
-          
+          #HanhKiem
+          hanhkiem = HanhKiemBUS()
+          self.lineMaHanhKiem.setText(str(HanhKiemBUS.CheckgetID(self)))
+          listHK = hanhkiem.getlistHK()
+          self.tableHanhKiem.setRowCount(len(listHK))
+          for i,row in enumerate(listHK): 
+               for j,val in enumerate(row): 
+                    self.tableHanhKiem.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableHanhKiem.rowCount() 
+          for i in range(numRows):
+               self.tableHanhKiem.item(i, 0).setFlags(self.tableHanhKiem.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableHanhKiem.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+         
      def addKetQua(self):
           kq = KetQuaBUS()
           lineTenKetQua = self.lineTenKetQua.text()
@@ -1470,7 +1486,7 @@ class TrangChu(QtWidgets.QMainWindow):
                                         del item
                                    QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
                                    # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
-                                   self.loadlistMonHoc()
+                                   self.loadlistKQ()
                               else:
                                    QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
@@ -1544,73 +1560,61 @@ class TrangChu(QtWidgets.QMainWindow):
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def addHanhKiem(self):
+          hk = HanhKiemBUS()
           lineTenHanhKiem = self.lineTenHanhKiem.text()
-          maHanhKiem = self.MaHanhKiem
-          if len(lineTenHanhKiem)==0:
+          addKQ = HanhKiemDTO(None,lineTenHanhKiem)
+          if len(lineTenHanhKiem)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM hanhkiem WHERE tenHanhKiem = %s", (lineTenHanhKiem,))
-               check = query.fetchone()
-               if check is not None:
-                    QMessageBox.information(self,"Thông báo","Khoản phí này đã có trong danh sách!")
+               if hk.Checkten(lineTenHanhKiem):
+                    QMessageBox.information(self,"Thông báo","Loại hạnh kiểm này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO hanhkiem (maHanhKiem, tenHanhKiem) VALUES (%s, %s)", (maHanhKiem, lineTenHanhKiem))
-                    #db.commit()
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenHanhKiem.clear()
-          self.stackKetQua()
+                    if hk.inser(addKQ):
+                         print("Inserted record:", addKQ.maHanhKiem, addKQ.tenHanhKiem)
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistKQ()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
+     
      def updateHanhKiem(self):
+          hk = HanhKiemBUS()
           numRows = self.tableHanhKiem.rowCount()
+          flag = True
           for i in range(numRows):
-               maHanhKiem= self.tableHanhKiem.item(i,0).text()
-               tenHanhKiem = self.tableHanhKiem.item(i,1).text()
-               sql =" UPDATE hanhkiem SET tenHanhKiem = %s WHERE maHanhKiem =%s"
-               val = (tenHanhKiem,maHanhKiem)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackKetQua()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
-    
+               ma= self.tableHanhKiem.item(i,0).text()
+               ten= self.tableHanhKiem.item(i,1).text()
+               update = HanhKiemDTO(ma,ten)
+               if not hk.update(update):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistKQ()
+          else : 
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
+
      def deleteHanhKiem(self):
           selected = self.tableHanhKiem.selectedItems()
-          
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
-               
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maHanhKiem = self.tableHanhKiem.item(row, 0).text()
-                         self.tableHanhKiem.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM hanhkiem WHERE maHanhKiem = %s"
-                         val = (maHanhKiem,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                         except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
-
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableHanhKiem.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa loại hạnh kiểm có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
+                         if ret == QMessageBox.Yes:
+                              hk = HanhKiemBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if hk.delete(mamon):
+                                   for col in range(self.tableHanhKiem.columnCount()):
+                                        item = self.tableHanhKiem.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistKQ()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def quyDinh(self):
