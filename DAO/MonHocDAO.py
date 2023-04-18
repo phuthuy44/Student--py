@@ -31,7 +31,7 @@ class MonHocDAO:
                mydb.close()
           return list
      def CheckgetID(self):
-          sqlGetMa = "SELECT CONCAT('MH', LPAD(COUNT(*) + 1, 3, '0')) FROM monhoc"
+          sqlGetMa = "SELECT CONCAT('MH', LPAD(COALESCE(MAX(SUBSTR(maMonHoc, 3)), 0) + 1, 3, '0')) FROM monhoc"
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",

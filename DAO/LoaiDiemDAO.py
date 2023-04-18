@@ -31,7 +31,7 @@ class LoaiDiemDAO:
                mydb.close()
           return list
      def CheckgetID(self):
-          sqlGetMa = "SELECT CONCAT('LD', LPAD(COUNT(*) + 1, 3, '0')) FROM loaidiem"
+          sqlGetMa = "SELECT CONCAT('LD', LPAD(COALESCE(MAX(SUBSTR(maKetQua, 3)), 0) + 1, 3, '0')) FROM loaidiem"
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",

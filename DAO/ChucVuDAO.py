@@ -98,7 +98,7 @@ class ChucVuDAO:
                mydb.close()
           return False
      def CheckgetID(self):
-          sqlGetMaCV = "SELECT CONCAT('CV', LPAD(COUNT(*) + 1, 3, '0')) FROM chucvu"
+          sqlGetMaCV = "SELECT CONCAT('KQ', LPAD(COALESCE(MAX(SUBSTR(maChucVu, 3)), 0) + 1, 3, '0')) FROM chucvu"
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",

@@ -12,6 +12,8 @@ from BUS.MonHocBUS import MonHocBUS
 from DTO.MonHocDTO import MonHocDTO
 from BUS.LoaiDiemBUS import LoaiDiemBUS
 from DTO.LoaiDiemDTO import LoaiDiemDTO
+from BUS.KetQuaBUS import KetQuaBUS
+from DTO.KetQuaDTO import KetQuaDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -675,6 +677,11 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineSoTiet.clear()
           self.txtTimKiem_2.clear()
           self.lineTenLoaiDiem.clear()
+          self.lineTenKetQua.clear()
+          self.lineTenHocLuc.clear()
+          self.lineDiemCD.clear()
+          self.lineDiemCT.clear()
+          self.lineDiemKhongChe.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -1344,16 +1351,7 @@ class TrangChu(QtWidgets.QMainWindow):
      
      def stackKetQua(self):
           self.stackedWidget.setCurrentIndex(8)
-          sqlKetQua = "SELECT *FROM ketqua"
-          try:
-               query.execute(sqlKetQua)
-               data = query.fetchall()
-               self.tableKetQua.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableKetQua.setItem(i, j, QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
+          self.loadlistKQ()
           sqlHocLuc = "SELECT *FROM hocluc "
           try:
                query.execute(sqlHocLuc)
@@ -1388,9 +1386,7 @@ class TrangChu(QtWidgets.QMainWindow):
           except mysql.connector.errors.InternalError as e:
                print("Error executing MySQL query:", e)
 
-          maKetQua ="KQ" + str(random.randint(0,999)).zfill(3)
-          self.lineMaKetQua.setText(maKetQua)
-          self.maKetQua = maKetQua
+          
 
           maHocLuc ="HL"+str(random.randint(0,999)).zfill(3)
           self.lineMaHocLuc.setText(maHocLuc)
@@ -1399,76 +1395,82 @@ class TrangChu(QtWidgets.QMainWindow):
           maHanhKiem = "HK" + str(random.randint(0,999)).zfill(3)
           self.lineMaHanhKiem.setText(maHanhKiem)
           self.MaHanhKiem = maHanhKiem
+     def loadlistKQ(self):
+          ketqua = KetQuaBUS()
+          self.lineMaKetQua.setText(str(KetQuaBUS.CheckgetID(self)))
+          listmonHoc = ketqua.getlistKetQua()
+          self.tableKetQua.setRowCount(len(listmonHoc))
+          #self.tableMonHoc.setColumnCount(len(listmonHoc[0]))
+
+          for i,row in enumerate(listmonHoc): 
+               for j,val in enumerate(row): 
+                    self.tableKetQua.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableKetQua.rowCount() 
+          for i in range(numRows):
+               self.tableKetQua.item(i, 0).setFlags(self.tableKetQua.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableKetQua.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          
      def addKetQua(self):
+          kq = KetQuaBUS()
           lineTenKetQua = self.lineTenKetQua.text()
-          maKetQua =self.maKetQua
+          addKQ = KetQuaDTO(None,lineTenKetQua)
           if len(lineTenKetQua)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM ketqua WHERE tenKetQua = %s", (lineTenKetQua,))
-               check = query.fetchone()
-               if check is not None:
-                    QMessageBox.information(self,"Thông báo","Loại kết quả này đã có trong danh sách!")
+               if kq.Checkten(lineTenKetQua):
+                    QMessageBox.information(self,"Thông báo","Môn học này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO ketqua (maKetQua, tenKetQua) VALUES (%s, %s)", (maKetQua,lineTenKetQua))
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenKetQua.clear()
-          self.stackKetQua()
-     def updateKetQua(self):
-          numRows = self.tableKetQua.rowCount()
-          for i in range(numRows):
-               maKetQua= self.tableKetQua.item(i,0).text()
-               tenKetQua = self.tableKetQua.item(i,1).text()
-               sql =" UPDATE ketqua SET tenKetQua = %s WHERE maKetQua =%s"
-               val = (tenKetQua,maKetQua)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackKetQua()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+                    if kq.inser(addKQ):
+                         print("Inserted record:", addKQ.maKetQua, addKQ.tenKetQua)
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistKQ()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
      
+     def updateKetQua(self):
+          kq = KetQuaBUS()
+          numRows = self.tableKetQua.rowCount()
+          flag = True
+          for i in range(numRows):
+               ma= self.tableKetQua.item(i,0).text()
+               ten= self.tableKetQua.item(i,1).text()
+               update = KetQuaDTO(ma,ten)
+               if not kq.update(update):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistKQ()
+          else : 
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
+
      def deleteKetQua(self):
           selected = self.tableKetQua.selectedItems()
-          
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableKetQua.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa loại điểm có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maMonHoc = self.tableKetQua.item(row, 0).text()
-                         self.tableKetQua.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM ketqua WHERE maKetQua= %s"
-                         val = (maMonHoc,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                         except:
-                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
-
+                         if ret == QMessageBox.Yes:
+                              loaidiem = KetQuaBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if loaidiem.delete(mamon):
+                                   for col in range(self.tableKetQua.columnCount()):
+                                        item = self.tableKetQua.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistMonHoc()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
 
+          
      def addHocLuc(self):
           lineTenHocLuc = self.lineTenHocLuc.text()
           lineDiemCD = self.lineDiemCD.text()
