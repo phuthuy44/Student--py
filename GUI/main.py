@@ -22,6 +22,10 @@ from BUS.QuyDinhBUS import QuyDinhBUS
 from DTO.QuyDinhDTO import QuyDinhDTO
 from BUS.KhoiBUS import KhoiBUS
 from DTO.KhoiDTO import KhoiDTO
+from BUS.HocKyBUS import HocKyBUS
+from DTO.HocKyDTO import HocKyDTO
+from BUS.NamHocBUS import NamHocBUS
+from DTO.NamHocDTO import NamHocDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -99,15 +103,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnHocPhi.clicked.connect(self.stackHocPhi)
           '''Loadata'''
           '''Xu lý cac nut trong tabWidget'''  
-
-          self.btnThemHocKy.clicked.connect(self.addHocKy)
-          self.btnCapNhatHocKy.clicked.connect(self.updateHocKy)
-          self.btnXoaHocKy.clicked.connect(self.deleteHocKy)
-
-          self.btnThemNamHoc.clicked.connect(self.addNamHoc)
-          self.btnCapNhatNamHoc.clicked.connect(self.updateNamHoc)
-          self.btnXoaNamHoc.clicked.connect(self.deleteNamHoc)
-
           self.btnThemHocSinh.clicked.connect(self.addHocSinh)
           self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
           self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
@@ -673,6 +668,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineDiemKhongChe.clear()
           self.lineTenHanhKiem.clear()
           self.lineTenKhoi.clear()
+          self.lineTenHocKy.clear()
+          self.lineTenNamHoc.clear()
+          self.lineEdit_69.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -952,19 +950,21 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackHKNH(self):
           self.stackedWidget.setCurrentIndex(6)
-          sqlHocKy = "SELECT * FROM hocky"
-          sqlNamHoc = "SELECT * FROM namhoc"
-          try: 
-               query.execute(sqlHocKy)
-               data = query.fetchall()
-               self.tableHocKy.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableHocKy.setItem(i, j, QTableWidgetItem(str(val)))
-
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          try: 
+          #HocKy
+          self.btnThemHocKy.clicked.connect(self.addHocKy)
+          self.btnCapNhatHocKy.clicked.connect(self.updateHocKy)
+          self.btnXoaHocKy.clicked.connect(self.deleteHocKy)
+          self.pushButton_85.clicked.connect(self.clear)
+          #NamHoc
+          self.btnThemNamHoc.clicked.connect(self.addNamHoc)
+          self.btnCapNhatNamHoc.clicked.connect(self.updateNamHoc)
+          self.btnXoaNamHoc.clicked.connect(self.deleteNamHoc)
+          self.pushButton_86.clicked.connect(self.clear)
+          self.btnTimNH.clicked.connect(self.findNH)
+          self.cbSortCV_2.activated.connect(self.fineSortASCMaInNH)
+          self.cbSortCV_3.activated.connect(self.fineSortASCTenInNH)
+          self.loadlistHKNH()
+          '''try: 
                query.execute(sqlNamHoc)
                dataNamHoc = query.fetchall()
                self.tableNamHoc.setRowCount(len(dataNamHoc))
@@ -975,151 +975,189 @@ class TrangChu(QtWidgets.QMainWindow):
           except mysql.connector.errors.InternalError as e:
                print("Error executing MySQL query:", e) 
           # populate the widget with the data from the database
-          lineMaHocKy = "HK" + str(random.randint(0,999)).zfill(3)
-          self.lineMaHocKy.setText(lineMaHocKy)
-          self.maHocKy = lineMaHocKy
+          
 
           lineMaNamHoc ="NH"+str(random.randint(0,9999)).zfill(6)
           self.lineMaNamHoc.setText(lineMaNamHoc)
-          self.maNamHoc = lineMaNamHoc
+          self.maNamHoc = lineMaNamHoc'''
+     def loadlistHKNH(self):
+          #hocky
+          hocky = HocKyBUS()
+          self.lineMaHocKy.setText(str(HocKyBUS.CheckgetID(self)))
+          listHK = hocky.getlistHocKy()
+          self.tableHocKy.setRowCount(len(listHK))
+          for i,row in enumerate(listHK): 
+               for j,val in enumerate(row): 
+                    self.tableHocKy.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableHocKy.rowCount() 
+          for i in range(numRows):
+               self.tableHocKy.item(i, 0).setFlags(self.tableHocKy.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableHocKy.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          #namhoc
+          namhoc = NamHocBUS()
+          self.lineMaNamHoc.setText(str(NamHocBUS.CheckgetID(self)))
+          listNH = namhoc.getlistNH()
+          self.tableNamHoc.setRowCount(len(listNH))
+          for i,row in enumerate(listNH): 
+               for j,val in enumerate(row): 
+                    self.tableNamHoc.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableNamHoc.rowCount() 
+          for i in range(numRows):
+               self.tableNamHoc.item(i, 0).setFlags(self.tableNamHoc.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableNamHoc.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+
      def addHocKy(self):
+          hocky = HocKyBUS()
           lineTenHocKy = self.lineTenHocKy.text()
-          lineMaHocKy = self.maHocKy
           cboxHeSoHocKy = self.cboxHeSoHocKy.currentText()
+          addHK = HocKyDTO(None,lineTenHocKy,cboxHeSoHocKy)
           if len(lineTenHocKy)==0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM hocky WHERE tenHocKy = %s", (lineTenHocKy,))
-               check = query.fetchone()
-               if check is not None:
+               if hocky.Checkten(lineTenHocKy):
                     QMessageBox.information(self,"Thông báo","Loại học kỳ này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO hocky (maHocKy, tenHocKy,heSo) VALUES (%s, %s,%s)", (lineMaHocKy,lineTenHocKy,cboxHeSoHocKy))
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenHocKy.clear()
-          self.stackHKNH()
+                    if hocky.insert(addHK):
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistHKNH()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
+
      def updateHocKy(self):
+          hocky = HocKyBUS()
           numRows = self.tableHocKy.rowCount()
+          flag = True
           for i in range(numRows):
                maHocKy= self.tableHocKy.item(i,0).text()
                tenHocKy = self.tableHocKy.item(i,1).text()
                heSoHocKy = self.tableHocKy.item(i,2).text()
-               sql =" UPDATE hocky SET tenHocKy = %s,heSo = %s WHERE maHocKy =%s"
-               val = (tenHocKy,heSoHocKy,maHocKy)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackHKNH()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               update = HocKyDTO(maHocKy,tenHocKy,heSoHocKy)
+               if not hocky.update(update):
+                    flag = False
+          if flag :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistHKNH()
+          else :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
      def deleteHocKy(self):
           selected = self.tableHocKy.selectedItems()
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableHocKy.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa loại học kỳ có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maHocKy = self.tableHocKy.item(row, 0).text()
-                         self.tableHocKy.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM hocky WHERE maHocKy= %s"
-                         val = (maHocKy,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-
-                         except:
-                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return               
-
+                         if ret == QMessageBox.Yes:
+                              hk = HocKyBUS()
+                              if hk.delete(mamon):
+                                   #self.tableHocLuc.removeRow(row)
+                                   for col in range(self.tableHocKy.columnCount()):
+                                        item = self.tableHocKy.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistHKNH()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def addNamHoc(self):
+          namhoc = NamHocBUS()
           lineTenNamHoc = self.lineTenNamHoc.text()
-          maNamHoc=self.maNamHoc
+          addNH = NamHocDTO(None,lineTenNamHoc)
           if len(lineTenNamHoc)==0 :
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT * FROM namhoc WHERE tenNamHoc= %s", (lineTenNamHoc,))
-               check = query.fetchone()
-               if check is not None:
+               if namhoc.Checkten(lineTenNamHoc):
                     QMessageBox.information(self,"Thông báo","Loại năm học này đã có trong danh sách!")
                else:
-                    query.execute("INSERT INTO namhoc (maNamHoc, tenNamHoc) VALUES (%s, %s)", (maNamHoc,lineTenNamHoc))
-                    try:              
-                    #query.execute(sql,val)
-                         db.commit()
-                    except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                         return
-                    QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
-          self.lineTenNamHoc.clear()
-          self.stackHKNH()
+                    if namhoc.insert(addNH):
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         self.loadlistHKNH()
+                         self.clear()
+                    else:
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
+
      def updateNamHoc(self):
+          namhoc = NamHocBUS()
           numRows = self.tableNamHoc.rowCount()
+          flag = True
           for i in range(numRows):
-               maNamHoc= self.tableNamHoc.item(i,0).text()
-               tenNamHoc = self.tableNamHoc.item(i,1).text()
-               sql =" UPDATE namhoc SET tenNamHoc = %s WHERE maNamHoc =%s"
-               val = (tenNamHoc,maNamHoc)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackHKNH()
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               maNH= self.tableNamHoc.item(i,0).text()
+               tenNH= self.tableNamHoc.item(i,1).text()
+               update = NamHocDTO(maNH,tenNH)
+               if not namhoc.update(update):
+                    flag = False
+          if flag :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistHKNH()
+          else :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu không thành công!")
      def deleteNamHoc(self):
           selected = self.tableNamHoc.selectedItems()
-          
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         mamon = self.tableNamHoc.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa loại năm học có mã {mamon} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maNamHoc = self.tableNamHoc.item(row, 0).text()
-                         self.tableNamHoc.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM namhoc WHERE maNamHoc= %s"
-                         val = (maNamHoc,)
-                         try:              
-                              query.execute(sql,val)
-                              db.commit()
-                         except:
-                         # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return
-                    QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công!")
-               
-
+                         if ret == QMessageBox.Yes:
+                              nh = NamHocBUS()
+                              if nh.delete(mamon):
+                                   #self.tableHocLuc.removeRow(row)
+                                   for col in range(self.tableNamHoc.columnCount()):
+                                        item = self.tableNamHoc.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {mamon} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistHKNH()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
-
+     def fineSortASCMaInNH(self):
+          nh = NamHocBUS()
+          self.tableNamHoc.clearContents()
+          order = self.cbSortCV_2.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = nh.findSortASCMa(order)
+          #self.tableChucVu.clearContents()
+          self.tableNamHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableNamHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     def fineSortASCTenInNH(self):
+          nh = NamHocBUS()
+          self.tableNamHoc.clearContents()
+          order = self.cbSortCV_3.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = nh.findSortASCTen(order)
+          #self.tableChucVu.clearContents()
+          self.tableNamHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableNamHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     def findNH(self):
+          nh = NamHocBUS()
+          txtTimKiem = self.lineEdit_69.text()
+          list = nh.find(txtTimKiem)
+          rowcount = 0
+          self.tableNamHoc.clearContents()
+          self.tableNamHoc.rowCount()
+          if list is not None:
+               for row in list :
+                    self.tableNamHoc.setItem(rowcount, 0, QTableWidgetItem(row[0]))
+               #self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               #self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 200))
+                    self.tableNamHoc.setItem(rowcount, 1, QTableWidgetItem(row[1]))
+                    rowcount += 1
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
           self.btnThemMonHoc.clicked.connect(self.addMonHoc)

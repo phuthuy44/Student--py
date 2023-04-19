@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -7466,7 +7466,7 @@ border: 1px solid black;
 }</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_83">
+       <widget class="QPushButton" name="btnTimNH">
         <property name="geometry">
          <rect>
           <x>420</x>
@@ -10758,7 +10758,7 @@ font: 75 12pt &quot;Tahoma&quot;;</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_21">
        <attribute name="title">
