@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import base64
 import sys
 import re
@@ -26,6 +27,8 @@ from BUS.HocKyBUS import HocKyBUS
 from DTO.HocKyDTO import HocKyDTO
 from BUS.NamHocBUS import NamHocBUS
 from DTO.NamHocDTO import NamHocDTO
+from BUS.GiaoVienBUS import GiaoVienBUS
+from DTO.GiaoVienDTO import GiaoVienDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -107,11 +110,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
           self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
           self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
-
-          self.btnThemGiaoVien.clicked.connect(self.addGiaoVien)
-          self.btnCapNhatGiaoVien.clicked.connect(self.updateGiaoVien)
-          self.btnXoaGiaoVien.clicked.connect(self.deleteGiaoVien)
-          self.btnGetImageGiaoVien.clicked.connect(self.imageGiaoVien)
 
           self.btnThemLopHoc.clicked.connect(self.addLop)
           self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
@@ -352,50 +350,52 @@ class TrangChu(QtWidgets.QMainWindow):
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
-          maGiaoVien = "GV" + str(random.randint(1000,9999)).zfill(3)
-          self.lineMaGV.setText(maGiaoVien)
-          self.maGiaoVien = maGiaoVien
-          '''maMonHoc = self.maMonHoc
-          maChucVu = self.maChucVu'''
-          sqlGiaoVien = "SELECT maGiaoVien,tenGiaoVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,monhoc.tenMonHoc,chucvu.tenChucVu,hinhAnh FROM giaovien,monhoc,chucvu WHERE giaovien.maMonHoc = monhoc.maMonHoc AND giaovien.maChucVu = chucvu.maChucVu ORDER BY maGiaoVien ASC"
-          #value =(maMonHoc,maChucVu)
-          try:
-               query.execute(sqlGiaoVien)
-               data = query.fetchall()
-               self.tableGiaoVien.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    #self.tableHocSinh.insertRow(i)
-                    for j, val in enumerate(row):
-                         item = str(val)
-                         if j == 9:
-                              item = self.getImageLabel(val)
-                              self.tableGiaoVien.setCellWidget(i, j,item)
-                         else:
-                              self.tableGiaoVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
-               self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180)
-          
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing query MYSQL query:",e)
+          self.btnThemGiaoVien.clicked.connect(self.addGiaoVien)
+          self.btnCapNhatGiaoVien.clicked.connect(self.updateGiaoVien)
+          self.btnXoaGiaoVien.clicked.connect(self.deleteGiaoVien)
+          self.btnGetImageGiaoVien.clicked.connect(self.imageGiaoVien)
+          self.pushButton_78.clicked.connect(self.clear)
+          self.cboxSortGV.activated.connect(self.findSortGV)
+          self.cboxSortGT.activated.connect(self.findGioiTinhOfGV)
 
-          sqlChuyenMon = "SELECT tenMonHoc FROM monhoc"
-          try:
-               query.execute(sqlChuyenMon)
-               data = query.fetchall()
-               for row in data:
-                    self.CboxChuyenMon.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing query MYSQL query:",e)
-          sqlChucVuInTabGiaoVien = "SELECT tenChucVu FROM chucvu"
-          try:
-               query.execute(sqlChucVuInTabGiaoVien)
-               data = query.fetchall()
-               for row in data:
-                    self.CboxChucVu.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing query MYSQL query:",e)
+
+          
+          self.loadlistGV()
+     def loadlistGV(self):
+          gv = GiaoVienBUS()
+          self.lineMaGV.setText(str(GiaoVienBUS.CheckgetID(self)))
+          listgv = gv.getlistGV()
+          self.tableGiaoVien.setRowCount(len(listgv))
+          for i,row in enumerate(listgv): 
+               for j,val in enumerate(row):
+                    item = str(val)
+                    if j == 9:
+                         item = self.getImageLabel(val)
+                         self.tableGiaoVien.setCellWidget(i, j,item)
+                    else:
+                         self.tableGiaoVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180) 
+          numRows = self.tableGiaoVien.rowCount()
+          for i in range(numRows):
+               #maChucVu = self.tableChucVu.item(i, 0).text()
+               self.tableGiaoVien.item(i, 0).setFlags(self.tableGiaoVien.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableGiaoVien.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))  
+          monhoc = MonHocBUS()
+          listmh = monhoc.getListMonHoc()
+          for row in listmh:
+               self.CboxChuyenMon.addItem(row[1])
+          chucvu = ChucVuBUS()
+          listcv = chucvu.getListCV()
+          for row in listcv:
+               self.CboxChucVu.addItem(row[1])
      def displayInforInTabPhanCong(self):
           pass
      def addGiaoVien(self):
+          giaovien = GiaoVienBUS()
+          monhoc = MonHocBUS()
+          chucvu = ChucVuBUS()
+          maChuyenMon = monhoc.getMamon(self.CboxChuyenMon.currentText())
+          maChucVu = chucvu.getmaMon(self.CboxChucVu.currentText())
           lineTenGV  = self.lineTenGV.text()
           dateNgaySinhOfGV = self.DatBirthOfGV.date().toPyDate()
           date = dateNgaySinhOfGV.strftime("%Y-%m-%d")
@@ -403,68 +403,42 @@ class TrangChu(QtWidgets.QMainWindow):
           lineDiaChiOfGV = self.diaChiOfGV.text()          
           lineEmailOfGV = self.emailOfGV.text()
           lineSoDienThoaiOfGV = self.soDienThoaiOfGV.text()
-          CboxChuyenMon = self.CboxChuyenMon.currentText()
-          CboxChucVu = self.CboxChucVu.currentText()
+          #CboxChuyenMon = self.CboxChuyenMon.currentText()
+          #CboxChucVu = self.CboxChucVu.currentText()
           img_base64 = self.img_base64
-          maGiaoVien = self.maGiaoVien
-          if len(lineTenGV)==0 and len(lineEmailOfGV) == 0 and len(lineDiaChiOfGV) == 0 and len(lineSoDienThoaiOfGV) == 0:
+          addGiaoVien = GiaoVienDTO(None,lineTenGV,date,cboxGioiTinhOfGV,lineDiaChiOfGV,lineEmailOfGV,lineSoDienThoaiOfGV,maChuyenMon,maChucVu,img_base64)
+
+          if len(lineTenGV)==0 or len(lineEmailOfGV) == 0 or len(lineDiaChiOfGV) == 0 or len(lineSoDienThoaiOfGV) == 0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
           else: 
-               query.execute("SELECT COUNT(*) FROM giaovien WHERE maGiaoVien = %s",(maGiaoVien,))
-               checkMaGV = query.fetchone()
-               if checkMaGV[0]>0:
-                    self.stackGiaoVien()
-               else:
-                    print("Email:", lineEmailOfGV) 
-                    if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmailOfGV):
-                         query.execute("SELECT * FROM giaovien WHERE email = %s",(lineEmailOfGV,))
-                         check = query.fetchone()
-                         if check is not None:
-                              QMessageBox.information(self,"Thông báo",f"Email {lineEmailOfGV} đã tồn tại trong danh sách!")
-                         else:
-                              print("Số điện thoai:",lineSoDienThoaiOfGV)
-                              if  re.match(r"^\d{10}$", lineSoDienThoaiOfGV):
-                                   sqlGetMonHoc = "SELECT maMonHoc FROM monhoc WHERE tenMonHoc = %s"
-                                   val = (CboxChuyenMon,)
-                                   try : 
-                                        query.execute(sqlGetMonHoc, val)
-                                        maMonHoc = query.fetchone()[0]
-                                   except mysql.connector.errors.InternalError as e:
-                                        print("Error executing MySQL query:",e)
-                                   sqlGetChucVu = "SELECT maChucVu FROM chucvu WHERE tenChucVu = %s"
-                                   val = (CboxChucVu,)
-                                   try : 
-                                        query.execute(sqlGetChucVu, val)
-                                        maChucVu = query.fetchone()[0]
-                                   except mysql.connector.errors.InternalError as e:
-                                        print("Error executing MySQL query:",e)   
-                                   query.execute("INSERT INTO giaovien (maGiaoVien , tenGiaoVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,maMonHoc,maChucVu,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s,%s)", (maGiaoVien,lineTenGV,date,cboxGioiTinhOfGV,lineDiaChiOfGV,lineEmailOfGV,lineSoDienThoaiOfGV,maMonHoc,maChucVu,img_base64))
-                                   try:              
-                                        #query.execute(sql,val)
-                                        db.commit()
-                                        QMessageBox.information(self,"Thông báo",f"Thêm giáo viên {lineTenGV} vào danh sách thành công!")
-                                   #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
-
-                                   except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                                        QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                                        db.rollback()
-                                   self.lineTenGV.clear()
-                                   self.emailOfGV.clear()
-                                   self.diaChiOfGV.clear()
-                                   self.lineTenPhuHuynh.clear()
-                                   self.soDienThoaiOfGV.clear()
-                                   self.dateNgaySinhOfHS.clear()
-                                   self.lblImageGiaoVien.clear()
-                                   self.CboxChuyenMon.clear()
-                                   self.CboxChucVu.clear()     
-                                   self.stackGiaoVien()
-                              else: 
-                                   QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại {lineSoDienThoaiOfGV} không hợp lệ")
+               print("Email:", lineEmailOfGV) 
+               if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmailOfGV):
+                    if giaovien.Checkten(lineEmailOfGV):
+                         QMessageBox.information(self,"Thông báo",f"Email {lineEmailOfGV} đã tồn tại trong danh sách!")
                     else:
-                         QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
+                         print("Số điện thoai:",lineSoDienThoaiOfGV)
+                         if  re.match(r"^\d{10}$", lineSoDienThoaiOfGV):
+                              if giaovien.ChecksoDT(lineSoDienThoaiOfGV):
+                                   QMessageBox.information(self,"Thông báo",f"Số điện thoại {lineSoDienThoaiOfGV} đã tồn tại trong danh sách!")
+                              else:
+                                   if giaovien.insert(addGiaoVien) :
+                                        QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                        self.CboxChuyenMon.clear()
+                                        self.CboxChucVu.clear()
+                                        self.loadlistGV()
+                                        
+                                   else: 
+                                        QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+                                 
+                         else: 
+                              QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại {lineSoDienThoaiOfGV} không hợp lệ")
+               else:
+                    QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
      def updateGiaoVien(self):
+          monhoc = MonHocBUS()
+          chucvu = ChucVuBUS()
           numRows = self.tableGiaoVien.rowCount()
+          flag = True
           for i in range(numRows):
                maGiaoVien = self.tableGiaoVien.item(i,0).text()
                tenGiaoVien = self.tableGiaoVien.item(i,1).text()
@@ -474,62 +448,85 @@ class TrangChu(QtWidgets.QMainWindow):
                email = self.tableGiaoVien.item(i,5).text()
                soDT = self.tableGiaoVien.item(i,6).text()
                chuyenmon = self.tableGiaoVien.item(i,7).text()
-               chucvu = self.tableGiaoVien.item(i,8).text()
-               sqlGetMonHoc = "SELECT maMonHoc FROM monhoc WHERE tenMonHoc = %s"
-               val = (chuyenmon,)
-               try : 
-                    query.execute(sqlGetMonHoc, val)
-                    maMonHoc = query.fetchone()[0]
-               except mysql.connector.errors.InternalError as e:
-                    print("Error executing MySQL query:",e)
-               sqlGetChucVu = "SELECT maChucVu FROM chucvu WHERE tenChucVu = %s"
-               val = (chucvu,)
-               try : 
-                    query.execute(sqlGetChucVu, val)
-                    maChucVu = query.fetchone()[0]
-               except mysql.connector.errors.InternalError as e:
-                    print("Error executing MySQL query:",e)   
-                                   
-               sql =" UPDATE giaovien SET tenGiaoVien = %s, ngaySinh = %s, gioiTinh =%s, diaChi= %s, email = %s, soDienThoai = %s,maMonHoc = %s, maChucVu =%s WHERE maGiaoVien=%s"
-               val = (tenGiaoVien,date,gioiTinh,diachi,email,soDT,maMonHoc,maChucVu,maGiaoVien)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackGiaoVien()
-          QMessageBox.information(self,"Thông báo",f"Cập nhật dữ liệu cho giáo viên có mã {maGiaoVien} thành công!")
-
+               tenchucvu = self.tableGiaoVien.item(i,8).text()
+               hinhAnh = self.tableGiaoVien.item(i,9)
+               giaovien = GiaoVienBUS()
+               maChuyenMon = monhoc.getMamon(chuyenmon)
+               maChucVu = chucvu.getmaMon(tenchucvu)
+               updateGiaoVien = GiaoVienDTO(maGiaoVien,tenGiaoVien,date,gioiTinh,diachi,email,soDT,maChuyenMon,maChucVu,hinhAnh)   
+               if not giaovien.update(updateGiaoVien):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.CboxChuyenMon.clear()
+               self.CboxChucVu.clear()
+               self.loadlistGV()
+          else:
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
      def deleteGiaoVien(self):
           selected = self.tableGiaoVien.selectedItems()
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tableGiaoVien.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa giáo viên có mã {ma} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maGiaoVien = self.tableGiaoVien.item(row, 0).text()
-                         self.tableGiaoVien.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM giaovien WHERE maGiaoVien= %s"
-                         val = (maGiaoVien,)
-                         try:
-                              query.execute(sql,val)
-                              db.commit()
-                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
-                         except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return               
-
+                         if ret == QMessageBox.Yes:
+                              giaovien = GiaoVienBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if giaovien.delete(ma):
+                                   for col in range(self.tableGiaoVien.columnCount()):
+                                        item = self.tableGiaoVien.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.CboxChuyenMon.clear()
+                                   self.CboxChucVu.clear()
+                                   self.loadlistGV()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
+     def findSortGV(self):
+          giaovien = GiaoVienBUS()
+          self.tableGiaoVien.clearContents()
+          order = self.cboxSortGV.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = giaovien.findsort(order)
+          #self.tableChucVu.clearContents()
+          self.tableGiaoVien.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 9:
+                         item = self.getImageLabel(val)
+                         self.tableGiaoVien.setCellWidget(i, j,item)
+                    else:
+                         self.tableGiaoVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180) 
+
+     def findGioiTinhOfGV(self):
+          giaovien = GiaoVienBUS()
+          self.tableGiaoVien.clearContents()
+          order = self.cboxSortGT.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = giaovien.findGT(order)
+          #self.tableChucVu.clearContents()
+          self.tableGiaoVien.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 9:
+                         item = self.getImageLabel(val)
+                         self.tableGiaoVien.setCellWidget(i, j,item)
+                    else:
+                         self.tableGiaoVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180) 
+
      def stackNhanVien(self):
           self.stackedWidget.setCurrentIndex(3)
           self.btnThemCV.clicked.connect(self.tabChucVu)
@@ -562,7 +559,7 @@ class TrangChu(QtWidgets.QMainWindow):
           listChucVu = chucvu.getListCV()
           # Đặt số lượng hàng và cột cho QTableWidget
           self.tableChucVu.setRowCount(len(listChucVu))
-          self.tableChucVu.setColumnCount(len(listChucVu[0]))
+          #self.tableChucVu.setColumnCount(len(listChucVu[0]))
 
           for i,row in enumerate(listChucVu): 
                for j,val in enumerate(row): 
@@ -671,6 +668,12 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineTenHocKy.clear()
           self.lineTenNamHoc.clear()
           self.lineEdit_69.clear()
+          self.lineTenGV.clear()
+          self.emailOfGV.clear()
+          self.diaChiOfGV.clear()
+          self.soDienThoaiOfGV.clear()
+          self.dateNgaySinhOfHS.clear()
+          self.lblImageGiaoVien.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass

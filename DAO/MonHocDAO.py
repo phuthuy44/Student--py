@@ -257,3 +257,23 @@ class MonHocDAO:
                query.close()
                mydb.close()
           return list
+     def getMaMon(ten):
+          sql  = "SELECT maMonHoc FROM monhoc WHERE tenMonHoc = %s"
+          val = (ten,)
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sql,val)
+               ma = query.fetchone()[0]
+               print(ma)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return ma

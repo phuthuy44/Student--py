@@ -32,5 +32,7 @@ class MonHocBUS:
           return MonHocDAO.findHeSo(self,order = order)
      def findSoTiet(self,order):
           return MonHocDAO.findSoTiet(self,order = order)
+     def getMamon(self,ma):
+          return MonHocDAO.getMaMon(ma)
 monhoc = MonHocBUS()
 monhoc.getListMonHoc()

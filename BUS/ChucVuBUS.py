@@ -28,6 +28,8 @@ class ChucVuBUS:
      def findSortASC(self,order):
           print("order:", order)
           return ChucVuDAO.findSortASC(self,order=order)
+     def getmaMon(self,mamon):
+          return ChucVuDAO.getMaMon(mamon)
 
 chucvu = ChucVuBUS()
 chucvu.getListCV()
