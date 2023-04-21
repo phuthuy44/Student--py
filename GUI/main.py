@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import base64
+import openpyxl 
+import win32com.client as win32
 import sys
 import re
 import os
+import time
+import pandas as pd
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from BUS.ChucVuBUS import ChucVuBUS
@@ -124,6 +128,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnTimKiemHS.clicked.connect(self.findHS)
           self.cboxSortGV_HS.activated.connect(self.findSortHS)
           self.cboxGTofHS.activated.connect(self.findGioiTinhOfHS)
+          self.btnExportExcelHS.clicked.connect(self.exportExcelHS)
+          self.btnImportExcelHS.clicked.connect(self.importExcelHS)
+          
 
           self.loadlistHS()
           self.displayInforInTabPhanLop()
@@ -271,17 +278,7 @@ class TrangChu(QtWidgets.QMainWindow):
                          else:
                               QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại {lineSoDienThoaiOfPhuHuynh} không hợp lệ")
                else:
-                    QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
-     def imageGiaoVien(self):
-          choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
-          # If the user did not select a file, return immediately
-          if not choose[0]:
-               return
-          with open(choose[0], 'rb') as f:
-               img_bytes = f.read()
-          px = QtGui.QPixmap(choose[0])
-          self.lblImageGiaoVien.setPixmap(px)
-          self.img_base64 = img_bytes     
+                    QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!")     
      def updateHocSinh(self):
           hs = HocSinhBUS()
           numRows = self.tableHocSinh.rowCount()
@@ -381,7 +378,73 @@ class TrangChu(QtWidgets.QMainWindow):
                     else:
                          self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
           self.tableHocSinh.verticalHeader().setDefaultSectionSize(180) 
+     def exportExcelHS(self):
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.tableHocSinh.model().columnCount()):
+               columnHeader.append(self.tableHocSinh.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.tableHocSinh.rowCount()):
+               for col in range(self.tableHocSinh.columnCount()):
+                    item = self.tableHocSinh.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenFile = "FileExcel\HocSinh\DanhsachHocSinh_{}.xlsx".format(currentTime)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
+               
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
+     '''def importExcelHS(self):
+          # Mở hộp thoại chọn file
+          file_path, _ = QFileDialog.getOpenFileName(self, "Chọn file Excel", "", "GiaoVien (*.xlsx)")
 
+          # Nếu người dùng chọn file
+          if file_path:
+          # Đọc dữ liệu từ file excel
+               workbook = openpyxl.load_workbook(filename=file_path)
+               worksheet = workbook.active
+               data = []
+               for row in worksheet.iter_rows(min_row=2, values_only=True):
+                    data.append(row)
+
+          # So sánh dữ liệu với dữ liệu trong bảng và thêm vào bảng nếu cần
+          for row in data:
+            # Kiểm tra nếu dữ liệu trong excel giống với dữ liệu trong bảng
+               match_found = False
+               for r in range(self.tableHocSinh.rowCount()):
+                    row_match = True
+                    for c in range(self.tableHocSinh.columnCount()):
+                         cell = self.tableHocSinh.item(r, c)
+                         if cell is None or cell.text() != str(row[c]):
+                              row_match = False
+                              break
+                         if row_match:
+                              match_found = True
+                              break
+            
+            # Nếu không tìm thấy dữ liệu trong bảng
+               if not match_found:
+                # Thêm vào bảng
+                    row_count = self.tableHocSinh.rowCount()
+                    self.tableWidget.insertRow(row_count)
+                    for c in range(self.tableWidget.columnCount()):
+                         item = QtWidgets.QTableWidgetItem(str(row[c]))
+                         self.tableWidget.setItem(row_count, c, item)
+
+        # Hiển thị thông báo
+          QtWidgets.QMessageBox.information(self, "Thông báo", "Import file thành công!")
+     '''
 
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
@@ -393,10 +456,21 @@ class TrangChu(QtWidgets.QMainWindow):
           self.pushButton_78.clicked.connect(self.clear)
           self.cboxSortGV.activated.connect(self.findSortGV)
           self.cboxSortGT.activated.connect(self.findGioiTinhOfGV)
+          self.btnXuatExcelGV.clicked.connect(self.exportExcelGV)
           #Phan cong
 
           
           self.loadlistGV()
+     def imageGiaoVien(self):
+          choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
+          # If the user did not select a file, return immediately
+          if not choose[0]:
+               return
+          with open(choose[0], 'rb') as f:
+               img_bytes = f.read()
+          px = QtGui.QPixmap(choose[0])
+          self.lblImageGiaoVien.setPixmap(px)
+          self.img_base64 = img_bytes 
      def loadlistGV(self):
           gv = GiaoVienBUS()
           self.lineMaGV.setText(str(GiaoVienBUS.CheckgetID(self)))
@@ -562,6 +636,33 @@ class TrangChu(QtWidgets.QMainWindow):
                     else:
                          self.tableGiaoVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
           self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180) 
+     def exportExcelGV(self):
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.tableGiaoVien.model().columnCount()):
+               columnHeader.append(self.tableGiaoVien.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.tableGiaoVien.rowCount()):
+               for col in range(self.tableGiaoVien.columnCount()):
+                    item = self.tableGiaoVien.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenFile = "FileExcel\GiaoVien\DanhsachGiaoVien_{}.xlsx".format(currentTime)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
+               
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
 
      def stackNhanVien(self):
 

@@ -1287,7 +1287,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_67">
+        <widget class="QPushButton" name="btnImportExcelHS">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -1314,7 +1314,7 @@ QPushButton:hover{
           <string>Nhập Excel</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_81">
+        <widget class="QPushButton" name="btnExportExcelHS">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -3003,7 +3003,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_57">
+        <widget class="QPushButton" name="btnImportExcelGV">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -3030,7 +3030,7 @@ QPushButton:hover{
           <string>Nhập Excel</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_58">
+        <widget class="QPushButton" name="btnXuatExcelGV">
          <property name="geometry">
           <rect>
            <x>10</x>
