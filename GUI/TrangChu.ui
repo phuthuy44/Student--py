@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -947,7 +947,7 @@ border-radius:5px;
 border:1px solid black;</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_35">
+        <widget class="QLineEdit" name="txtTimKiemhs">
          <property name="geometry">
           <rect>
            <x>100</x>
@@ -964,7 +964,7 @@ border: 1px solid black;
 }</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_39">
+        <widget class="QPushButton" name="btnTimKiemHS">
          <property name="geometry">
           <rect>
            <x>380</x>
@@ -991,7 +991,7 @@ color:black;
           <string>Tìm kiếm </string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_10">
+        <widget class="QComboBox" name="cboxSortGV_HS">
          <property name="geometry">
           <rect>
            <x>700</x>
@@ -1155,7 +1155,7 @@ color:black;
           <string>Giới tính</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_17">
+        <widget class="QComboBox" name="cboxGTofHS">
          <property name="geometry">
           <rect>
            <x>560</x>
@@ -3464,9 +3464,9 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        <widget class="QLineEdit" name="lineEdit_127">
         <property name="geometry">
          <rect>
-          <x>10</x>
+          <x>50</x>
           <y>10</y>
-          <width>491</width>
+          <width>401</width>
           <height>41</height>
          </rect>
         </property>
@@ -3481,7 +3481,7 @@ border: 1px solid black;
        <widget class="QPushButton" name="pushButton_137">
         <property name="geometry">
          <rect>
-          <x>490</x>
+          <x>420</x>
           <y>10</y>
           <width>101</width>
           <height>41</height>
@@ -3505,70 +3505,10 @@ color:black;
          <string>Tìm kiếm </string>
         </property>
        </widget>
-       <widget class="QComboBox" name="comboBox_57">
-        <property name="geometry">
-         <rect>
-          <x>120</x>
-          <y>70</y>
-          <width>141</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QComboBox{
-font: 16pt &quot;Tahoma&quot;;
-	color: rgb(0, 0, 0);
-border: 1px solid black;
-border-radius:5px;
-}</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Chuyên môn </string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Vật lý </string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Toán học </string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Lịch sử</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QLabel" name="label_279">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>70</y>
-          <width>111</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Tahoma</family>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(170, 170, 127);</string>
-        </property>
-        <property name="text">
-         <string> Chuyên môn</string>
-        </property>
-       </widget>
        <widget class="QLabel" name="label_281">
         <property name="geometry">
          <rect>
-          <x>270</x>
+          <x>110</x>
           <y>70</y>
           <width>51</width>
           <height>41</height>
@@ -3590,7 +3530,7 @@ border-radius:5px;
        <widget class="QComboBox" name="comboBox_58">
         <property name="geometry">
          <rect>
-          <x>310</x>
+          <x>150</x>
           <y>70</y>
           <width>91</width>
           <height>41</height>
@@ -3613,7 +3553,7 @@ border-radius:5px;
        <widget class="QLabel" name="label_282">
         <property name="geometry">
          <rect>
-          <x>410</x>
+          <x>250</x>
           <y>70</y>
           <width>51</width>
           <height>41</height>
@@ -3635,7 +3575,7 @@ border-radius:5px;
        <widget class="QComboBox" name="comboBox_59">
         <property name="geometry">
          <rect>
-          <x>470</x>
+          <x>310</x>
           <y>70</y>
           <width>121</width>
           <height>41</height>

@@ -29,6 +29,8 @@ from BUS.NamHocBUS import NamHocBUS
 from DTO.NamHocDTO import NamHocDTO
 from BUS.GiaoVienBUS import GiaoVienBUS
 from DTO.GiaoVienDTO import GiaoVienDTO
+from BUS.HocSinhBUS import HocSinhBUS
+from DTO.HocSinhDTO import HocSinhDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -106,11 +108,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnHocPhi.clicked.connect(self.stackHocPhi)
           '''Loadata'''
           '''Xu lý cac nut trong tabWidget'''  
-          self.btnThemHocSinh.clicked.connect(self.addHocSinh)
-          self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
-          self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
-          self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
-
           self.btnThemLopHoc.clicked.connect(self.addLop)
           self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
           self.btnXoaLopHoc.clicked.connect(self.deleteLop)
@@ -118,30 +115,17 @@ class TrangChu(QtWidgets.QMainWindow):
           self.loadlistCV()
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
+          #HocSinh
+          self.btnThemHocSinh.clicked.connect(self.addHocSinh)
+          self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
+          self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
+          self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
+          self.pushButton_82.clicked.connect(self.clear)
+          self.btnTimKiemHS.clicked.connect(self.findHS)
+          self.cboxSortGV_HS.activated.connect(self.findSortHS)
+          self.cboxGTofHS.activated.connect(self.findGioiTinhOfHS)
 
-          maHocSinh="HS" + str(random.randint(1000,9999)).zfill(3)
-          #maHocSinh = self.maHocSinh
-          self.lineMaHocSinh.setText(maHocSinh)
-          self.maHocSinh = maHocSinh
-
-          sqlHocSinh = "SELECT * FROM hocsinh"
-          try:
-               query.execute(sqlHocSinh)
-               data = query.fetchall()
-               # populate the widget with the data from the database
-               self.tableHocSinh.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    #self.tableHocSinh.insertRow(i)
-                    for j, val in enumerate(row):
-                         item = str(val)
-                         if j == 8:
-                              item = self.getImageLabel(val)
-                              self.tableHocSinh.setCellWidget(i, j,item)
-                         else:
-                              self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
-               self.tableHocSinh.verticalHeader().setDefaultSectionSize(180)
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
+          self.loadlistHS()
           self.displayInforInTabPhanLop()
           '''# populate the widget with the data from the database
           self.tableHocSinh.setRowCount(len(data))
@@ -187,6 +171,27 @@ class TrangChu(QtWidgets.QMainWindow):
                return pixmap
           except:
                return None'''
+     def loadlistHS(self):
+          hs = HocSinhBUS()
+          self.lineMaHocSinh.setText(str(HocSinhBUS.CheckgetID(self)))
+          listHS = hs.getlistHS()
+          self.tableHocSinh.setRowCount(len(listHS))
+          for i,row in enumerate(listHS): 
+               for j,val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableHocSinh.setCellWidget(i, j,item)
+                    else:
+                         self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableHocSinh.verticalHeader().setDefaultSectionSize(180) 
+          numRows = self.tableHocSinh.rowCount()
+          for i in range(numRows):
+               #maChucVu = self.tableChucVu.item(i, 0).text()
+               self.tableHocSinh.item(i, 0).setFlags(self.tableHocSinh.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableHocSinh.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))  
+
+
      def displayInforInTabPhanLop(self):
           sqlNamHocInTabPhanLop = "SELECT tenNamHoc FROM namhoc"
           try:
@@ -224,59 +229,7 @@ class TrangChu(QtWidgets.QMainWindow):
           qimage = QtGui.QImage.fromData(image, '*.png *.jpg *.bmp')
           pixmap = QtGui.QPixmap.fromImage(qimage)
           imageLabel.setPixmap(pixmap)
-          return imageLabel          
-     def addHocSinh(self):
-          lineTenHocSinh  = self.lineTenHocSinh.text()
-          dateNgaySinhOfHS = self.dateNgaySinhOfHS.date().toPyDate()
-          date = dateNgaySinhOfHS.strftime("%Y-%m-%d")
-          cboxGioiTinhOfHocSinh = self.cboxGioiTinhOfHocSinh.currentText()
-          lineEmailOfHocSinh = self.lineEmailOfHocSinh.text()
-          lineDiaChiOfHocSinh = self.lineDiaChiOfHocSinh.text()
-          lineTenPhuHuynh = self.lineTenPhuHuynh.text()
-          lineSoDienThoaiOfPhuHuynh = self.lineSoDienThoaiOfPhuHuynh.text()
-          img_base64 = self.img_base64
-          maHocSinh = self.maHocSinh
-          if len(lineTenHocSinh)==0 and len(lineEmailOfHocSinh) == 0 and len(lineDiaChiOfHocSinh) == 0 and len(lineTenPhuHuynh) == 0 and len(lineSoDienThoaiOfPhuHuynh) == 0:
-               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
-          else: 
-               query.execute("SELECT COUNT(*) FROM hocsinh WHERE maHocSinh = %s",(maHocSinh,))
-               checkMaHS = query.fetchone()
-               if checkMaHS[0]>0:
-                    self.stackHocSinh()
-               else:
-                    print("Email:", lineEmailOfHocSinh) 
-                    if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmailOfHocSinh):
-                         query.execute("SELECT * FROM hocsinh WHERE email = %s",(lineEmailOfHocSinh,))
-                         check = query.fetchone()
-                         if check is not None:
-                              QMessageBox.information(self,"Thông báo","Email này đã tồn tại trong danh sách!")
-                         else:
-                              print("Số điện thoai:",lineSoDienThoaiOfPhuHuynh)
-                              if  re.match(r"^\d{10}$", lineSoDienThoaiOfPhuHuynh):
-                                   query.execute("INSERT INTO hocsinh (maHocSinh , tenHocSinh,ngaySinh,gioitinh,email,diaChi,tenPhuHuynh,soDienThoai,hinhAnh) VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s)", (maHocSinh,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64))
-                                   try:              
-                                        #query.execute(sql,val)
-                                        db.commit()
-                                        QMessageBox.information(self,"Thông báo",f"Thêm học sinh {lineTenHocSinh} vào danh sách thành công!")
-                                   #query.execute("SELECT * FROM hocsinh ORDER BY maHocSinh DESC")
-
-                                   except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                                        QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
-                                        db.rollback()
-                                   self.lineTenHocSinh.clear()
-                                   self.lineEmailOfHocSinh.clear()
-                                   self.lineDiaChiOfHocSinh.clear()
-                                   self.lineTenPhuHuynh.clear()
-                                   self.lineSoDienThoaiOfPhuHuynh.clear()
-                                   self.dateNgaySinhOfHS.clear()
-                                   self.lblImageHocSinh.clear()
-     
-                                   self.stackHocSinh()
-                              else: 
-                                   QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại{lineSoDienThoaiOfPhuHuynh} không hợp lệ")
-                    else:
-                         QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
+          return imageLabel 
      def imageHocSinh(self):
           choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
           # If the user did not select a file, return immediately
@@ -286,7 +239,39 @@ class TrangChu(QtWidgets.QMainWindow):
                img_bytes = f.read()
           px = QtGui.QPixmap(choose[0])
           self.lblImageHocSinh.setPixmap(px)
-          self.img_base64 = img_bytes
+          self.img_base64 = img_bytes         
+     def addHocSinh(self):
+          hs = HocSinhBUS()
+          lineTenHocSinh  = self.lineTenHocSinh.text()
+          dateNgaySinhOfHS = self.dateNgaySinhOfHS.date().toPyDate()
+          date = dateNgaySinhOfHS.strftime("%Y-%m-%d")
+          cboxGioiTinhOfHocSinh = self.cboxGioiTinhOfHocSinh.currentText()
+          lineEmailOfHocSinh = self.lineEmailOfHocSinh.text()
+          lineDiaChiOfHocSinh = self.lineDiaChiOfHocSinh.text()
+          lineTenPhuHuynh = self.lineTenPhuHuynh.text()
+          lineSoDienThoaiOfPhuHuynh = self.lineSoDienThoaiOfPhuHuynh.text()
+          img_base64 = self.img_base64
+          addHS = HocSinhDTO(None,lineTenHocSinh,date,cboxGioiTinhOfHocSinh,lineEmailOfHocSinh,lineDiaChiOfHocSinh,lineTenPhuHuynh,lineSoDienThoaiOfPhuHuynh,img_base64)
+          if len(lineTenHocSinh)==0 or len(lineEmailOfHocSinh) == 0 or len(lineDiaChiOfHocSinh) == 0 or len(lineTenPhuHuynh) == 0 or len(lineSoDienThoaiOfPhuHuynh) == 0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else: 
+               print("Email:", lineEmailOfHocSinh) 
+               if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmailOfHocSinh):
+                    if hs.Checkten(lineEmailOfHocSinh):
+                         QMessageBox.information(self,"Thông báo",f"Email {lineEmailOfHocSinh} đã tồn tại trong danh sách!")
+                    else:
+                         print("Số điện thoai:",lineSoDienThoaiOfPhuHuynh)
+                         if  re.match(r"^\d{10}$", lineSoDienThoaiOfPhuHuynh):
+                              if hs.insert(addHS):
+                                   QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                   self.clear()
+                                   self.loadlistHS()
+                              else:
+                                   QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+                         else:
+                              QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại {lineSoDienThoaiOfPhuHuynh} không hợp lệ")
+               else:
+                    QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
      def imageGiaoVien(self):
           choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
           # If the user did not select a file, return immediately
@@ -298,7 +283,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lblImageGiaoVien.setPixmap(px)
           self.img_base64 = img_bytes     
      def updateHocSinh(self):
+          hs = HocSinhBUS()
           numRows = self.tableHocSinh.rowCount()
+          flag = True
           for i in range(numRows):
                maHocSinh = self.tableHocSinh.item(i,0).text()
                tenHocSinh = self.tableHocSinh.item(i,1).text()
@@ -308,48 +295,97 @@ class TrangChu(QtWidgets.QMainWindow):
                diachi = self.tableHocSinh.item(i,5).text()
                tenPH = self.tableHocSinh.item(i,6).text()
                soDT = self.tableHocSinh.item(i,7).text()
-               sql =" UPDATE hocsinh SET tenHocSinh = %s, ngaySinh = %s, gioitinh =%s, email= %s, diaChi = %s, tenPhuHuynh = %s,soDienThoai = %s WHERE maHocSinh =%s"
-               val = (tenHocSinh,date,gioiTinh,email,diachi,tenPH,soDT,maHocSinh)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                    # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          self.stackHocSinh()
-          QMessageBox.information(self,"Thông báo",f"Cập nhật dữ liệu cho học sinh có mã {maHocSinh} thành công!")
-
+               hinhAnh = self.tableHocSinh.item(i,8)
+               update = HocSinhDTO(maHocSinh,tenHocSinh,date,gioiTinh,email,diachi,tenPH,soDT,hinhAnh)
+               if not hs.update(update):
+                    flag = False
+          if flag :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.clear()
+               self.loadlistHS()
+          else:
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+               
      def deleteHocSinh(self):
           selected = self.tableHocSinh.selectedItems()
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tableHocSinh.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa học sinh có mã {ma} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maHocSinh = self.tableHocSinh.item(row, 0).text()
-                         self.tableHocSinh.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM hocsinh WHERE maHocSinh= %s"
-                         val = (maHocSinh,)
-                         try:
-                              query.execute(sql,val)
-                              db.commit()
-                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
-                         except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return               
-
+                         if ret == QMessageBox.Yes:
+                              hs = HocSinhBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if hs.delete(ma):
+                                   for col in range(self.tableHocSinh.columnCount()):
+                                        item = self.tableHocSinh.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.clear()
+                                   self.loadlistHS()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+     def findSortHS(self):
+          hs = HocSinhBUS()
+          self.tableHocSinh.clearContents()
+          order = self.cboxSortGV_HS.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = hs.findsort(order)
+          #self.tableChucVu.clearContents()
+          self.tableHocSinh.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableHocSinh.setCellWidget(i, j,item)
+                    else:
+                         self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableHocSinh.verticalHeader().setDefaultSectionSize(180) 
+     def findGioiTinhOfHS(self):
+          hs = HocSinhBUS()
+          self.tableHocSinh.clearContents()
+          order = self.cboxGTofHS.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = hs.findGT(order)
+          #self.tableChucVu.clearContents()
+          self.tableHocSinh.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableHocSinh.setCellWidget(i, j,item)
+                    else:
+                         self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableHocSinh.verticalHeader().setDefaultSectionSize(180) 
+     def findHS(self):
+          hs = HocSinhBUS()
+          txtTimKiem = self.txtTimKiemhs.text()
+          data = hs.find(txtTimKiem)
+          self.tableHocSinh.clearContents()
+          self.tableHocSinh.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableHocSinh.setCellWidget(i, j,item)
+                    else:
+                         self.tableHocSinh.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableHocSinh.verticalHeader().setDefaultSectionSize(180) 
+
+
      def stackGiaoVien(self):
           self.stackedWidget.setCurrentIndex(2)
+          #Giao vien
           self.btnThemGiaoVien.clicked.connect(self.addGiaoVien)
           self.btnCapNhatGiaoVien.clicked.connect(self.updateGiaoVien)
           self.btnXoaGiaoVien.clicked.connect(self.deleteGiaoVien)
@@ -357,7 +393,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.pushButton_78.clicked.connect(self.clear)
           self.cboxSortGV.activated.connect(self.findSortGV)
           self.cboxSortGT.activated.connect(self.findGioiTinhOfGV)
-
+          #Phan cong
 
           
           self.loadlistGV()
@@ -528,6 +564,8 @@ class TrangChu(QtWidgets.QMainWindow):
           self.tableGiaoVien.verticalHeader().setDefaultSectionSize(180) 
 
      def stackNhanVien(self):
+
+          #ChucVu
           self.stackedWidget.setCurrentIndex(3)
           self.btnThemCV.clicked.connect(self.tabChucVu)
           self.btnXoaChucVu.clicked.connect(self.deleteChucVu)
@@ -674,6 +712,13 @@ class TrangChu(QtWidgets.QMainWindow):
           self.soDienThoaiOfGV.clear()
           self.dateNgaySinhOfHS.clear()
           self.lblImageGiaoVien.clear()
+          self.lineTenHocSinh.clear()
+          self.lineEmailOfHocSinh.clear()
+          self.lineDiaChiOfHocSinh.clear()
+          self.lineTenPhuHuynh.clear()
+          self.lineSoDienThoaiOfPhuHuynh.clear()
+          self.dateNgaySinhOfHS.clear()
+          self.lblImageHocSinh.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
