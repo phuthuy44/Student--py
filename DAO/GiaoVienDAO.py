@@ -222,3 +222,48 @@ class GiaoVienDAO:
                query.close()
                mydb.close()
           return list 
+     def get_teachers_not_incharge(self,year):
+          list = []
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               sqlChucVu  = "SELECT DISTINCT giaovien.tenGiaoVien FROM giaovien WHERE giaovien.maGiaoVien NOT IN ( SELECT lop.maGiaoVien FROM lop,namhoc WHERE namhoc.tenNamHoc = %s AND lop.maNamHoc = namhoc.maNamHoc) "
+               val = (year,)
+               query.execute(sqlChucVu,val)
+               rows = query.fetchall()
+               for row in rows:
+                    chucvu = (row[0])
+                    list.append(chucvu)
+               print(list)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return list
+     def getma(ten):
+          sql  = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
+          val = (ten,)
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sql,val)
+               rows = query.fetchone()[0]
+               print(sql,val)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return rows
+     

@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -453,9 +453,9 @@ color: rgb(170, 170, 127);</string>
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>340</y>
+          <y>310</y>
           <width>1211</width>
-          <height>381</height>
+          <height>411</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -615,7 +615,7 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
           <x>0</x>
           <y>0</y>
           <width>1061</width>
-          <height>331</height>
+          <height>301</height>
          </rect>
         </property>
         <property name="font">
@@ -951,7 +951,7 @@ border:1px solid black;</string>
          <property name="geometry">
           <rect>
            <x>100</x>
-           <y>280</y>
+           <y>250</y>
            <width>331</width>
            <height>41</height>
           </rect>
@@ -968,7 +968,7 @@ border: 1px solid black;
          <property name="geometry">
           <rect>
            <x>380</x>
-           <y>280</y>
+           <y>250</y>
            <width>91</width>
            <height>41</height>
           </rect>
@@ -995,7 +995,7 @@ color:black;
          <property name="geometry">
           <rect>
            <x>700</x>
-           <y>280</y>
+           <y>250</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -1023,7 +1023,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>280</y>
+           <y>250</y>
            <width>81</width>
            <height>41</height>
           </rect>
@@ -1045,7 +1045,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>640</x>
-           <y>280</y>
+           <y>250</y>
            <width>51</width>
            <height>41</height>
           </rect>
@@ -1137,7 +1137,7 @@ color:black;
          <property name="geometry">
           <rect>
            <x>480</x>
-           <y>280</y>
+           <y>250</y>
            <width>81</width>
            <height>41</height>
           </rect>
@@ -1159,7 +1159,7 @@ color:black;
          <property name="geometry">
           <rect>
            <x>560</x>
-           <y>280</y>
+           <y>250</y>
            <width>71</width>
            <height>41</height>
           </rect>
@@ -1190,7 +1190,7 @@ border-radius:5px;
           <x>1070</x>
           <y>0</y>
           <width>141</width>
-          <height>331</height>
+          <height>301</height>
          </rect>
         </property>
         <property name="font">
@@ -1287,38 +1287,11 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="btnImportExcelHS">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>180</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid yellow;
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-QPushButton:hover{
-	font: 18pt &quot;Tahoma&quot;;
-	
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255));
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Nhập Excel</string>
-         </property>
-        </widget>
         <widget class="QPushButton" name="btnExportExcelHS">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>230</y>
+           <y>180</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -1344,7 +1317,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>280</y>
+           <y>230</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -2186,7 +2159,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
           <x>0</x>
           <y>0</y>
           <width>1061</width>
-          <height>331</height>
+          <height>311</height>
          </rect>
         </property>
         <property name="font">
@@ -2518,7 +2491,7 @@ border:1px solid black;</string>
          <property name="geometry">
           <rect>
            <x>80</x>
-           <y>280</y>
+           <y>260</y>
            <width>141</width>
            <height>41</height>
           </rect>
@@ -2546,7 +2519,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>280</y>
+           <y>260</y>
            <width>51</width>
            <height>41</height>
           </rect>
@@ -2610,7 +2583,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>320</x>
-           <y>280</y>
+           <y>260</y>
            <width>71</width>
            <height>41</height>
           </rect>
@@ -2708,7 +2681,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>230</x>
-           <y>280</y>
+           <y>260</y>
            <width>81</width>
            <height>41</height>
           </rect>
@@ -2731,9 +2704,9 @@ border-radius:5px;
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>340</y>
+          <y>320</y>
           <width>1211</width>
-          <height>381</height>
+          <height>401</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -2906,7 +2879,7 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
           <x>1070</x>
           <y>0</y>
           <width>141</width>
-          <height>331</height>
+          <height>311</height>
          </rect>
         </property>
         <property name="font">
@@ -3003,38 +2976,11 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="btnImportExcelGV">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>180</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid yellow;
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-QPushButton:hover{
-	font: 18pt &quot;Tahoma&quot;;
-	
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255));
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Nhập Excel</string>
-         </property>
-        </widget>
         <widget class="QPushButton" name="btnXuatExcelGV">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>230</y>
+           <y>180</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -3060,7 +3006,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>280</y>
+           <y>230</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -3629,7 +3575,7 @@ border-radius:5px;
           <x>0</x>
           <y>0</y>
           <width>1061</width>
-          <height>331</height>
+          <height>301</height>
          </rect>
         </property>
         <property name="font">
@@ -3955,7 +3901,7 @@ border:1px solid black;</string>
          <property name="geometry">
           <rect>
            <x>100</x>
-           <y>280</y>
+           <y>250</y>
            <width>231</width>
            <height>41</height>
           </rect>
@@ -3972,7 +3918,7 @@ border: 1px solid black;
          <property name="geometry">
           <rect>
            <x>310</x>
-           <y>280</y>
+           <y>250</y>
            <width>91</width>
            <height>41</height>
           </rect>
@@ -3999,7 +3945,7 @@ color:black;
          <property name="geometry">
           <rect>
            <x>480</x>
-           <y>280</y>
+           <y>250</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -4027,7 +3973,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>280</y>
+           <y>250</y>
            <width>81</width>
            <height>41</height>
           </rect>
@@ -4049,7 +3995,7 @@ border-radius:5px;
          <property name="geometry">
           <rect>
            <x>420</x>
-           <y>280</y>
+           <y>250</y>
            <width>51</width>
            <height>41</height>
           </rect>
@@ -4141,7 +4087,7 @@ color:black;
          <property name="geometry">
           <rect>
            <x>610</x>
-           <y>280</y>
+           <y>250</y>
            <width>81</width>
            <height>41</height>
           </rect>
@@ -4163,7 +4109,7 @@ color:black;
          <property name="geometry">
           <rect>
            <x>690</x>
-           <y>280</y>
+           <y>250</y>
            <width>81</width>
            <height>41</height>
           </rect>
@@ -4194,7 +4140,7 @@ border-radius:5px;
           <x>1070</x>
           <y>0</y>
           <width>141</width>
-          <height>331</height>
+          <height>301</height>
          </rect>
         </property>
         <property name="font">
@@ -4291,38 +4237,11 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_49">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>180</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid yellow;
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-QPushButton:hover{
-	font: 18pt &quot;Tahoma&quot;;
-	
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255));
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Nhập Excel</string>
-         </property>
-        </widget>
         <widget class="QPushButton" name="pushButton_50">
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>230</y>
+           <y>180</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -4348,7 +4267,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>280</y>
+           <y>230</y>
            <width>121</width>
            <height>41</height>
           </rect>
@@ -4375,9 +4294,9 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>340</y>
+          <y>310</y>
           <width>1211</width>
-          <height>381</height>
+          <height>411</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -6086,7 +6005,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_69">
+        <widget class="QPushButton" name="btnExportExOFLH">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -6369,7 +6288,7 @@ border-radius:5px;
          </property>
          <item>
           <property name="text">
-           <string>gvcn</string>
+           <string>Giáo Viên</string>
           </property>
          </item>
         </widget>
@@ -6396,12 +6315,12 @@ border-radius:5px;
           </property>
          </item>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_77">
+        <widget class="QLineEdit" name="txtTimKiemLH">
          <property name="geometry">
           <rect>
            <x>100</x>
            <y>210</y>
-           <width>341</width>
+           <width>211</width>
            <height>41</height>
           </rect>
          </property>
@@ -6435,12 +6354,12 @@ border: 1px solid black;
           <string>Tìm kiếm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_95">
+        <widget class="QPushButton" name="btnTimLH">
          <property name="geometry">
           <rect>
-           <x>390</x>
+           <x>300</x>
            <y>210</y>
-           <width>81</width>
+           <width>91</width>
            <height>41</height>
           </rect>
          </property>
@@ -6483,9 +6402,9 @@ border-radius:5px;
         <widget class="QLabel" name="label_143">
          <property name="geometry">
           <rect>
-           <x>490</x>
+           <x>400</x>
            <y>210</y>
-           <width>61</width>
+           <width>141</width>
            <height>41</height>
           </rect>
          </property>
@@ -6499,13 +6418,63 @@ border-radius:5px;
           <string notr="true">color: rgb(170, 170, 127);</string>
          </property>
          <property name="text">
-          <string>Bộ lọc</string>
+          <string>Lọc theo mã lớp</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_26">
+        <widget class="QComboBox" name="cboxMaLH">
          <property name="geometry">
           <rect>
-           <x>560</x>
+           <x>540</x>
+           <y>210</y>
+           <width>121</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QComboBox{
+font: 16pt &quot;Tahoma&quot;;
+	color: rgb(0, 0, 0);
+border: 1px solid black;
+border-radius:5px;
+}</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Giảm dần</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Tăng dần</string>
+          </property>
+         </item>
+        </widget>
+        <widget class="QLabel" name="label_151">
+         <property name="geometry">
+          <rect>
+           <x>670</x>
+           <y>210</y>
+           <width>71</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(170, 170, 127);</string>
+         </property>
+         <property name="text">
+          <string>Tên lớp</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cBoxTenLop">
+         <property name="geometry">
+          <rect>
+           <x>740</x>
            <y>210</y>
            <width>121</width>
            <height>41</height>

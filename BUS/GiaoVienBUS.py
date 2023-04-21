@@ -26,6 +26,10 @@ class GiaoVienBUS:
           return GiaoVienDAO.findSortASC(self,order=order)
      def findGT(self,order):
           return GiaoVienDAO.findGioiTinh(self,order=order)
+     def get_giaovien(self,year):
+          return GiaoVienDAO.get_teachers_not_incharge(self,year)
+     def getma(self,ten):
+          return GiaoVienDAO.getma(ten)
 
 gv = GiaoVienBUS()
 gv.getlistGV()

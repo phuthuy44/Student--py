@@ -35,6 +35,8 @@ from BUS.GiaoVienBUS import GiaoVienBUS
 from DTO.GiaoVienDTO import GiaoVienDTO
 from BUS.HocSinhBUS import HocSinhBUS
 from DTO.HocSinhDTO import HocSinhDTO
+from BUS.LopHocBUS import LopHocBUS
+from DTO.LopHocDTO import LopHocDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -110,13 +112,8 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnMonHoc.clicked.connect(self.stackMonHoc)
           self.btnKetQua.clicked.connect(self.stackKetQua)
           self.btnHocPhi.clicked.connect(self.stackHocPhi)
-          '''Loadata'''
-          '''Xu lý cac nut trong tabWidget'''  
-          self.btnThemLopHoc.clicked.connect(self.addLop)
-          self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
-          self.btnXoaLopHoc.clicked.connect(self.deleteLop)
 
-          self.loadlistCV()
+          #self.loadlistCV()
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
           #HocSinh
@@ -129,7 +126,6 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cboxSortGV_HS.activated.connect(self.findSortHS)
           self.cboxGTofHS.activated.connect(self.findGioiTinhOfHS)
           self.btnExportExcelHS.clicked.connect(self.exportExcelHS)
-          self.btnImportExcelHS.clicked.connect(self.importExcelHS)
           
 
           self.loadlistHS()
@@ -820,6 +816,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineSoDienThoaiOfPhuHuynh.clear()
           self.dateNgaySinhOfHS.clear()
           self.lblImageHocSinh.clear()
+          self.lineTenlop.clear()
+          self.spinBoxSiso.setValue(0)
+          self.txtTimKiemLH.clear()
      def tabNhanVien(self):
           #lineMaNhanVien = self.lineMaNhanVien.text()
           pass
@@ -834,14 +833,27 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnXoaKhoi.clicked.connect(self.deleteKhoi)
           self.pushButton_71.clicked.connect(self.clear)
           #lop
-          
+          self.btnThemLopHoc.clicked.connect(self.addLop)
+          self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
+          self.btnXoaLopHoc.clicked.connect(self.deleteLop)
+          self.CboxNamHoc.currentTextChanged.connect(self.update_teacher_combobox)
+          self.pushButton_70.clicked.connect(self.clear)
+          self.btnTimLH.clicked.connect(self.findLH)
+          self.cboxMaLH.activated.connect(self.findSortLH)
+          self.cBoxTenLop.activated.connect(self.findSortTenLop)
+          self.btnExportExOFLH.clicked.connect(self.exportExcelLH)
+
+                    
           self.loadlistlop()
-          
-          maLop = "LH" + str(random.randint(0,99)).zfill(3)
-          self.lineMaLop.setText(maLop)
-          self.maLop = maLop
-          self.displayInforInTabLopHoc()
+          #self.displayInforInTabLopHoc()
+     def update_teacher_combobox(self, year):
+          giaovien = GiaoVienBUS()
+          self.cBoxGVCN.clear()
+          teachers = giaovien.get_giaovien(year)
+          for teacher in teachers:
+               self.cBoxGVCN.addItem(teacher)
      def loadlistlop(self):
+          #Khoi
           khoi = KhoiBUS()
           self.lineMaKhoi.setText(str(KhoiBUS.CheckgetID(self)))
           listkhoi = khoi.getKhoi()
@@ -855,118 +867,135 @@ class TrangChu(QtWidgets.QMainWindow):
           for i in range(numRows):
                self.tableKhoi.item(i, 0).setFlags(self.tableKhoi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableKhoi.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
-          
-     def displayInforInTabLopHoc(self):
-          sqlNamHocInTabLopHoc = "SELECT tenNamHoc FROM namhoc ORDER BY tenNamHoc DESC"
-          try :
-               query.execute(sqlNamHocInTabLopHoc)
-               data = query.fetchall()
-               for row in data:
-                    self.CboxNamHoc.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
+          #Lop 
+          lophoc = LopHocBUS()
+          self.lineMaLop.setText(str(LopHocBUS.CheckgetID(self)))
+          listlop = lophoc.getListLH()
+          self.tableLopHoc.setRowCount(len(listlop))
+          for i,row in enumerate(listlop): 
+               for j,val in enumerate(row): 
+                    self.tableLopHoc.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableLopHoc.rowCount() 
+          for i in range(numRows):
+               self.tableLopHoc.item(i, 0).setFlags(self.tableLopHoc.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLopHoc.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          for row in listkhoi:
+               self.CboxKhoiLop.addItem(row[1])
+          namhoc = NamHocBUS()
+          listnamhoc = namhoc.getlistNH()
+          for row in listnamhoc:
+               self.CboxNamHoc.addItem(row[1])
 
-          sqlKhoiInTabLopHoc = "SELECT tenKhoiLop FROM khoilop ORDER BY tenKhoiLop ASC"
-          try:
-               query.execute(sqlKhoiInTabLopHoc)
-               data = query.fetchall()
-               for row in data:
-                    self.CboxKhoiLop.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          
-          sqlGiaoVienInTabLopHoc = "SELECT tenGiaoVien FROM giaovien"
-          try:
-               query.execute(sqlGiaoVienInTabLopHoc)
-               data = query.fetchall()
-               for row in data:
-                    self.cBoxGVCN.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          
-          sqlLopHoc = "SELECT maLop, tenLop, khoilop.tenKhoiLop, namhoc.tenNamHoc,siSo, giaovien.tenGiaoVien FROM lop,khoilop,namhoc,giaovien WHERE lop.maKhoiLop = khoilop.maKhoiLop AND lop.maNamHoc = namhoc.maNamHoc AND LOP.maGiaoVien = giaovien.maGiaoVien "
-          try:
-               query.execute(sqlLopHoc)
-               data = query.fetchall()
-               self.tableLopHoc.setRowCount(len(data))
-               for i, row in enumerate(data):
-                    for j, val in enumerate(row):
-                         self.tableLopHoc.setItem(i,j,QTableWidgetItem(str(val)))
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
      def addLop(self):
+          lop = LopHocBUS()
           lineTenlop = self.lineTenlop.text()
           CboxKhoiLop = self.CboxKhoiLop.currentText()
           CboxNamHoc = self.CboxNamHoc.currentText()
           spinBoxSiso = self.spinBoxSiso.value()
           cBoxGVCN = self.cBoxGVCN.currentText()
-          maLop = self.maLop
+          khoi = KhoiBUS()
+          makhoi = khoi.getma(CboxKhoiLop)
+          namhoc = NamHocBUS()
+          maNamHoc = namhoc.getma(CboxNamHoc)
+          giaovien = GiaoVienBUS()
+          maGiaoVien = giaovien.getma(cBoxGVCN)
+          addLop = LopHocDTO(None,lineTenlop,makhoi,maNamHoc,spinBoxSiso,maGiaoVien)
           if len(lineTenlop) == 0 or spinBoxSiso == 0:
                QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu! Sỉ số của lớp học phải lớn hơn 15")
           else: 
-               query.execute("SELECT COUNT(*) FROM lop WHERE maLop = %s",(maLop,))
-               checkMaLop = query.fetchone()
-               if checkMaLop[0]>0:
-                    self.stackLop()
+               if lop.Checkten(CboxNamHoc,lineTenlop):
+                    QMessageBox.information(self,"Thông báo",f"Lớp {lineTenlop} đã tồn tại vào năm {CboxNamHoc}trong danh sách!")
                else:
-                    sqlTenLop = "SELECT * FROM lop WHERE tenLopHoc = %s"
-                    val = (lineTenlop,)
-                    query.execute(sqlTenLop, val)
-                    checkTenLop = query.fetchone()
-                    if checkTenLop is not None:
-                          QMessageBox.information(self,"Thông báo",f"Lớp {lineTenlop} đã có trong danh sách!")
+                    if spinBoxSiso < 15 and spinBoxSiso >= 45 :
+                         QMessageBox.warning(self, "Thông báo", "Sỉ số của lớp học tối thiểu là 15 học sinh và tối đa là 45 học sinh!")
                     else: 
-                         sqlGetKhoi = "SELECT maKhoiLop FROM khoilop WHERE tenKhoiLop = %s"
-                         val =(CboxKhoiLop,)
-                         try:
-                              query.execute(sqlGetKhoi,val)
-                              maKhoiLop = query.fetchone()[0]
-                         except mysql.connector.errors.InternalError as e:
-                              print("Error executing MySQL query:",e)
-                              sqlGetNamHoc = "SELECT maNamHoc FROM namhoc WHERE tenNamHoc = %s"
-                              val =(CboxNamHoc,)
-                         try:
-                              query.execute(sqlGetNamHoc,val)
-                              maNamHoc = query.fetchone()[0]
-                         except mysql.connector.errors.InternalError as e:
-                              print("Error executing MySQL query:",e)
-
-                         sqlGetGiaoVien = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
-                         val =(cBoxGVCN,)
-                         try:
-                              query.execute(sqlGetGiaoVien,val)
-                              maGiaoVien = query.fetchone()[0]
-                         except mysql.connector.errors.InternalError as e:
-                              print("Error executing MySQL query:",e)
-                    
-                         sqlCheckGVOfNamHoc = "SELECT COUNT(*) FROM lop WHERE maGiaoVien = %s AND maNamHoc = %s"
-                         val = (maGiaoVien,maNamHoc)
-                         query.execute(sqlCheckGVOfNamHoc, val)
-                         if query.fetchone()[0] >= 1:
-                              QMessageBox.warning(self, "Thông báo", f"Giáo viên {cBoxGVCN} đã quản lý lớp trong năm học {CboxNamHoc}. Không thể thêm lớp mới!")
+                         if lop.insert(addLop):
+                              QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                              self.spinBoxSiso.clear()
+                              self.CboxKhoiLop.clear()
+                              self.CboxNamHoc.clear()
+                              self.loadlistlop()
                          else:
-                              if spinBoxSiso < 15 and spinBoxSiso >= 45 :
-                                   QMessageBox.warning(self, "Thông báo", "Sỉ số của lớp học tối thiểu là 15 học sinh và tối đa là 45 học sinh!")
-                              else:
-                                   sqlLop = "INSERT INTO lop (maLop,tenLop,maKhoiLop,maNamHoc,siSo,maGiaoVien) VALUES (%s,%s,%s,%s,%s,%s)"   
-                                   val =(maLop,lineTenlop,maKhoiLop,maNamHoc,spinBoxSiso,maGiaoVien)
-                                   try:
-                                        query.execute(sqlLop,val)
-                                        db.commit()
-                                        QMessageBox.information(self,"Thông báo",f"Thêm {lineTenlop} do giáo viên {cBoxGVCN} quản lý vào danh sách thành công!")
-                                   except Exception as e:
-                                   # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                                        QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công:",e)
-                                        db.rollback()
-                                   self.lineTenlop.clear()
-                                   self.spinBoxSiso.clear()
-                                   self.CboxKhoiLop.clear()
-                                   self.CboxNamHoc.clear()
-                                   self.cBoxGVCN.clear()
-                                   self.stackLop()                
+                              QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+     def findSortLH(self):
+          lophoc = LopHocBUS()
+          self.tableLopHoc.clearContents()
+          order = self.cboxMaLH.currentText()
+          data = lophoc.findSortMa(order)
+          #self.tableChucVu.clearContents()
+          self.tableLopHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableLopHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     def findSortTenLop(self):
+          lophoc = LopHocBUS()
+          self.tableLopHoc.clearContents()
+          order = self.cBoxTenLop.currentText()
+          data = lophoc.findSortTen(order)
+          #self.tableChucVu.clearContents()
+          self.tableLopHoc.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, item in enumerate(row):
+                    self.tableLopHoc.setItem(i, j, QTableWidgetItem(str(item)))
+     def findLH(self):
+          lophoc = LopHocBUS()
+          txtTimKiem_2 = self.txtTimKiemLH.text()
+          list = lophoc.findLH(txtTimKiem_2)
+          '''self.tableLopHoc.clearContents()
+          self.tableLopHoc.setRowCount(len(list))
+          for i, row in enumerate(list):
+               for j, item in enumerate(row):
+                    self.tableMonHoc.setItem(i, j, QTableWidgetItem(str(item)))'''
+          rowcount = 0
+          self.tableLopHoc.clearContents()
+          self.tableLopHoc.rowCount()
+          if list is not None:
+               for row in list :
+                    self.tableLopHoc.setItem(rowcount, 0, QTableWidgetItem(row[0]))
+               #self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               #self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 200))
+                    self.tableLopHoc.setItem(rowcount, 1, QTableWidgetItem(row[1]))
+                    self.tableLopHoc.setItem(rowcount, 2, QTableWidgetItem(row[2]))
+                    self.tableLopHoc.setItem(rowcount, 3, QTableWidgetItem(row[3]))
+                    self.tableLopHoc.setItem(rowcount, 4, QTableWidgetItem(str(row[4])))
+                    self.tableLopHoc.setItem(rowcount, 5, QTableWidgetItem(row[5]))
+                    
+                    rowcount += 1
+     def exportExcelLH(self):
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.tableLopHoc.model().columnCount()):
+               columnHeader.append(self.tableLopHoc.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.tableLopHoc.rowCount()):
+               for col in range(self.tableLopHoc.columnCount()):
+                    item = self.tableLopHoc.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenFile = "FileExcel\LopHoc\Danhsach_{}.xlsx".format(currentTime)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
                
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
+
+
      def updateLop(self):
+          nhoc = NamHocBUS()
+          khoi = KhoiBUS()
+          giaovien = GiaoVienBUS()
           numRows = self.tableLopHoc.rowCount()
+          flag = True
           for i in range(numRows):
                maLopHoc = self.tableLopHoc.item(i,0).text()
                tenLopHoc = self.tableLopHoc.item(i,1).text()
@@ -974,68 +1003,50 @@ class TrangChu(QtWidgets.QMainWindow):
                namhoc = self.tableLopHoc.item(i,3).text()
                spinBoxSiso = self.tableLopHoc.item(i,4).text()
                GVCN = self.tableLopHoc.item(i,5).text()
-               sqlGetKhoiLop = "SELECT maKhoiLop FROM khoilop WHERE tenKhoiLop = %s"
-               val = (khoiLop,)
-               try : 
-                    query.execute(sqlGetKhoiLop, val)
-                    maKhoiLop = query.fetchone()[0]
-               except mysql.connector.errors.InternalError as e:
-                    print("Error executing MySQL query:",e)
-               sqlGetNamHoc = "SELECT maNamHoc FROM namHoc WHERE tenNamHoc = %s"
-               val = (namhoc,)
-               try : 
-                    query.execute(sqlGetNamHoc, val)
-                    maNamHoc = query.fetchone()[0]
-               except mysql.connector.errors.InternalError as e:
-                    print("Error executing MySQL query:",e)   
-               sqlGetGiaoVien = "SELECT maGiaoVien FROM giaovien WHERE tenGiaoVien = %s"
-               val = (GVCN,)
-               try : 
-                    query.execute(sqlGetGiaoVien, val)
-                    maGiaoVien = query.fetchone()[0]
-               except mysql.connector.errors.InternalError as e:
-                    print("Error executing MySQL query:",e)
-               
-               sql =" UPDATE lop SET tenLop = %s, maKhoiLop = %s, maNamHoc =%s, siSo= %s, maGiaoVien = %s WHERE maLop = %s"
-               val = (tenLopHoc,maKhoiLop,maNamHoc,spinBoxSiso,maGiaoVien,maLopHoc)
-               try:              
-                    query.execute(sql,val)
-                    db.commit()
-               except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                    QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
-                    return
-          QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               maKhoi = khoi.getma(khoiLop)
+               maNamHoc = nhoc.getma(namhoc)
+               maGiaoVien = giaovien.getma(GVCN)
+               lophoc = LopHocBUS()
+               updateLop = LopHocDTO(maLopHoc,tenLopHoc,maKhoi,maNamHoc,spinBoxSiso,maGiaoVien)
+               if not lophoc.update(updateLop):
+                    flag = False
+          if flag :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.spinBoxSiso.clear()
+               self.CboxKhoiLop.clear()
+               self.CboxNamHoc.clear()
+               self.loadlistlop()
+          else:
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
 
-          self.stackLop()
      def deleteLop(self):
           selected = self.tableLopHoc.selectedItems()
           if selected:
-               ret = QMessageBox.question(self, 'MessageBox', "Bạn muốn xóa đối tượng này?", QMessageBox.Yes| QMessageBox.Cancel)
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tableLopHoc.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa lớp học có mã {ma} ?", QMessageBox.Yes| QMessageBox.Cancel)
                
-               if ret == QMessageBox.Yes:
-                    rows = set()
-                    for item in selected:
-                         rows.add(item.row())  # lưu trữ chỉ số hàng của các phần tử được chọn
-                    rows = list(rows)  # chuyển set thành list
-                    rows.sort()  # sắp xếp các chỉ số hàng theo thứ tự tăng dần
-                    rows.reverse()  # đảo ngược thứ tự để xóa từ cuối lên đầu
-                    for row in rows:
-                         maLop = self.tableLopHoc.item(row, 0).text()
-                         self.tableLopHoc.removeRow(row)  # xóa dòng khỏi bảng
-                         sql = "DELETE FROM lop WHERE maLop= %s"
-                         val = (maLop,)
-                         try:
-                              query.execute(sql,val)
-                              db.commit()
-                              QMessageBox.information(self,"Thông báo","Xóa dữ liệu thành công")
-                         except:
-                              # Hiển thị thông báo lỗi nếu truy vấn không thành công
-                              QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
-                              return               
-
+                         if ret == QMessageBox.Yes:
+                              lophoc = LopHocBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if lophoc.delete(ma):
+                                   for col in range(self.tableLopHoc.columnCount()):
+                                        item = self.tableLopHoc.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.spinBoxSiso.clear()
+                                   self.CboxKhoiLop.clear()
+                                   self.CboxNamHoc.clear()
+                                   self.loadlistlop()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      
      def addKhoi(self):
           khoi = KhoiBUS()

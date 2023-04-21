@@ -20,5 +20,7 @@ class KhoiBUS:
          return KhoiDAO.CheckgetID(self)
      def Checkten(self, ten):
          return KhoiDAO.CheckTenTonTai(ten)
+     def getma(self,ten):
+          return KhoiDAO.getma(ten)
 khoi = KhoiBUS()
 khoi.getKhoi()

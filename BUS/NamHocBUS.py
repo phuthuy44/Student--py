@@ -28,5 +28,7 @@ class NamHocBUS:
      def findSortASCTen(self,order):
           print("order:", order)
           return NamHocDAO.findSortASCTen(self,order=order)
+     def getma(self,ten):
+          return NamHocDAO.getma(ten)
 NH = NamHocBUS()
 NH.getlistNH()

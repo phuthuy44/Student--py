@@ -6,9 +6,4 @@ class LopHocDTO:
           self.maNamHoc = maNamHoc
           self.siSo = siSo
           self.maGiaoVien = maGiaoVien
-     def getIdLopHoc(self):
-          return self.idLopHoc
-     def setTenLop(self,tenLop):
-          self.tenLop = tenLop
-     def getTenLop(self):
-          return self.tenLop    
+     
