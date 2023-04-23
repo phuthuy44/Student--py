@@ -37,6 +37,8 @@ from BUS.HocSinhBUS import HocSinhBUS
 from DTO.HocSinhDTO import HocSinhDTO
 from BUS.LopHocBUS import LopHocBUS
 from DTO.LopHocDTO import LopHocDTO
+from BUS.NhanVienBUS import NhanVienBUS
+from DTO.NhanVienDTO import NhanVienDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -659,11 +661,21 @@ class TrangChu(QtWidgets.QMainWindow):
                
           else:
                QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
-
+     
      def stackNhanVien(self):
-
-          #ChucVu
           self.stackedWidget.setCurrentIndex(3)
+          #nhanvien
+          self.btnThemNV.clicked.connect(self.addNhanVien)
+          self.btnSuaNhanVien.clicked.connect(self.updateNhanVien)
+          self.btnXoaNhanVien.clicked.connect(self.deleteNhanVien)
+          self.btnExportNhanVien.clicked.connect(self.ExportNhanVien)
+          self.btnClearNhanVien.clicked.connect(self.clear)
+
+          #self.btnTimKiemHS.clicked.connect(self.findHS)
+          self.cboxSortGV_HS.activated.connect(self.findSortNV)
+          self.cboxGTofHS.activated.connect(self.findGioiTinhOfNV)
+          self.btnGetImgNV.clicked.connect(self.imageNhanVien)
+          #ChucVu
           self.btnThemCV.clicked.connect(self.tabChucVu)
           self.btnXoaChucVu.clicked.connect(self.deleteChucVu)
           self.btnCapNhatChucVu.clicked.connect(self.updateChucVu)
@@ -688,6 +700,27 @@ class TrangChu(QtWidgets.QMainWindow):
                for j, item in enumerate(row):
                     self.tableChucVu.setItem(i, j, QTableWidgetItem(str(item)))
      def loadlistCV(self):
+          #nhanvien
+          nhanvien = NhanVienBUS()
+          self.lineMaNhanVien.setText(str(NhanVienBUS.CheckgetID(self)))
+          listnv = nhanvien.getlistNV()
+          self.tableNhanVien.setRowCount(len(listnv))
+          for i,row in enumerate(listnv): 
+               for j,val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableNhanVien.setCellWidget(i, j,item)
+                    else:
+                         self.tableNhanVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableNhanVien.verticalHeader().setDefaultSectionSize(180) 
+          numRows = self.tableNhanVien.rowCount()
+          for i in range(numRows):
+               #maChucVu = self.tableChucVu.item(i, 0).text()
+               self.tableNhanVien.item(i, 0).setFlags(self.tableNhanVien.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableNhanVien.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          
+          #chucvu
           chucvu = ChucVuBUS()
           #chucvu.checkidChucVu()
           self.lineMaChucVu.setText(str(ChucVuBUS.checkidChucVu(self)))
@@ -703,7 +736,102 @@ class TrangChu(QtWidgets.QMainWindow):
           for i in range(numRows):
                #maChucVu = self.tableChucVu.item(i, 0).text()
                self.tableChucVu.item(i, 0).setFlags(self.tableChucVu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
-               self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+               self.tableChucVu.item(i, 0).setBackground(QtGui.QColor(200, 200, 150)) 
+          #LayMaChucVu them voa combobox
+          for row in listChucVu:
+               self.cboxCVOGNV.addItem(row[1]) 
+     def imageNhanVien(self):
+          choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
+          # If the user did not select a file, return immediately
+          if not choose[0]:
+               return
+          with open(choose[0], 'rb') as f:
+               img_bytes = f.read()
+          px = QtGui.QPixmap(choose[0])
+          self.imgNhanVien.setPixmap(px)
+          self.img_base64 = img_bytes 
+     def addNhanVien(self):
+          nhanvien = NhanVienBUS()
+          chucvu = ChucVuBUS()
+          maChucVu = chucvu.getmaMon(self.cboxCVOGNV.currentText())
+          lineTenNhanVien = self.lineTenNhanVien.text()
+          dateNgaySinhOfNV = self.dateNhanVien.date().toPyDate()
+          date = dateNgaySinhOfNV.strftime("%Y-%m-%d")
+          cboxGTNV = self.cboxGTNV.currentText()
+          lineDiaChiNV = self.lineDiaChiNV.text()
+          lineEmaiNV = self.lineEmaiNV.text()
+          lineSDT = self.lineSDT.text()
+          img_base64 = self.img_base64
+          addNV = NhanVienDTO(None,lineTenNhanVien,date,cboxGTNV,lineDiaChiNV,lineEmaiNV,lineSDT,maChucVu,img_base64)
+          if len(lineTenNhanVien)==0 or len(lineDiaChiNV)==0 or len(lineEmaiNV)==0 or len(lineSDT)==0:
+               QMessageBox.warning(self,"Thông báo","Bạn chưa nhập dữ liệu")
+          else:
+               print("Email:", lineEmaiNV)
+               if re.fullmatch(r"[^@]+@[^@]+\.[^@]+", lineEmaiNV):
+                    if nhanvien.Checkten(lineEmaiNV):
+                         QMessageBox.information(self,"Thông báo",f"Email {lineEmaiNV} đã tồn tại trong danh sách!")
+                    else:
+                         print("Số điện thoai:",lineSDT)
+                         if  re.match(r"^\d{10}$", lineSDT):
+                              if nhanvien.CheckSDT(lineSDT):
+                                   QMessageBox.information(self,"Thông báo",f"Số điện thoại {lineSDT} đã tồn tại trong danh sách!")
+                              else:
+                                   if nhanvien.insert(addNV):
+                                        QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                                        self.cboxCVOGNV.clear()
+                                        self.clear()
+                                        self.loadlistCV()
+                                   else:
+                                        QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+
+                         else:
+                              QMessageBox.warning(self, "Cảnh bảo",f"Số điện thoại {lineSoDienThoaiOfGV} không hợp lệ")
+                         
+               else:
+                    QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
+
+     def updateNhanVien(self):
+          pass
+     def deleteNhanVien(self):
+          pass
+     def ExportNhanVien(self):
+          pass
+     def findSortNV(self):
+          hs = NhanVienBUS()
+          self.tableNhanVien.clearContents()
+          order = self.cboxSortNV.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = hs.findsort(order)
+          #self.tableChucVu.clearContents()
+          self.tableNhanVien.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableNhanVien.setCellWidget(i, j,item)
+                    else:
+                         self.tableNhanVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableNhanVien.verticalHeader().setDefaultSectionSize(180) 
+     def findGioiTinhOfNV(self):
+          hs = NhanVienBUS()
+          self.tableNhanVien.clearContents()
+          order = self.cboxGTofNV.currentText()
+          #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
+          data = hs.findGT(order)
+          #self.tableChucVu.clearContents()
+          self.tableNhanVien.setRowCount(len(data))
+          for i, row in enumerate(data):
+               for j, val in enumerate(row):
+                    item = str(val)
+                    if j == 8:
+                         item = self.getImageLabel(val)
+                         self.tableNhanVien.setCellWidget(i, j,item)
+                    else:
+                         self.tableNhanVien.setItem(i,j,QtWidgets.QTableWidgetItem(item))
+          self.tableNhanVien.verticalHeader().setDefaultSectionSize(180) 
+
+
      def updateChucVu(self):
           chucVuBUS = ChucVuBUS()
           numRows = self.tableChucVu.rowCount()
@@ -819,10 +947,11 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineTenlop.clear()
           self.spinBoxSiso.setValue(0)
           self.txtTimKiemLH.clear()
-     def tabNhanVien(self):
-          #lineMaNhanVien = self.lineMaNhanVien.text()
-          pass
-
+          self.lineTenNhanVien.clear()
+          self.lineDiaChiNV.clear()
+          self.lineEmaiNV.clear()
+          self.lineSDT.clear()
+          self.imgNhanVien(clear())
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):

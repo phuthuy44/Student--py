@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -2573,11 +2573,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Chuyên môn</string>
-          </property>
-         </item>
         </widget>
         <widget class="QComboBox" name="cboxSortGT">
          <property name="geometry">
@@ -2671,11 +2666,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Chức vụ</string>
-          </property>
-         </item>
         </widget>
         <widget class="QLabel" name="label_283">
          <property name="geometry">
@@ -3773,7 +3763,7 @@ border: 1px solid black;
           <string>Số điện thoại </string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_37">
+        <widget class="QLineEdit" name="lineDiaChiNV">
          <property name="geometry">
           <rect>
            <x>550</x>
@@ -3793,7 +3783,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_38">
+        <widget class="QLineEdit" name="lineEmaiNV">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -3816,7 +3806,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_39">
+        <widget class="QLineEdit" name="lineSDT">
          <property name="geometry">
           <rect>
            <x>550</x>
@@ -3836,7 +3826,7 @@ border: 1px solid black;
           <string/>
          </property>
         </widget>
-        <widget class="QLabel" name="label_78">
+        <widget class="QLabel" name="imgNhanVien">
          <property name="geometry">
           <rect>
            <x>870</x>
@@ -3851,10 +3841,13 @@ border:1px solid black;
 }</string>
          </property>
          <property name="text">
-          <string>hình ảnh </string>
+          <string/>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_11">
+        <widget class="QComboBox" name="cboxGTNV">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -3882,7 +3875,7 @@ border-radius:5px;
           </property>
          </item>
         </widget>
-        <widget class="QDateEdit" name="dateEdit_6">
+        <widget class="QDateEdit" name="dateNhanVien">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -3941,7 +3934,7 @@ color:black;
           <string>Tìm kiếm </string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_12">
+        <widget class="QComboBox" name="cboxSortNV">
          <property name="geometry">
           <rect>
            <x>480</x>
@@ -4032,7 +4025,7 @@ border-radius:5px;
           <string>Chức vụ</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_22">
+        <widget class="QComboBox" name="cboxCVOGNV">
          <property name="geometry">
           <rect>
            <x>550</x>
@@ -4049,13 +4042,8 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Chức vụ</string>
-          </property>
-         </item>
         </widget>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="btnGetImgNV">
          <property name="geometry">
           <rect>
            <x>880</x>
@@ -4105,7 +4093,7 @@ color:black;
           <string>Giới tính</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_19">
+        <widget class="QComboBox" name="cboxGTofNV">
          <property name="geometry">
           <rect>
            <x>690</x>
@@ -4185,7 +4173,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
           <string>Thêm </string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_47">
+        <widget class="QPushButton" name="btnSuaNhanVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -4211,7 +4199,7 @@ QPushButton:hover{
           <string>Sửa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_48">
+        <widget class="QPushButton" name="btnXoaNhanVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -4237,7 +4225,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_50">
+        <widget class="QPushButton" name="btnExportNhanVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -4263,7 +4251,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
           <string>Xuất Excel</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_76">
+        <widget class="QPushButton" name="btnClearNhanVien">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -4290,7 +4278,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          </property>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_6">
+       <widget class="QTableWidget" name="tableNhanVien">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -4302,7 +4290,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
         <property name="styleSheet">
          <string notr="true">border: 1px solid gray;
 border- radius:2px;
-font: 12pt &quot;Tahoma&quot;;</string>
+font: 14pt &quot;Tahoma&quot;;</string>
         </property>
         <property name="alternatingRowColors">
          <bool>false</bool>
@@ -4319,36 +4307,6 @@ font: 12pt &quot;Tahoma&quot;;</string>
         <attribute name="verticalHeaderDefaultSectionSize">
          <number>50</number>
         </attribute>
-        <column>
-         <property name="text">
-          <string>STT</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
-         </property>
-         <property name="background">
-          <color>
-           <red>255</red>
-           <green>255</green>
-           <blue>255</blue>
-          </color>
-         </property>
-         <property name="foreground">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </property>
-        </column>
         <column>
          <property name="text">
           <string>Mã nhân viên </string>
@@ -4441,6 +4399,22 @@ font: 12pt &quot;Tahoma&quot;;</string>
           <font>
            <family>Tahoma</family>
            <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Chức vụ</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="textAlignment">
@@ -6225,11 +6199,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Năm học</string>
-          </property>
-         </item>
         </widget>
         <widget class="QLabel" name="label_138">
          <property name="geometry">
@@ -6286,11 +6255,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Giáo Viên</string>
-          </property>
-         </item>
         </widget>
         <widget class="QComboBox" name="CboxKhoiLop">
          <property name="geometry">
@@ -6309,11 +6273,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Khối</string>
-          </property>
-         </item>
         </widget>
         <widget class="QLineEdit" name="txtTimKiemLH">
          <property name="geometry">
@@ -6808,7 +6767,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_11">
        <attribute name="title">
@@ -7602,7 +7561,7 @@ border-radius:5px;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -9210,7 +9169,7 @@ QPushButton:hover{
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_15">
        <attribute name="title">
@@ -10601,7 +10560,7 @@ font: 75 12pt &quot;Tahoma&quot;;</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_21">
        <attribute name="title">
