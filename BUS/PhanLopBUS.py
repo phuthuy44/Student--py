@@ -20,4 +20,6 @@ class PhanLopBUS:
           return PhanLopDAO.insert(self,dd)
      def delete(self,ma):
           return PhanLopDAO.delete(ma)
+     def getlisths(self,lop):
+          return PhanLopDAO.getlistHS(self,lop)
      

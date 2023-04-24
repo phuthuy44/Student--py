@@ -136,6 +136,11 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnThemHocSinhIntoList.clicked.connect(self.insertPhanLop)
           self.cBoxNH.currentTextChanged.connect(self.load_HS_combocbox)
           self.btnXoaHocSinhRemoveList.clicked.connect(self.deletePhanLop)
+          #Danh sach
+          self.cboxlistNH.currentTextChanged.connect(self.load_khoi_combocbox)
+          self.cboxlistKhoi.currentTextChanged.connect(self.load_lop_combobox)
+          self.btnDisplayListHS.clicked.connect(self.displayListHocSinh)
+          self.btnExportPhanLop.clicked.connect(self.ExportPhanLop)
           self.loadlistHS()
           #self.displayInforInTabPhanLop()
           '''# populate the widget with the data from the database
@@ -182,6 +187,53 @@ class TrangChu(QtWidgets.QMainWindow):
                return pixmap
           except:
                return None'''
+     def displayListHocSinh(self):
+          phanlop = PhanLopBUS()
+          #self.cBoxLop.get()
+          list = phanlop.getlisths(self.cboxlistLop.currentText())
+          self.tablelistHocSinhInLop.setRowCount(len(list))
+          for i,row in enumerate(list): 
+               for j,val in enumerate(row): 
+                    self.tablelistHocSinhInLop.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tablelistHocSinhInLop.rowCount() 
+          for i in range(numRows):
+               self.tablelistHocSinhInLop.item(i, 0).setFlags(self.tablelistHocSinhInLop.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablelistHocSinhInLop.item(i, 1).setFlags(self.tablelistHocSinhInLop.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablelistHocSinhInLop.item(i, 2).setFlags(self.tablelistHocSinhInLop.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablelistHocSinhInLop.item(i, 3).setFlags(self.tablelistHocSinhInLop.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablelistHocSinhInLop.item(i, 4).setFlags(self.tablelistHocSinhInLop.item(i, 4).flags() & ~QtCore.Qt.ItemIsEditable)
+          self.clear()
+          self.loadlistHS()
+     def ExportPhanLop(self):
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.tablelistHocSinhInLop.model().columnCount()):
+               columnHeader.append(self.tablelistHocSinhInLop.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.tablelistHocSinhInLop.rowCount()):
+               for col in range(self.tablelistHocSinhInLop.columnCount()):
+                    item = self.tablelistHocSinhInLop.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenlop = self.tablelistHocSinhInLop.item(0, 4).text()
+          tenFile = r"FileExcel\PhanLop\DanhsachLop{}_{}.xlsx".format(tenlop,currentTime)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
+               
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
+  
+
      def loadlistHS(self):
           hs = HocSinhBUS()
           self.lineMaHocSinh.setText(str(HocSinhBUS.CheckgetID(self)))
@@ -205,6 +257,7 @@ class TrangChu(QtWidgets.QMainWindow):
           list = namhoc.getlistNH()
           for row in list:
                self.cBoxNH.addItem(row[1])
+               self.cboxlistNH.addItem(row[1])
           phanlop = PhanLopBUS()
           listphanlop = phanlop.getlist()
           self.tableListHocSinh.setRowCount(len(listphanlop))
@@ -220,9 +273,11 @@ class TrangChu(QtWidgets.QMainWindow):
      def load_khoi_combocbox(self,year):
           phanlop = PhanLopBUS()
           self.cbBoxKhoi.clear()
+          self.cboxlistKhoi.clear()
           khoi = phanlop.getKhoi(year)
           for khois in khoi:
                self.cbBoxKhoi.addItem(khois)
+               self.cboxlistKhoi.addItem(khois)
      def load_HS_combocbox(self,year):
           phanlop = PhanLopBUS()
           self.cBoxHocSinh.clear()
@@ -232,9 +287,11 @@ class TrangChu(QtWidgets.QMainWindow):
      def load_lop_combobox(self,khoi):
           phanlop = PhanLopBUS()
           self.cBoxLop.clear()
+          self.cboxlistLop.clear()
           lop = phanlop.getLop(khoi)
           for lops in lop:
                self.cBoxLop.addItem(lops)
+               self.cboxlistLop.addItem(lops)
      def insertPhanLop(self):
           cBoxNH = self.cBoxNH.currentText()
           cbBoxKhoi = self.cbBoxKhoi.currentText()
@@ -1093,6 +1150,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineEmaiNV.clear()
           self.lineSDT.clear()
           self.imgNhanVien.clear()
+          self.cboxlistKhoi.clear()
+          self.cboxlistNH.clear()
+          self.cboxlistLop.clear()
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):

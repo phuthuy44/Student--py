@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1596,7 +1596,7 @@ color: rgb(0, 0, 0);
 font: 75 14pt &quot;Tahoma&quot;;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>190</number>
+         <number>200</number>
         </attribute>
         <column>
          <property name="text">
@@ -1726,7 +1726,7 @@ color:blue;
           <string>Khối</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_64">
+        <widget class="QComboBox" name="cboxlistNH">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1741,7 +1741,7 @@ color: rgb(0, 0, 0);
 font: 14pt &quot;Tahoma&quot;;</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_65">
+        <widget class="QComboBox" name="cboxlistLop">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1756,7 +1756,7 @@ color: rgb(0, 0, 0);
 font: 14pt &quot;Tahoma&quot;;</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_66">
+        <widget class="QComboBox" name="cboxlistKhoi">
          <property name="geometry">
           <rect>
            <x>160</x>
@@ -1794,9 +1794,9 @@ font: 14pt &quot;Tahoma&quot;;</string>
          <property name="geometry">
           <rect>
            <x>420</x>
-           <y>30</y>
+           <y>60</y>
            <width>131</width>
-           <height>171</height>
+           <height>161</height>
           </rect>
          </property>
          <property name="styleSheet">
@@ -1806,7 +1806,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
          <property name="title">
           <string>CHỨC NĂNG</string>
          </property>
-         <widget class="QPushButton" name="pushButton_59">
+         <widget class="QPushButton" name="btnDisplayListHS">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -1832,7 +1832,7 @@ QPushButton:hover{
            <string>Hiển thị </string>
           </property>
          </widget>
-         <widget class="QPushButton" name="pushButton_60">
+         <widget class="QPushButton" name="btnExportPhanLop">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -1860,7 +1860,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
          </widget>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_9">
+       <widget class="QTableWidget" name="tablelistHocSinhInLop">
         <property name="geometry">
          <rect>
           <x>0</x>

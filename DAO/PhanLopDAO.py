@@ -147,3 +147,27 @@ class PhanLopDAO:
                query.close()
                mydb.close()
           return False
+     def getlistHS(self,lop):
+          list = []
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               sqlChucVu  = "SELECT hocsinh.maHocSinh,hocsinh.tenHocSinh,hocsinh.gioitinh,hocsinh.ngaySinh,lop.tenLop FROM hocsinh,lop,phanlop WHERE lop.maLop = phanlop.maLop AND lop.tenLop = %s AND hocsinh.maHocSinh = phanlop.maHocSinh"
+               val = (lop,)
+               query.execute(sqlChucVu,val)
+               rows = query.fetchall()
+               for row in rows:
+                    chucvu = (row[0],row[1],row[2],row[3],row[4])
+                    list.append(chucvu)
+               print(list)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return list
