@@ -41,6 +41,8 @@ from BUS.NhanVienBUS import NhanVienBUS
 from DTO.NhanVienDTO import NhanVienDTO
 from BUS.PhanLopBUS import PhanLopBUS
 from DTO.PhanLopDTO import PhanLopDTO
+from BUS.PhanCongBUS import PhanCongBUS
+from DTO.PhanCongDTO import PhanCongDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -581,8 +583,16 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cboxSortGT.activated.connect(self.findGioiTinhOfGV)
           self.btnXuatExcelGV.clicked.connect(self.exportExcelGV)
           #Phan cong
+          self.cboxNHInPC.currentTextChanged.connect(self.phancong_lop_combobox)
+          self.cboxLopPC.currentTextChanged.connect(self.phancong_monhoc_combobox)
+          self.cboxMonHocPC.currentTextChanged.connect(self.phancong_giaovien_combobox)
+          self.btnInsertPhanCong.clicked.connect(self.insertPhanCong)
+          self.btnXoaPhanCong.clicked.connect(self.deletePhanCong)
+          #Danh sach
+          self.cboxlistNH_2.currentTextChanged.connect(self.phancong_lop_combobox)
+          self.btnDisplayListHS_2.clicked.connect(self.displayListPhanCong)
+          self.btnExportPhanCong.clicked.connect(self.ExportPhanCong)
 
-          
           self.loadlistGV()
      def imageGiaoVien(self):
           choose = QFileDialog.getOpenFileName(None, 'HinhAnh', '', 'FILE img (*.png *.jpg *.bmp)')
@@ -621,8 +631,148 @@ class TrangChu(QtWidgets.QMainWindow):
           listcv = chucvu.getListCV()
           for row in listcv:
                self.CboxChucVu.addItem(row[1])
-     def displayInforInTabPhanCong(self):
-          pass
+          #phancong
+          namhoc = NamHocBUS()
+          self.cboxNHInPC.clear()
+          self.cboxlistNH_2.clear()
+          list = namhoc.getlistNH()
+          for row in list:
+               self.cboxNHInPC.addItem(row[1])
+               self.cboxlistNH_2.addItem(row[1])
+          phancong = PhanCongBUS()
+          listphancong = phancong.getlist()
+          self.tablePhanCong.setRowCount(len(listphancong))
+          for i,row in enumerate(listphancong): 
+               for j,val in enumerate(row): 
+                    self.tablePhanCong.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tablePhanCong.rowCount() 
+          for i in range(numRows):
+               self.tablePhanCong.item(i, 0).setFlags(self.tablePhanCong.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablePhanCong.item(i, 1).setFlags(self.tablePhanCong.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablePhanCong.item(i, 2).setFlags(self.tablePhanCong.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tablePhanCong.item(i, 3).setFlags(self.tablePhanCong.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+     def phancong_lop_combobox(self,year):
+          phancong = PhanCongBUS()
+          self.cboxLopPC.clear()
+          self.cboxlistLop_2.clear()
+          pc = phancong.getLop(year)
+          for lop in pc:
+               self.cboxLopPC.addItem(lop)
+               self.cboxlistLop_2.addItem(lop)
+     def phancong_monhoc_combobox(self,lop):
+          phancong = PhanCongBUS()
+          self.cboxMonHocPC.clear()
+          pc = phancong.getMon(lop)
+          for lop in pc:
+               self.cboxMonHocPC.addItem(lop)
+     def phancong_giaovien_combobox(self,mon):
+          phancong = PhanCongBUS()
+          self.cboxGiaoVien.clear()
+          pc = phancong.getGiaoVien(mon)
+          for lop in pc:
+               self.cboxGiaoVien.addItem(lop)
+     def displayListPhanCong(self):
+          phancong = PhanCongBUS()
+          #self.cBoxLop.get()
+          list = phancong.getlistGV(self.cboxlistLop_2.currentText())
+          self.tableListPhanCong.setRowCount(len(list))
+          for i,row in enumerate(list): 
+               for j,val in enumerate(row): 
+                    self.tableListPhanCong.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableListPhanCong.rowCount() 
+          for i in range(numRows):
+               self.tableListPhanCong.item(i, 0).setFlags(self.tableListPhanCong.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhanCong.item(i, 1).setFlags(self.tableListPhanCong.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhanCong.item(i, 2).setFlags(self.tableListPhanCong.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhanCong.item(i, 3).setFlags(self.tableListPhanCong.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhanCong.item(i, 4).setFlags(self.tableListPhanCong.item(i, 4).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhanCong.item(i, 5).setFlags(self.tableListPhanCong.item(i, 5).flags() & ~QtCore.Qt.ItemIsEditable)
+          self.clear()
+          self.loadlistGV()
+     def ExportPhanCong(self):
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.tableListPhanCong.model().columnCount()):
+               columnHeader.append(self.tableListPhanCong.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.tableListPhanCong.rowCount()):
+               for col in range(self.tableListPhanCong.columnCount()):
+                    item = self.tableListPhanCong.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenlop = self.tableListPhanCong.item(0, 5).text()
+          tenFile = r"FileExcel\PhanCong\DanhsachPhanCongLop{}_{}.xlsx".format(tenlop,currentTime)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
+               
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
+
+     def insertPhanCong(self):
+          namhoc = NamHocBUS()
+          lop = LopHocBUS()
+          monhoc = MonHocBUS()
+          giaovien = GiaoVienBUS()
+          maNamHoc = namhoc.getma(self.cboxNHInPC.currentText())
+          maLop = lop.getma(self.cboxLopPC.currentText())
+          maMonHoc = monhoc.getMamon(self.cboxMonHocPC.currentText())
+          maGiaoVien = giaovien.getma(self.cboxGiaoVien.currentText())
+          addPhanCong = PhanCongDTO(maNamHoc,maLop,maMonHoc,maGiaoVien)
+          phancong = PhanCongBUS()
+          if phancong.insert(addPhanCong):
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+               self.cboxNHInPC.clear()
+               self.cboxLopPC.clear()
+               self.cboxMonHocPC.clear()
+               self.cboxGiaoVien.clear()
+               self.loadlistGV()
+          else:
+               QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+     def deletePhanCong(self):
+          selected = self.tablePhanCong.selectedItems()
+          if selected:
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 3: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tablePhanCong.item(row, col).text()
+                         lop = self.tablePhanCong.item(row, 1).text()
+                         gv = GiaoVienBUS()
+                         lophoc = LopHocBUS()
+                         getma = gv.getma(ma)
+                         getlop = lophoc.getma(lop)
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa lịch phân công của giáo viên {ma} ra khỏi lớp {lop}?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+                         if ret == QMessageBox.Yes:
+                              phancong = PhanCongBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if phancong.delete(getma,getlop):
+                                   for col in range(self.tablePhanCong.columnCount()):
+                                        item = self.tablePhanCong.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.cboxNHInPC.clear()
+                                   self.cboxLopPC.clear()
+                                   self.cboxMonHocPC.clear()
+                                   self.cboxGiaoVien.clear()
+                                   self.loadlistGV()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+          else:
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def addGiaoVien(self):
           giaovien = GiaoVienBUS()
           monhoc = MonHocBUS()
@@ -1153,6 +1303,8 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cboxlistKhoi.clear()
           self.cboxlistNH.clear()
           self.cboxlistLop.clear()
+          self.cboxlistNH_2.clear()
+          self.cboxlistLop_2.clear()
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):

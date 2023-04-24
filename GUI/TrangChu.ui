@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -2849,10 +2849,10 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        <widget class="QGroupBox" name="groupBox_61">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>90</y>
-          <width>581</width>
-          <height>371</height>
+          <x>20</x>
+          <y>80</y>
+          <width>481</width>
+          <height>481</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -2881,7 +2881,83 @@ color: black;</string>
           <string>Năm học </string>
          </property>
         </widget>
-        <widget class="QLabel" name="label_242">
+        <widget class="QLabel" name="label_243">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>200</y>
+           <width>111</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: white;
+color: black;</string>
+         </property>
+         <property name="text">
+          <string>Môn học</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cboxMonHocPC">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>190</y>
+           <width>331</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(170, 170, 127);
+color: rgb(0, 0, 0);</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_244">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>280</y>
+           <width>111</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: white;
+color: black;</string>
+         </property>
+         <property name="text">
+          <string>Giáo viên </string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cboxGiaoVien">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>270</y>
+           <width>331</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(170, 170, 127);
+color: rgb(0, 0, 0);</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cboxNHInPC">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>50</y>
+           <width>331</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(170, 170, 127);
+color: rgb(0, 0, 0);</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_279">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -2898,7 +2974,7 @@ color: black;</string>
           <string>Lớp</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_54">
+        <widget class="QComboBox" name="cboxLopPC">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -2911,111 +2987,86 @@ color: black;</string>
           <string notr="true">border-color: rgb(170, 170, 127);
 color: rgb(0, 0, 0);</string>
          </property>
-         <item>
-          <property name="text">
-           <string>Lớp</string>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_62">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>340</y>
+           <width>381</width>
+           <height>111</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 127);
+font: 75 16pt &quot;Tahoma&quot;;
+border-color: rgb(170, 170, 127);
+</string>
+         </property>
+         <property name="title">
+          <string>CHỨC NĂNG</string>
+         </property>
+         <widget class="QPushButton" name="btnXoaPhanCong">
+          <property name="geometry">
+           <rect>
+            <x>200</x>
+            <y>40</y>
+            <width>121</width>
+            <height>41</height>
+           </rect>
           </property>
-         </item>
-        </widget>
-        <widget class="QLabel" name="label_243">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>210</y>
-           <width>111</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border: white;
-color: black;</string>
-         </property>
-         <property name="text">
-          <string>Môn học</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="comboBox_55">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>200</y>
-           <width>331</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border-color: rgb(170, 170, 127);
-color: rgb(0, 0, 0);</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Môn học</string>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid red;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+	background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.028, stop:0 rgba(189, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))
+}
+</string>
           </property>
-         </item>
-        </widget>
-        <widget class="QLabel" name="label_244">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>290</y>
-           <width>111</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border: white;
-color: black;</string>
-         </property>
-         <property name="text">
-          <string>Giáo viên </string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="comboBox_56">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>280</y>
-           <width>331</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border-color: rgb(170, 170, 127);
-color: rgb(0, 0, 0);</string>
-         </property>
-         <item>
           <property name="text">
-           <string>Giáo viên</string>
+           <string>Xóa</string>
           </property>
-         </item>
-        </widget>
-        <widget class="QComboBox" name="comboBox_71">
-         <property name="geometry">
-          <rect>
-           <x>140</x>
-           <y>50</y>
-           <width>331</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border-color: rgb(170, 170, 127);
-color: rgb(0, 0, 0);</string>
-         </property>
-         <item>
+         </widget>
+         <widget class="QPushButton" name="btnInsertPhanCong">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>40</y>
+            <width>121</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid green;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 170, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(85, 255, 0, 255), stop:1 rgba(255, 255, 255, 255));
+	font: 18pt &quot;Tahoma&quot;;
+}
+</string>
+          </property>
           <property name="text">
-           <string>Lớp</string>
+           <string>Thêm </string>
           </property>
-         </item>
+         </widget>
         </widget>
        </widget>
-       <widget class="QTableWidget" name="tableWidget_29">
+       <widget class="QTableWidget" name="tablePhanCong">
         <property name="geometry">
          <rect>
-          <x>600</x>
-          <y>1</y>
-          <width>611</width>
-          <height>711</height>
+          <x>510</x>
+          <y>10</y>
+          <width>701</width>
+          <height>701</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -3025,7 +3076,7 @@ color: rgb(0, 0, 0);
 font: 75 14pt &quot;Tahoma&quot;;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>150</number>
+         <number>200</number>
         </attribute>
         <column>
          <property name="text">
@@ -3035,7 +3086,312 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
           <font>
            <family>Tahoma</family>
            <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Lớp</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Môn học</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Giáo viên</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_25">
+       <attribute name="title">
+        <string>Danh sách</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_16">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>10</y>
+          <width>581</width>
+          <height>201</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox{
+border-radius: 5px;
+border:0.5px solid blue;
+	font: 14pt &quot;Tahoma&quot;;
+color:blue;
+}</string>
+        </property>
+        <property name="title">
+         <string>LỌC GIÁO VIÊN</string>
+        </property>
+        <widget class="QLabel" name="label_88">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>60</y>
+           <width>111</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Năm học</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cboxlistNH_2">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>50</y>
+           <width>221</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(170, 170, 127);
+color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cboxlistLop_2">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>120</y>
+           <width>221</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(170, 170, 127);
+color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_92">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>120</y>
+           <width>81</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Lớp</string>
+         </property>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_17">
+         <property name="geometry">
+          <rect>
+           <x>420</x>
+           <y>20</y>
+           <width>131</width>
+           <height>161</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(170, 170, 127);
+</string>
+         </property>
+         <property name="title">
+          <string>CHỨC NĂNG</string>
+         </property>
+         <widget class="QPushButton" name="btnDisplayListHS_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>111</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid blue;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+	background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 85, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Hiển thị </string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btnExportPhanCong">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>100</y>
+            <width>111</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid red;
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 170, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 85, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Xuất Excel</string>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QTableWidget" name="tableListPhanCong">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>220</y>
+          <width>1211</width>
+          <height>491</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid gray;
+border- radius:2px;
+color: rgb(0, 0, 0);
+font: 75 14pt &quot;Tahoma&quot;;</string>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>240</number>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Mã giáo viên</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Tên giáo viên</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Giới tính</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ngày sinh </string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Môn học</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
@@ -3048,246 +3404,10 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
            <pointsize>14</pointsize>
           </font>
          </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Môn học</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>14</pointsize>
-          </font>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
-        <column>
-         <property name="text">
-          <string>Giáo viên</string>
-         </property>
-         <property name="font">
-          <font>
-           <family>Tahoma</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-        </column>
-       </widget>
-       <widget class="QGroupBox" name="groupBox_62">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>470</y>
-          <width>581</width>
-          <height>111</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(0, 0, 127);
-font: 75 16pt &quot;Tahoma&quot;;
-border: 1px solid blue;
-border-radius:5px;</string>
-        </property>
-        <property name="title">
-         <string>CHỨC NĂNG</string>
-        </property>
-        <widget class="QPushButton" name="pushButton_133">
-         <property name="geometry">
-          <rect>
-           <x>160</x>
-           <y>40</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid red;
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-QPushButton:hover{
-	font: 18pt &quot;Tahoma&quot;;
-	background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0.028, stop:0 rgba(189, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Xóa</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_134">
-         <property name="geometry">
-          <rect>
-           <x>440</x>
-           <y>40</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid red;
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 170, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-QPushButton:hover{
-	font: 18pt &quot;Tahoma&quot;;
-background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 85, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Xuất Excel</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_135">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>40</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid green;
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 170, 0, 255), stop:1 rgba(255, 255, 255, 255));
-}
-QPushButton:hover{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(85, 255, 0, 255), stop:1 rgba(255, 255, 255, 255));
-	font: 18pt &quot;Tahoma&quot;;
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Thêm </string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_79">
-         <property name="geometry">
-          <rect>
-           <x>300</x>
-           <y>40</y>
-           <width>121</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:15px;
-border:1px solid pink;
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 127, 255), stop:1 rgba(255, 255, 255, 255))
-}
-QPushButton:hover{
-	font: 18pt &quot;Tahoma&quot;;
-background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(134, 0, 67, 255), stop:1 rgba(255, 255, 255, 255))
-}
-</string>
-         </property>
-         <property name="text">
-          <string>Clear</string>
-         </property>
-        </widget>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_127">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>20</y>
-          <width>241</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLineEdit{
-font: 16pt &quot;Tahoma&quot;;
-border-radius:5px;
-border: 1px solid black;
-}</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_137">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>20</y>
-          <width>101</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton{
-background-color: rgb(0, 0, 127);
-color:white;
-	font: 14pt &quot;Tahoma&quot;;
-border-radius:5px;
-}
-QPushButton:hover{
-border:0.5px solid black;
-	background-color: yellow;
-color:black;
-	
-}</string>
-        </property>
-        <property name="text">
-         <string>Tìm kiếm </string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_282">
-        <property name="geometry">
-         <rect>
-          <x>350</x>
-          <y>20</y>
-          <width>51</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Tahoma</family>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(170, 170, 127);</string>
-        </property>
-        <property name="text">
-         <string>Bộ lọc</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="comboBox_59">
-        <property name="geometry">
-         <rect>
-          <x>420</x>
-          <y>20</y>
-          <width>121</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QComboBox{
-font: 16pt &quot;Tahoma&quot;;
-	color: rgb(0, 0, 0);
-border: 1px solid black;
-border-radius:5px;
-}</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Giảm dần</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Tăng dần</string>
-         </property>
-        </item>
        </widget>
       </widget>
      </widget>
@@ -8761,9 +8881,9 @@ border-radius:5px;
         <widget class="QPushButton" name="pushButton_88">
          <property name="geometry">
           <rect>
-           <x>320</x>
+           <x>250</x>
            <y>160</y>
-           <width>221</width>
+           <width>141</width>
            <height>41</height>
           </rect>
          </property>
@@ -8782,7 +8902,33 @@ QPushButton:hover{
 </string>
          </property>
          <property name="text">
-          <string>Hiển thị danh sách</string>
+          <string>Hiển thị </string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btnExportExOFLH_2">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>160</y>
+           <width>121</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid red;
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 170, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 85, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+</string>
+         </property>
+         <property name="text">
+          <string>Xuất Excel</string>
          </property>
         </widget>
        </widget>
