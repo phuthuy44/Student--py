@@ -39,6 +39,8 @@ from BUS.LopHocBUS import LopHocBUS
 from DTO.LopHocDTO import LopHocDTO
 from BUS.NhanVienBUS import NhanVienBUS
 from DTO.NhanVienDTO import NhanVienDTO
+from BUS.PhanLopBUS import PhanLopBUS
+from DTO.PhanLopDTO import PhanLopDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -128,10 +130,14 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cboxSortGV_HS.activated.connect(self.findSortHS)
           self.cboxGTofHS.activated.connect(self.findGioiTinhOfHS)
           self.btnExportExcelHS.clicked.connect(self.exportExcelHS)
-          
-
+          #PhanLop
+          self.cBoxNH.currentTextChanged.connect(self.load_khoi_combocbox)
+          self.cbBoxKhoi.currentTextChanged.connect(self.load_lop_combobox)
+          self.btnThemHocSinhIntoList.clicked.connect(self.insertPhanLop)
+          self.cBoxNH.currentTextChanged.connect(self.load_HS_combocbox)
+          self.btnXoaHocSinhRemoveList.clicked.connect(self.deletePhanLop)
           self.loadlistHS()
-          self.displayInforInTabPhanLop()
+          #self.displayInforInTabPhanLop()
           '''# populate the widget with the data from the database
           self.tableHocSinh.setRowCount(len(data))
           for i, row in enumerate(data):
@@ -195,39 +201,101 @@ class TrangChu(QtWidgets.QMainWindow):
                #maChucVu = self.tableChucVu.item(i, 0).text()
                self.tableHocSinh.item(i, 0).setFlags(self.tableHocSinh.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableHocSinh.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))  
+          namhoc = NamHocBUS()
+          list = namhoc.getlistNH()
+          for row in list:
+               self.cBoxNH.addItem(row[1])
+          phanlop = PhanLopBUS()
+          listphanlop = phanlop.getlist()
+          self.tableListHocSinh.setRowCount(len(listphanlop))
+          for i,row in enumerate(listphanlop): 
+               for j,val in enumerate(row): 
+                    self.tableListHocSinh.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableListHocSinh.rowCount() 
+          for i in range(numRows):
+               self.tableListHocSinh.item(i, 0).setFlags(self.tableListHocSinh.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListHocSinh.item(i, 1).setFlags(self.tableListHocSinh.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListHocSinh.item(i, 2).setFlags(self.tableListHocSinh.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListHocSinh.item(i, 3).setFlags(self.tableListHocSinh.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+     def load_khoi_combocbox(self,year):
+          phanlop = PhanLopBUS()
+          self.cbBoxKhoi.clear()
+          khoi = phanlop.getKhoi(year)
+          for khois in khoi:
+               self.cbBoxKhoi.addItem(khois)
+     def load_HS_combocbox(self,year):
+          phanlop = PhanLopBUS()
+          self.cBoxHocSinh.clear()
+          hs = phanlop.getHocSinh(year)
+          for khois in hs:
+               self.cBoxHocSinh.addItem(khois)
+     def load_lop_combobox(self,khoi):
+          phanlop = PhanLopBUS()
+          self.cBoxLop.clear()
+          lop = phanlop.getLop(khoi)
+          for lops in lop:
+               self.cBoxLop.addItem(lops)
+     def insertPhanLop(self):
+          cBoxNH = self.cBoxNH.currentText()
+          cbBoxKhoi = self.cbBoxKhoi.currentText()
+          cBoxLop = self.cBoxLop.currentText()
+          cBoxHocSinh = self.cBoxHocSinh.currentText()
+          namhoc = NamHocBUS()
+          maNamHoc = namhoc.getma(cBoxNH)
+          khoi = KhoiBUS()
+          maKhoi = khoi.getma(cbBoxKhoi)
+          lop = LopHocBUS()
+          maLop = lop.getma(cBoxLop)
+          hocsinh = HocSinhBUS()
+          maHocSinh = hocsinh.getma(cBoxHocSinh)
+          addPhanLop = PhanLopDTO(maNamHoc,maKhoi,maLop,maHocSinh)
+          phanlop = PhanLopBUS()
+          if phanlop.insert(addPhanLop):
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+               self.cBoxNH.clear()
+               self.cbBoxKhoi.clear()
+               self.cBoxLop.clear()
+               self.cBoxHocSinh.clear()
+               self.loadlistHS()
+          else:
+               QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+     def deletePhanLop(self):
+          selected = self.tableListHocSinh.selectedItems()
+          if selected:
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 3: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tableListHocSinh.item(row, col).text()
+                         lop = self.tableListHocSinh.item(row, 2).text()
+                         hs = HocSinhBUS()
+                         getma = hs.getma(ma)
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa học sinh {ma} ra khỏi lớp {lop}?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+                         if ret == QMessageBox.Yes:
+                              phanlop=PhanLopBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if phanlop.delete(getma):
+                                   for col in range(self.tableListHocSinh.columnCount()):
+                                        item = self.tableListHocSinh.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.cBoxNH.clear()
+                                   self.cbBoxKhoi.clear()
+                                   self.cBoxLop.clear()
+                                   self.cBoxHocSinh.clear()
+                                   self.loadlistHS()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+          else:
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
 
-
-     def displayInforInTabPhanLop(self):
-          sqlNamHocInTabPhanLop = "SELECT tenNamHoc FROM namhoc"
-          try:
-               query.execute(sqlNamHocInTabPhanLop)
-               data = query.fetchall()
-               for row in data:
-                    self.cBoxNH.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-          
-          sqlKhoiLopInTabPhanLop = "SELECT tenKhoiLop FROM khoilop "
-          try :
-               query.execute(sqlKhoiLopInTabPhanLop)
-               data = query.fetchall()
-               for row in data:
-                    self.cBoxKhoi.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:", e)
-
-          sqlListHocSinhInTabPhanLop="SELECT tenHocSinh FROM hocsinh WHERE maHocSinh NOT IN (SELECT maHocSinh FROM phanlop,lop WHERE phanlop.maLop = lop.maLop)"
-          try: 
-               query.execute(sqlListHocSinhInTabPhanLop)
-               data = query.fetchall()
-               for row in data:
-                    self.cBoxHocSinh.addItem(row[0])
-          except mysql.connector.errors.InternalError as e:
-               print("Error executing MySQL query:",e)
-          #sqlLopHocInTabPhanLop = "SELECT tenLop FROM n"
      def getImageLabel(self,image):
           imageLabel = QtWidgets.QLabel(self.centralwidget)
           imageLabel.setText("")
+
           imageLabel.setScaledContents(True)
           '''pixmap = QtGui.QPixmap()
           pixmap.loadFromData(image, 'jpg')'''

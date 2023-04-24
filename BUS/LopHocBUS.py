@@ -28,4 +28,6 @@ class LopHocBUS:
           return LopHocDAO.findSortASC(self,order=order)
      def findSortTen(self,order):
           return LopHocDAO.findTenLop(self,order=order)
+     def getma(self,ma):
+          return LopHocDAO.getma(ma)
      

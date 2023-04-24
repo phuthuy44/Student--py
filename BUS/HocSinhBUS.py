@@ -26,6 +26,8 @@ class HocSinhBUS:
           return HocSinhDAO.findGioiTinh(self,order=order)
      def find(self,key):
           return HocSinhDAO.find(self,key)
+     def getma(self,ma):
+          return HocSinhDAO.getma(ma)
      
 hs = HocSinhBUS()
 hs.getlistHS()

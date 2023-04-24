@@ -245,3 +245,23 @@ class LopHocDAO:
                query.close()
                mydb.close()
           return list
+     def getma(ten):
+          sql  = "SELECT maLop FROM lop WHERE tenLop = %s"
+          val = (ten,)
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sql,val)
+               rows = query.fetchone()[0]
+               print(sql,val)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return rows
