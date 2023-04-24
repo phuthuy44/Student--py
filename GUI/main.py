@@ -672,8 +672,8 @@ class TrangChu(QtWidgets.QMainWindow):
           self.btnClearNhanVien.clicked.connect(self.clear)
 
           #self.btnTimKiemHS.clicked.connect(self.findHS)
-          self.cboxSortGV_HS.activated.connect(self.findSortNV)
-          self.cboxGTofHS.activated.connect(self.findGioiTinhOfNV)
+          self.cboxSortNV.activated.connect(self.findSortNV)
+          self.cboxGTofNV.activated.connect(self.findGioiTinhOfNV)
           self.btnGetImgNV.clicked.connect(self.imageNhanVien)
           #ChucVu
           self.btnThemCV.clicked.connect(self.tabChucVu)
@@ -791,17 +791,90 @@ class TrangChu(QtWidgets.QMainWindow):
                     QMessageBox.information(self,"Thông báo","Email bạn nhập không hợp lệ!") 
 
      def updateNhanVien(self):
-          pass
+          nhanvien = NhanVienBUS()
+          chucvu = ChucVuBUS()
+          numRows = self.tableNhanVien.rowCount()
+          flag = True
+          for i in range(numRows):
+               maNhanVien = self.tableNhanVien.item(i,0).text()
+               tenNhanVien = self.tableNhanVien.item(i,1).text()
+               date = self.tableNhanVien.item(i,2).text()
+               gioiTinh = self.tableNhanVien.item(i,3).text()
+               diachi = self.tableNhanVien.item(i,4).text()
+               email = self.tableNhanVien.item(i,5).text()
+               soDT = self.tableNhanVien.item(i,6).text()
+               tenchucvu = self.tableNhanVien.item(i,7).text()
+               hinhAnh = self.tableNhanVien.item(i,8)
+               maChucvu = chucvu.getmaMon(tenchucvu)
+               updateNhanVien = NhanVienDTO(maNhanVien,tenNhanVien,date,gioiTinh,diachi,email,soDT,maChucvu,hinhAnh)
+               if not nhanvien.update(updateNhanVien):
+                    flag = False
+          if flag :
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.cboxCVOGNV.clear()
+               self.loadlistCV()
+          else: 
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
      def deleteNhanVien(self):
-          pass
+          nhanvien = NhanVienBUS()
+          selected = self.tableNhanVien.selectedItems()
+          if selected:
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 0: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tableNhanVien.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa nhân viên có mã {ma} ?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+                         if ret == QMessageBox.Yes:
+                              if nhanvien.delete(ma):
+                                   for col in range(self.tableNhanVien.columnCount()):
+                                        item = self.tableNhanVien.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.cboxCVOGNV.clear()
+                                   self.loadlistCV()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+          else:
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def ExportNhanVien(self):
-          pass
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.tableNhanVien.model().columnCount()):
+               columnHeader.append(self.tableNhanVien.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.tableNhanVien.rowCount()):
+               for col in range(self.tableNhanVien.columnCount()):
+                    item = self.tableNhanVien.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenFile = r"FileExcel\NhanVien\DanhsachNhanVien_{}.xlsx".format(currentTime)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
+               
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
+
      def findSortNV(self):
           hs = NhanVienBUS()
           self.tableNhanVien.clearContents()
           order = self.cboxSortNV.currentText()
           #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
-          data = hs.findsort(order)
+          data = hs.findSortNV(order)
           #self.tableChucVu.clearContents()
           self.tableNhanVien.setRowCount(len(data))
           for i, row in enumerate(data):
@@ -818,7 +891,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.tableNhanVien.clearContents()
           order = self.cboxGTofNV.currentText()
           #sort_order = "Giảm dần" if self.cbSortCV.currentIndex() == 0 else "Tăng dần"  # determine sorting order based on selected index
-          data = hs.findGT(order)
+          data = hs.findSortGT(order)
           #self.tableChucVu.clearContents()
           self.tableNhanVien.setRowCount(len(data))
           for i, row in enumerate(data):
@@ -951,7 +1024,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.lineDiaChiNV.clear()
           self.lineEmaiNV.clear()
           self.lineSDT.clear()
-          self.imgNhanVien(clear())
+          self.imgNhanVien.clear()
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
      def stackLop(self):

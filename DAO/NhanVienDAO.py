@@ -123,7 +123,7 @@ class NhanVienDAO :
           return False
      def update(dd:NhanVienDTO):
           sqlCapNhat = "UPDATE nhanvien SET tenNhanVien= %s,ngaySinh =%s,gioiTinh =%s,diaChi = %s,email = %s,soDienThoai=%s,maChucVu=%s WHERE maNhanVien=%s"
-          data = (dd.tenNV,dd.ngaySinh,dd.gioiTinh,dd.diaChi,dd.email,dd.soDienThoai,dd.chucVu,dd.hinhAnh,dd.maNhanVien)
+          data = (dd.tenNV,dd.ngaySinh,dd.gioiTinh,dd.diaChi,dd.email,dd.soDienThoai,dd.chucVu,dd.maNhanVien)
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",
@@ -168,7 +168,62 @@ class NhanVienDAO :
      def find(self,key):
           pass
      def findSortASC(self,order):
-          pass
+          print("order:", order)
+          mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+          query = mydb.cursor()
+          if order == "Tăng dần":
+               query.execute("SELECT maNhanVien,tenNhanVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,chucvu.tenChucVu, hinhAnh FROM nhanvien,chucvu WHERE nhanvien.maChucVu = chucvu.maChucVu ORDER BY maNhanVien ASC")
+          elif order == "Giảm dần":
+               query.execute("SELECT maNhanVien,tenNhanVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,chucvu.tenChucVu, hinhAnh FROM nhanvien,chucvu WHERE nhanvien.maChucVu = chucvu.maChucVu ORDER BY maNhanVien DESC")
+          try:
+               #query.execute(sqlfindSortASC)
+               result = query.fetchall()
+               list = []
+               for row in result:
+                    chucvu = (row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8])
+                    list.append(chucvu)
+               print(list)
+               mydb.commit()
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return list
+     def findGioiTinh(self,order):
+          print("order:", order)
+          mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+          query = mydb.cursor()
+          if order == "Nam":
+               query.execute("SELECT maNhanVien,tenNhanVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,chucvu.tenChucVu, hinhAnh FROM nhanvien,chucvu WHERE nhanvien.maChucVu = chucvu.maChucVu AND nhanvien.gioiTinh = 'Nam' ORDER BY maNhanVien ASC")
+          elif order == "Nữ":
+               query.execute("SELECT maNhanVien,tenNhanVien,ngaySinh,gioiTinh,diaChi,email,soDienThoai,chucvu.tenChucVu, hinhAnh FROM nhanvien,chucvu WHERE nhanvien.maChucVu = chucvu.maChucVu AND nhanvien.gioiTinh = 'Nữ' ORDER BY maNhanVien ASC")
+          #sqlfindSortASC ="SELECT * FROM chucvu ORDER BY maChucVu DESC"
+          try:
+               #query.execute(sqlfindSortASC)
+               result = query.fetchall()
+               list = []
+               for row in result:
+                    chucvu = (row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8])
+                    list.append(chucvu)
+               print(list)
+               mydb.commit()
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return list 
      def finSortOfGT(self,order):
           pass
      

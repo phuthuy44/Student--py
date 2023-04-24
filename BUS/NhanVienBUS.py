@@ -22,5 +22,9 @@ class NhanVienBUS:
           return NhanVienDAO.update(dd)
      def delete(self,ma):
           return NhanVienDAO.delete(ma)
+     def findSortNV(self,order):
+          return NhanVienDAO.findSortASC(self,order=order)
+     def findSortGT(self,order):
+          return NhanVienDAO.findGioiTinh(self,order=order)
      
       
