@@ -20,6 +20,8 @@ class HocKyBUS:
          return HocKyDAO.CheckTenTonTai(ten)
      def CheckgetID(self):
          return HocKyDAO.CheckgetID(self)
+     def getma(self,ten):
+          return HocKyDAO.getMa(ten)
 
 hk = HocKyBUS()
 hk.getlistHocKy()

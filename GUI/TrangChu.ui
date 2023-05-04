@@ -411,7 +411,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -443,7 +443,7 @@ color: rgb(170, 170, 127);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
@@ -1966,7 +1966,7 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_5">
        <attribute name="title">
@@ -7296,7 +7296,7 @@ border-radius:5px;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -8274,7 +8274,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
        <attribute name="title">
         <string>Điểm</string>
        </attribute>
-       <widget class="QTableWidget" name="tableWidget_3">
+       <widget class="QTableWidget" name="tableListHsDiem">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -8288,7 +8288,7 @@ font: 14pt &quot;Tahoma&quot;;</string>
 font: 14pt &quot;Tahoma&quot;;</string>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>155</number>
+         <number>200</number>
         </attribute>
         <column>
          <property name="text">
@@ -8438,11 +8438,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Lớp</string>
-          </property>
-         </item>
         </widget>
         <widget class="QComboBox" name="comboBox_2">
          <property name="geometry">
@@ -8461,16 +8456,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2</string>
-          </property>
-         </item>
         </widget>
         <widget class="QLabel" name="label_6">
          <property name="geometry">
@@ -8505,13 +8490,8 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Môn học</string>
-          </property>
-         </item>
         </widget>
-        <widget class="QPushButton" name="pushButton_87">
+        <widget class="QPushButton" name="displayDanhSachDiem">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -8555,13 +8535,8 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Năm học</string>
-          </property>
-         </item>
         </widget>
-        <widget class="QPushButton" name="pushButton_89">
+        <widget class="QPushButton" name="btnLuuListDiemhs">
          <property name="geometry">
           <rect>
            <x>30</x>
@@ -8594,7 +8569,7 @@ QPushButton:hover{
        <attribute name="title">
         <string>Xem điểm</string>
        </attribute>
-       <widget class="QTableWidget" name="tableWidget_4">
+       <widget class="QTableWidget" name="tableListDiemHS">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -8662,7 +8637,7 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
         </column>
         <column>
          <property name="text">
-          <string>Loại điểm</string>
+          <string>Điểm miệng</string>
          </property>
          <property name="font">
           <font>
@@ -8678,7 +8653,39 @@ font: 75 14pt &quot;Tahoma&quot;;</string>
         </column>
         <column>
          <property name="text">
-          <string>Điểm</string>
+          <string>Điểm 15 phút</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm giữa kỳ</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm thi</string>
          </property>
          <property name="font">
           <font>
@@ -8730,11 +8737,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Năm học</string>
-          </property>
-         </item>
         </widget>
         <widget class="QComboBox" name="comboBox_6">
          <property name="geometry">
@@ -8753,11 +8755,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Lớp</string>
-          </property>
-         </item>
         </widget>
         <widget class="QLabel" name="label_7">
          <property name="geometry">
@@ -8810,16 +8807,6 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2</string>
-          </property>
-         </item>
         </widget>
         <widget class="QLabel" name="label_9">
          <property name="geometry">
@@ -8872,13 +8859,8 @@ background-color: rgb(255, 255, 255);
 border-radius:5px;
 </string>
          </property>
-         <item>
-          <property name="text">
-           <string>Tên học sinh</string>
-          </property>
-         </item>
         </widget>
-        <widget class="QPushButton" name="pushButton_88">
+        <widget class="QPushButton" name="btnDisplayListDiemHS">
          <property name="geometry">
           <rect>
            <x>250</x>

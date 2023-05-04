@@ -242,3 +242,27 @@ class HocSinhDAO:
                query.close()
                mydb.close()
           return rows
+     def getListTenHS(self,ten):
+          list = []
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               sqlChucVu  = "SELECT hocsinh.tenHocSinh from hocsinh,phanlop,lop WHERE phanlop.maHocSinh = hocsinh.maHocSinh and phanlop.maLop = lop.maLop and lop.tenLop = %s"
+               val = (ten,)
+               query.execute(sqlChucVu,val)
+               rows = query.fetchall()
+               for row in rows:
+                    chucvu = (row[0])
+                    list.append(chucvu)
+               print(list)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return list  

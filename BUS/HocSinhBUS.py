@@ -28,6 +28,8 @@ class HocSinhBUS:
           return HocSinhDAO.find(self,key)
      def getma(self,ma):
           return HocSinhDAO.getma(ma)
+     def getTenHS(self,lop):
+          return HocSinhDAO.getListTenHS(self,lop)
      
 hs = HocSinhBUS()
 hs.getlistHS()
