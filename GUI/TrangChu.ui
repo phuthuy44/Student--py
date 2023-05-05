@@ -4897,7 +4897,7 @@ color:rgb(0, 93, 45);</string>
         <property name="title">
          <string>CHỨC NĂNG</string>
         </property>
-        <widget class="QPushButton" name="pushButton_165">
+        <widget class="QPushButton" name="btnUpdateNguoiDung">
          <property name="geometry">
           <rect>
            <x>320</x>
@@ -4923,7 +4923,7 @@ QPushButton:hover{
           <string>Cập nhật</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_166">
+        <widget class="QPushButton" name="btnDeleteNguoiDung">
          <property name="geometry">
           <rect>
            <x>170</x>
@@ -4949,7 +4949,7 @@ QPushButton:hover{
           <string>Xóa</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_168">
+        <widget class="QPushButton" name="btnThemNguoiDung">
          <property name="geometry">
           <rect>
            <x>30</x>

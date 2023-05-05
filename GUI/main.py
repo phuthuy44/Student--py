@@ -1315,6 +1315,9 @@ class TrangChu(QtWidgets.QMainWindow):
           #Tao tai khoan
           self.cboxChucVuList.currentTextChanged.connect(self.comboBox_TenNguoiDung)
           self.cboxTenNguoiDung.currentTextChanged.connect(self.comboBox_tenDangNhap)
+          self.btnThemNguoiDung.clicked.connect(self.insertNguoiDung)
+          self.btnUpdateNguoiDung.clicked.connect(self.updateNguoiDung)
+          self.btnDeleteNguoiDung.clicked.connect(self.deleteNguoiDung)
           self.loadlistNguoiDung()
      def loadlistNguoiDung(self):
           #taotaikhoan
@@ -1353,6 +1356,65 @@ class TrangChu(QtWidgets.QMainWindow):
      def generate_password(self,length):
           letters = string.ascii_uppercase + string.digits
           return ''.join(random.choice(letters) for i in range(length))
+     def insertNguoiDung(self):
+          chucvu = ChucVuBUS()
+          maChucVu = chucvu.getmaMon(self.cboxChucVuList.currentText())
+          cboxTenNguoiDung = self.cboxTenNguoiDung.currentText()
+          LineTenDangNhap = self.LineTenDangNhap.text()
+          lineMatKhau = self.lineMatKhau.text()
+          addNguoiDung = NguoiDungDTO(maChucVu,LineTenDangNhap,cboxTenNguoiDung,lineMatKhau)
+          nguoiDung = NguoiDungBUS()
+          if nguoiDung.insert(addNguoiDung):
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+               self.loadlistNguoiDung()
+          else:
+               QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+     def updateNguoiDung(self):
+          chucvu = ChucVuBUS()
+          flag = True
+          numRows = self.tabelNguoiDUng.rowCount()
+          flag = True
+          for i in range(numRows):
+               tenChucVu = self.tabelNguoiDUng.item(i,0).text()
+               maChucVu = chucvu.getmaMon(tenChucVu)
+               tenDangNhap = self.tabelNguoiDUng.item(i,1).text()
+               tenNguoiDung = self.tabelNguoiDUng.item(i,2).text()
+               matKhau = self.tabelNguoiDUng.item(i,3).text()
+               nguoiDung = NguoiDungBUS()
+               update = NguoiDungDTO(maChucVu,tenDangNhap,tenNguoiDung,matKhau)
+               if not nguoiDung.update(update):
+                    flag = False
+          if flag:
+               QMessageBox.information(self,"Thông báo","Cập nhật dữ liệu thành công!")
+               self.loadlistNguoiDung()
+          else:
+               QMessageBox.warning(self, "Lỗi", "Cập nhật dữ liệu không thành công!")
+     def deleteNguoiDung(self):
+          selected = self.tabelNguoiDUng.selectedItems()
+          if selected:
+               for item in selected:
+                    row = item.row()
+                    col = item.column()
+                    if col == 1: 
+                         # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
+                         ma = self.tabelNguoiDUng.item(row, col).text()
+                         ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa tài khoản có tên đăng nhập {ma} ?", QMessageBox.Yes| QMessageBox.Cancel)
+               
+                         if ret == QMessageBox.Yes:
+                              nguoiDung = NguoiDungBUS()
+                              #self.tableChucVu.removeRow(row)
+                              if nguoiDung.delete(ma):
+                                   for col in range(self.tabelNguoiDUng.columnCount()):
+                                        item = self.tabelNguoiDUng.takeItem(row, col)
+                                        del item
+                                   QMessageBox.information(self,"Thông báo",f"Xóa {ma} thành công")
+                                   # Xóa đối tượng QTableWidgetItem khỏi bảng và danh sách đối tượng tương ứng
+                                   self.loadlistNguoiDung()
+                              else:
+                                   QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
+          else:
+                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+
      def stackLop(self):
           self.stackedWidget.setCurrentIndex(5)
           #khoi

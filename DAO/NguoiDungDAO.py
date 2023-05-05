@@ -78,4 +78,71 @@ class NguoiDungDAO:
                query.close()
                mydb.close()
           return list
-     
+     def insert(self,dd:NguoiDungDTO):
+          sqlInsert ="INSERT INTO nguoidung(maChucVu,tenDangNhap,tenNguoiDung,matkhau) VALUES (%s, %s,%s,%s)"
+          #id = self.CheckgetID()  # generate new unique ID
+          val = (dd.maChucVu,dd.tenDangNhap,dd.tenNguoiDung,dd.matKhau)
+          try:
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sqlInsert,val)
+               print(sqlInsert,val)
+               mydb.commit()
+               return True
+
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return False
+     def update(self,dd:NguoiDungDTO):
+          sqlInsert ="UPDATE nguoidung SET matKhau = %s WHERE maChucVu = %s AND tenDangNhap = %s AND tenNguoiDung = %s"
+          #id = self.CheckgetID()  # generate new unique ID
+          val = (dd.matKhau,dd.maChucVu,dd.tenDangNhap,dd.tenNguoiDung)
+          try:
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sqlInsert,val)
+               print(sqlInsert,val)
+               mydb.commit()
+               return True
+
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return False
+     def delete(ma):
+          sql = "DELETE FROM nguoidung WHERE nguoidung.tenDangNhap= %s"
+          val = (ma,)
+          try:
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sql,val)
+               print(sql,val)
+               mydb.commit()
+               return True
+
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return False

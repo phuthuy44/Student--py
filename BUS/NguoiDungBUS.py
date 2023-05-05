@@ -14,3 +14,9 @@ class NguoiDungBUS:
           return NguoiDungDAO.getListTenDangNhap(self,tenChucVu)
      def getMa(self,ma):
           return NguoiDungDAO.getMa(self,ma)
+     def insert(self,dd:NguoiDungDTO):
+          return NguoiDungDAO.insert(self,dd)
+     def update(self,dd:NguoiDungDTO):
+          return NguoiDungDAO.update(self,dd)
+     def delete(self,ma):
+          return NguoiDungDAO.delete(ma)
