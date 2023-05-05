@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+import string
 import openpyxl 
 import win32com.client as win32
 import sys
@@ -45,6 +46,8 @@ from BUS.PhanCongBUS import PhanCongBUS
 from DTO.PhanCongDTO import PhanCongDTO
 from BUS.DiemBUS import DiemBUS
 from DTO.DiemDTO import DiemDTO
+from BUS.NguoiDungBUS import NguoiDungBUS
+from DTO.NguoiDungDTO import NguoiDungDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -1309,6 +1312,47 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cboxlistLop_2.clear()
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
+          #Tao tai khoan
+          self.cboxChucVuList.currentTextChanged.connect(self.comboBox_TenNguoiDung)
+          self.cboxTenNguoiDung.currentTextChanged.connect(self.comboBox_tenDangNhap)
+          self.loadlistNguoiDung()
+     def loadlistNguoiDung(self):
+          #taotaikhoan
+          nguoiDung = NguoiDungBUS()
+          listND = nguoiDung.getList()
+          self.tabelNguoiDUng.setRowCount(len(listND))
+          for i,row in enumerate(listND):
+               for j,val in enumerate(row):
+                    self.tabelNguoiDUng.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tabelNguoiDUng.rowCount() 
+          for i in range(numRows):
+               self.tabelNguoiDUng.item(i, 0).setFlags(self.tabelNguoiDUng.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tabelNguoiDUng.item(i, 1).setFlags(self.tabelNguoiDUng.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tabelNguoiDUng.item(i, 2).setFlags(self.tabelNguoiDUng.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+          chucvu = ChucVuBUS()
+          listCV = chucvu.getListCV()
+          self.cboxChucVuList.clear()
+          self.lineMatKhau.clear()
+
+          for row in listCV:
+               self.cboxChucVuList.addItem(row[1])
+          self.lineMatKhau.setText(self.generate_password(10))
+     def comboBox_TenNguoiDung(self,tenChucVu):
+          nguoiDung = NguoiDungBUS()
+          self.cboxTenNguoiDung.clear()
+          tenND = nguoiDung.getTenDN(tenChucVu)
+          for row in tenND:
+               self.cboxTenNguoiDung.addItem(row)
+     def comboBox_tenDangNhap(self,tenNguoiDung):
+          nguoiDung = NguoiDungBUS()
+          self.LineTenDangNhap.clear()
+          tenDN = nguoiDung.getMa(tenNguoiDung)
+          for row in tenDN:
+               self.LineTenDangNhap.setText(row)
+          
+     def generate_password(self,length):
+          letters = string.ascii_uppercase + string.digits
+          return ''.join(random.choice(letters) for i in range(length))
      def stackLop(self):
           self.stackedWidget.setCurrentIndex(5)
           #khoi
@@ -2262,11 +2306,11 @@ class TrangChu(QtWidgets.QMainWindow):
                else:
                     if kq.inser(addKQ):
                          print("Inserted record:", addKQ.maKetQua, addKQ.tenKetQua)
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
                          self.loadlistKQ()
                          self.clear()
                     else:
-                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
+                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu không thành công!")
      
      def updateKetQua(self):
           kq = KetQuaBUS()
