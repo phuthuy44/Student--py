@@ -146,3 +146,71 @@ class NguoiDungDAO:
                query.close()
                mydb.close()
           return False
+     def CheckTenDN_Password(tenDN,matkhau):
+          sqlCheck = "SELECT nguoidung.tenDangNhap,nguoidung.matKhau FROM nguoidung,giaovien WHERE nguoidung.tenDangNhap = giaovien.maGiaoVien AND tenDangNhap = %s AND matkhau =%s UNION ALL SELECT nguoidung.tenDangNhap,nguoidung.matKhau FROM nguoidung,nhanvien WHERE nguoidung.tenDangNhap = nhanvien.maNhanVien AND tenDangNhap = %s AND matkhau =%s"
+          val = (tenDN,matkhau,tenDN,matkhau)
+          try:
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sqlCheck,val)
+               result = query.fetchone()
+               print(sqlCheck,val)
+               mydb.commit()
+               return result is not None
+
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return False
+     def get_role_code(self, username):
+          try: 
+               mydb = mysql.connector.connect(
+            host ="localhost",
+            user ="root",
+            password ="",
+            database ="studentmanager"
+          )
+               query = mydb.cursor()
+               sqlChucVu = "SELECT nguoidung.maChucVu FROM nguoidung, chucvu, giaovien WHERE nguoidung.maChucVu = chucvu.maChucVu and nguoidung.tenDangNhap = giaovien.maGiaoVien and nguoidung.tenDangNhap = %s UNION ALL SELECT nguoidung.maChucVu FROM nguoidung, chucvu, nhanvien WHERE nguoidung.maChucVu = chucvu.maChucVu and nguoidung.tenDangNhap = nhanvien.maNhanVien and nguoidung.tenDangNhap = %s"
+               val = (username,username)
+               query.execute(sqlChucVu, val)
+               row = query.fetchone()  # sử dụng fetchone thay vì fetchall
+               if row is not None:
+                    return row[0]  # trả về mã chức vụ
+          except mysql.connector.errors.InternalError as e:
+                    print("Error executing MySQL query:", e)
+          finally: 
+                    query.close()
+                    mydb.close()
+          return None
+     def getUsername(self,tenDN):
+          list = []
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               sqlChucVu  = "SELECT nguoidung.tenNguoiDung FROM nguoidung,giaovien WHERE nguoidung.tenDangNhap = giaovien.maGiaoVien AND nguoidung.tenDangNhap =%s UNION ALL SELECT nguoidung.tenNguoiDung  FROM nguoidung, nhanvien WHERE nguoidung.tenDangNhap = nhanvien.maNhanVien and nguoidung.tenDangNhap = %s"
+               val = (tenDN,tenDN)
+               query.execute(sqlChucVu,val)
+               rows = query.fetchall()
+               for row in rows:
+                    chucvu = (row[0])
+                    list.append(chucvu)
+               print(list)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return list

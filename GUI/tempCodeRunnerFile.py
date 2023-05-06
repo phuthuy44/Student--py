@@ -1,1 +1,2 @@
-               QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
+LabelTenNguoiDung = nguoiDung.getUsername(tenDangNhap)
+          self.tenNguoiDung.setText(LabelTenNguoiDung)

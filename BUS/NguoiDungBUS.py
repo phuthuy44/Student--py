@@ -20,3 +20,9 @@ class NguoiDungBUS:
           return NguoiDungDAO.update(self,dd)
      def delete(self,ma):
           return NguoiDungDAO.delete(ma)
+     def checkTenDN_Pass(self,tenDN,password):
+          return NguoiDungDAO.CheckTenDN_Password(tenDN,password)
+     def get_role_code(self,username):
+          return NguoiDungDAO.get_role_code(self,username)
+     def getUsername(self,tenDN):
+          return NguoiDungDAO.getUsername(self,tenDN)

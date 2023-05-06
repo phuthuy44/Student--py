@@ -61,70 +61,93 @@ db = mysql.connector.connect(
                database ="studentmanager"
                )
 query = db.cursor()
+global_username = ''
 class FormLogin(QtWidgets.QMainWindow):
      def __init__(self):
           super(FormLogin, self).__init__()
+          self.username = ' '
           uic.loadUi("GUI/Form_Login.ui",self)
           px = QtGui.QPixmap("img/child-girl-schoolgirl-elementary-school-student-123686003.jpg")
           self.labelLogin.setPixmap(px)
-          self.lineMatKhau.setEchoMode(QtWidgets.QLineEdit.Password )
+          self.lineMatKhau.setEchoMode(QtWidgets.QLineEdit.Password)
           self.btnDangNhap.clicked.connect(self.LoginFunction)
 
      def LoginFunction(self):
+          nguoidung = NguoiDungBUS()
           tenDangNhap = self.lineTenDangNhap.text()
           matKhau = self.lineMatKhau.text()
-
           if len(tenDangNhap)== 0 or len(matKhau)== 0:
               # self.textError.setText("Bạn chưa nhập tên đăng nhập hoặc mật khẩu!")
                QMessageBox.warning(self, 'Đăng nhập', 'Bạn chưa nhập tên đăng nhập hoặc mật khẩu!')
 
           else:
-               if tenDangNhap == 'admin' and matKhau =='1234':
+               '''if tenDangNhap == 'admin' and matKhau =='1234':
                     #QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập thành công!')
                     #uic.loadUi("GUI/TrangChu.ui",self)
                     trangChu = TrangChu()
                     widget.addWidget(trangChu)
                     widget.setFixedSize(trangChu.width(),trangChu.height())
                     widget.setCurrentIndex(widget.currentIndex()+1)
-                    '''trangChu.show()
+                    trangChu.show()
                     self.accept()'''
+               if nguoidung.checkTenDN_Pass(tenDangNhap,matKhau):
+                         global global_username 
+                         global_username = tenDangNhap
+                         trangChu = TrangChu()
+                         widget.addWidget(trangChu)
+                         widget.setFixedSize(trangChu.width(),trangChu.height())
+                         widget.setCurrentIndex(widget.currentIndex()+1)
                else:
                     QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập không thành công!')  
-
 class TrangChu(QtWidgets.QMainWindow):
      def __init__(self):
           super(TrangChu,self).__init__()
-          self.img_base64 = None 
-          self.maHocSinh=None
-          self.maChucVu = None
-          self.maNhanVien = None
-          self.maKhoi = None
-          self.maHocKy = None
-          self.maNamHoc = None
-          self.maMonHoc = None
-          self.maKetQua = None
-          self.MaHocLuc = None
-          self.MaHanhKiem = None
-          self.maPhi = None
-          self.maPhieu = None
-          self.maGiaoVien = None
-          self.maLop = None
           uic.loadUi("GUI/TrangChu.ui",self)
+          self.role =None
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
-          self.btnHocSinh.clicked.connect(self.stackHocSinh)
-          #self.btnGVPC.clicked.connect(self.stackGVPC)
-          self.btnGiaoVien.clicked.connect(self.stackGiaoVien)    
-          self.btnNhanVien.clicked.connect(self.stackNhanVien)
-          self.btnQuyen.clicked.connect(self.stackQuyen)
-          self.btnLop.clicked.connect(self.stackLop)
-          self.btnDangXuat.clicked.connect(self.DangXuat)
-          self.btnHKNH.clicked.connect(self.stackHKNH)
-          self.btnMonHoc.clicked.connect(self.stackMonHoc)
-          self.btnKetQua.clicked.connect(self.stackKetQua)
-          self.btnHocPhi.clicked.connect(self.stackHocPhi)
-
-          #self.loadlistCV()
+          self.getTenDangNhap()          #self.loadlistCV()
+     def getTenDangNhap(self):
+          nguoiDung = NguoiDungBUS()
+          #tenDangNhap = nguoiDung.getList()
+          tenDangNhap = global_username
+          self.tenDangNhap.setText(tenDangNhap)
+          LabelTenNguoiDung = nguoiDung.getUsername(tenDangNhap)
+          self.tenNguoiDung.setText(LabelTenNguoiDung[0])
+          self.role = nguoiDung.get_role_code(tenDangNhap)
+          if self.role == 'CV001' or self.role =='CV002':
+               self.btnHocSinh.clicked.connect(self.stackHocSinh)
+               #self.btnGVPC.clicked.connect(self.stackGVPC)
+               self.btnGiaoVien.clicked.connect(self.stackGiaoVien)    
+               self.btnNhanVien.clicked.connect(self.stackNhanVien)
+               self.btnQuyen.clicked.connect(self.stackQuyen)
+               self.btnLop.clicked.connect(self.stackLop)
+               self.btnDangXuat.clicked.connect(self.DangXuat)
+               self.btnHKNH.clicked.connect(self.stackHKNH)
+               self.btnMonHoc.clicked.connect(self.stackMonHoc)
+               self.btnKetQua.clicked.connect(self.stackKetQua)
+               self.btnHocPhi.clicked.connect(self.stackHocPhi)
+          elif self.role =='CV004':
+               self.btnMonHoc.clicked.connect(self.stackMonHoc)
+               self.btnHocSinh.clicked.connect(self.stackHocSinh)
+               self.btnDangXuat.clicked.connect(self.DangXuat)
+               self.btnHocPhi.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnGiaoVien.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnLop.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnQuyen.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnHKNH.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnNhanVien.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnKetQua.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+          elif self.role =='CV003':
+               self.btnHocPhi.clicked.connect(self.stackHocPhi)
+               self.btnDangXuat.clicked.connect(self.DangXuat)
+               self.btnMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnGiaoVien.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnLop.clicked.connect(lambda:QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnQuyen.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnHKNH.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnKetQua.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnHocSinh.clicked.connect(lambda:QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
           #HocSinh
@@ -2698,12 +2721,16 @@ class TrangChu(QtWidgets.QMainWindow):
                     #widget.resize(formLogin.width(),formLogin.height())
                formLogin.lineTenDangNhap.clear()
                formLogin.lineMatKhau.clear()
-
-               widget.setCurrentIndex(0)
+               #widget.setCurrentIndex(0)
           #formLogin.show()
-               widget.setFixedSize(800,500)     
-
-
+               #widget.setFixedSize(800,500)
+               global global_username
+               global_username = None  # đặt giá trị của biến global_username thành None     
+               #widget.setCurrentIndex(0)
+               self.deleteLater()
+               widget.setCurrentIndex(0)  # chuyển đến trang đầu tiên (FormLogin)
+               widget.setFixedSize(800,500)
+               formLogin.show()  # hiển thị FormLogin trên màn hình
 
 
 
@@ -2716,6 +2743,7 @@ widget.addWidget(formLogin)
 #widget.setFixedWidth(800)
 widget.resize(formLogin.width(),formLogin.height())
 widget.show()
+formLogin.setParent(widget)
 #formLogin.show()
 try:
      sys.exit(app.exec_())
