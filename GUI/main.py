@@ -98,11 +98,12 @@ class FormLogin(QtWidgets.QMainWindow):
                          widget.setFixedSize(trangChu.width(),trangChu.height())
                          widget.setCurrentIndex(widget.currentIndex()+1)
                else:
-                    QMessageBox.warning(self, 'Đăng nhập', 'Đăng nhập không thành công!')  
+                    QMessageBox.warning(self, 'Đăng nhập', 'Sai tên đăng nhập hoặc mật khẩu!')  
 class TrangChu(QtWidgets.QMainWindow):
      def __init__(self):
           super(TrangChu,self).__init__()
           uic.loadUi("GUI/TrangChu.ui",self)
+          self.img_base64 = None
           self.role =None
           self.stackedWidget.setCurrentIndex(0)
           #self.btnHSPL.clicked.connect(self.stackHSPL)
@@ -129,7 +130,7 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnHocPhi.clicked.connect(self.stackHocPhi)
           elif self.role =='CV004':
                self.btnMonHoc.clicked.connect(self.stackMonHoc)
-               self.btnHocSinh.clicked.connect(self.stackHocSinh)
+               self.btnHocSinh.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnDangXuat.clicked.connect(self.DangXuat)
                self.btnHocPhi.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnGiaoVien.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
@@ -285,6 +286,8 @@ class TrangChu(QtWidgets.QMainWindow):
                self.tableHocSinh.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))  
           namhoc = NamHocBUS()
           list = namhoc.getlistNH()
+          self.cBoxNH.clear()
+          self.cboxlistNH.clear()
           for row in list:
                self.cBoxNH.addItem(row[1])
                self.cboxlistNH.addItem(row[1])
@@ -1933,32 +1936,55 @@ class TrangChu(QtWidgets.QMainWindow):
                     rowcount += 1
      def stackMonHoc(self):
           self.stackedWidget.setCurrentIndex(7)
+          nguoiDung = NguoiDungBUS()
+          tenDangNhap = global_username
+          self.role = nguoiDung.get_role_code(tenDangNhap)
+          if self.role == ' CV001':
           #monhoc
-          self.btnThemMonHoc.clicked.connect(self.addMonHoc)
-          self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
-          self.btnXoaMonHoc.clicked.connect(self.deleteMonHoc)
-          self.btnTimKiemCV_2.clicked.connect(self.findMon)
-          self.cbSortMH.activated.connect(self.findSortMonHoc)
-          self.cbSortHeSo.activated.connect(self.findHeSo)
-          self.cbSortST.activated.connect(self.findSoTiet)
-          self.pushButton_103.clicked.connect(self.clear)
-          self.btnThemMonHoc_2.clicked.connect(self.addLoaiDiem)
-          self.btnCapNhatMonHoc_2.clicked.connect(self.updateLoaiDiem)
-          self.btnXoaMonHoc_2.clicked.connect(self.deleteLoaiDiem)
-          self.pushButton_105.clicked.connect(self.clear)
-          '''maMonHoc = "MH" + str(random.randint(0,999)).zfill(3)
-          self.lineMaMonHoc.setText(maMonHoc)
-          self.maMonHoc = maMonHoc'''
-          #diem
-          self.comboBox_4.currentTextChanged.connect(self.Diem_lopHoc_combobox)
-          self.comboBox_5.currentTextChanged.connect(self.Diem_lopHoc1_combobox)
-          self.comboBox_6.currentTextChanged.connect(self.Diem_TenHocSinh_combobox)
+               self.btnThemMonHoc.clicked.connect(self.addMonHoc)
+               self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
+               self.btnXoaMonHoc.clicked.connect(self.deleteMonHoc)
+               self.btnTimKiemCV_2.clicked.connect(self.findMon)
+               self.cbSortMH.activated.connect(self.findSortMonHoc)
+               self.cbSortHeSo.activated.connect(self.findHeSo)
+               self.cbSortST.activated.connect(self.findSoTiet)
+               self.pushButton_103.clicked.connect(self.clear)
+               self.btnThemMonHoc_2.clicked.connect(self.addLoaiDiem)
+               self.btnCapNhatMonHoc_2.clicked.connect(self.updateLoaiDiem)
+               self.btnXoaMonHoc_2.clicked.connect(self.deleteLoaiDiem)
+               self.pushButton_105.clicked.connect(self.clear)
+               #diem
+               self.comboBox_4.currentTextChanged.connect(self.Diem_lopHoc_combobox)
+               self.comboBox_5.currentTextChanged.connect(self.Diem_lopHoc1_combobox)
+               self.comboBox_6.currentTextChanged.connect(self.Diem_TenHocSinh_combobox)
 
-          self.displayDanhSachDiem.clicked.connect(self.Display_Hsinh_Diem)
-          self.btnDisplayListDiemHS.clicked.connect(self.display_list_Hsinh)
-          self.btnExportExOFLH_2.clicked.connect(self.exportListDiem)
+               self.displayDanhSachDiem.clicked.connect(self.Display_Hsinh_Diem)
+               self.btnDisplayListDiemHS.clicked.connect(self.display_list_Hsinh)
+               self.btnExportExOFLH_2.clicked.connect(self.exportListDiem)
 
-          self.btnLuuListDiemhs.clicked.connect(self.insertDiem)
+               self.btnLuuListDiemhs.clicked.connect(self.insertDiem)
+          elif self.role == 'CV004':
+               self.comboBox_4.currentTextChanged.connect(self.Diem_lopHoc_combobox)
+               self.comboBox_5.currentTextChanged.connect(self.Diem_lopHoc1_combobox)
+               self.comboBox_6.currentTextChanged.connect(self.Diem_TenHocSinh_combobox)
+
+               self.displayDanhSachDiem.clicked.connect(self.Display_Hsinh_Diem)
+               self.btnDisplayListDiemHS.clicked.connect(self.display_list_Hsinh)
+               self.btnExportExOFLH_2.clicked.connect(self.exportListDiem)
+               self.btnLuuListDiemhs.clicked.connect(self.insertDiem)
+               
+               self.btnThemMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnCapNhatMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnXoaMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnTimKiemCV_2.clicked.connect(self.findMon)
+               self.cbSortMH.activated.connect(self.findSortMonHoc)
+               self.cbSortHeSo.activated.connect(self.findHeSo)
+               self.cbSortST.activated.connect(self.findSoTiet)
+               self.pushButton_103.clicked.connect(self.clear)
+               self.btnThemMonHoc_2.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnCapNhatMonHoc_2.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnXoaMonHoc_2.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.pushButton_105.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
           self.loadlistMonHoc()
      def loadlistMonHoc(self):
           monhoc = MonHocBUS()

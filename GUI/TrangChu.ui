@@ -403,7 +403,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -6856,7 +6856,7 @@ border-radius:5px;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -8492,7 +8492,7 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_15">
        <attribute name="title">
