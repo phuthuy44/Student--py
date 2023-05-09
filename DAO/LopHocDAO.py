@@ -245,9 +245,9 @@ class LopHocDAO:
                query.close()
                mydb.close()
           return list
-     def getma(ten):
-          sql  = "SELECT maLop FROM lop WHERE tenLop = %s"
-          val = (ten,)
+     def getma(tenLop,maNamHoc):
+          sql  = "SELECT maLop FROM lop,namhoc WHERE tenLop = %s and lop.maNamHoc = namhoc.maNamHoc and namhoc.maNamHoc = %s"
+          val = (tenLop,maNamHoc)
           try : 
                mydb = mysql.connector.connect(
                     host ="localhost",

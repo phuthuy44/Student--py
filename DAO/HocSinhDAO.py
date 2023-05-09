@@ -242,7 +242,7 @@ class HocSinhDAO:
                query.close()
                mydb.close()
           return rows
-     def getListTenHS(self,ten):
+     def getListTenHS(self,tenNam,tenLop):
           list = []
           try : 
                mydb = mysql.connector.connect(
@@ -252,8 +252,8 @@ class HocSinhDAO:
                     database ="studentmanager"
                )
                query = mydb.cursor()
-               sqlChucVu  = "SELECT hocsinh.tenHocSinh from hocsinh,phanlop,lop WHERE phanlop.maHocSinh = hocsinh.maHocSinh and phanlop.maLop = lop.maLop and lop.tenLop = %s"
-               val = (ten,)
+               sqlChucVu  = "SELECT hocsinh.tenHocSinh from hocsinh,phanlop,lop,namhoc WHERE phanlop.maHocSinh = hocsinh.maHocSinh and phanlop.maLop = lop.maLop and namhoc.maNamHoc = lop.maNamHoc and namhoc.tenNamHoc = %s and lop.tenLop = %s"
+               val = (tenNam,tenLop)
                query.execute(sqlChucVu,val)
                rows = query.fetchall()
                for row in rows:

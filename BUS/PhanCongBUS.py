@@ -12,8 +12,8 @@ class PhanCongBUS:
           return PhanCong.getlist()
      def getLop(self,year):
           return PhanCongDAO.getLop(self,year)
-     def getMon(self,year):
-          return PhanCongDAO.getMonHoc(self,year)
+     def getMon(self,year,lop):
+          return PhanCongDAO.getMonHoc(self,year,lop)
      def getGiaoVien(self,mon):
           return PhanCongDAO.getGiaoVien(self,mon)
      def insert(self,dd:PhanCongDTO):

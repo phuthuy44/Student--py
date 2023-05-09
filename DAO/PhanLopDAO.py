@@ -54,7 +54,7 @@ class PhanLopDAO:
                query.close()
                mydb.close()
           return list
-     def getLop(self,khoi):
+     def getLop(self,khoi,namhoc):
           list = []
           try : 
                mydb = mysql.connector.connect(
@@ -64,8 +64,8 @@ class PhanLopDAO:
                     database ="studentmanager"
                )
                query = mydb.cursor()
-               sqlChucVu  = "SELECT DISTINCT lop.tenLop FROM lop JOIN khoilop ON lop.maKhoiLop = khoilop.maKhoiLop WHERE khoilop.tenKhoiLop = %s"
-               val = (khoi,)
+               sqlChucVu  = "SELECT DISTINCT lop.tenLop FROM lop JOIN khoilop ON lop.maKhoiLop = khoilop.maKhoiLop JOIN namhoc ON lop.maNamHoc = namhoc.maNamHoc WHERE khoilop.tenKhoiLop = %s and namhoc.tenNamHoc = %s"
+               val = (khoi,namhoc)
                query.execute(sqlChucVu,val)
                rows = query.fetchall()
                for row in rows:
@@ -147,7 +147,7 @@ class PhanLopDAO:
                query.close()
                mydb.close()
           return False
-     def getlistHS(self,lop):
+     def getlistHS(self,lop,namhoc):
           list = []
           try : 
                mydb = mysql.connector.connect(
@@ -157,8 +157,8 @@ class PhanLopDAO:
                     database ="studentmanager"
                )
                query = mydb.cursor()
-               sqlChucVu  = "SELECT hocsinh.maHocSinh,hocsinh.tenHocSinh,hocsinh.gioitinh,hocsinh.ngaySinh,lop.tenLop FROM hocsinh,lop,phanlop WHERE lop.maLop = phanlop.maLop AND lop.tenLop = %s AND hocsinh.maHocSinh = phanlop.maHocSinh"
-               val = (lop,)
+               sqlChucVu  = "SELECT hocsinh.maHocSinh,hocsinh.tenHocSinh,hocsinh.gioitinh,hocsinh.ngaySinh,lop.tenLop FROM hocsinh,lop,phanlop,namhoc WHERE lop.maLop = phanlop.maLop AND lop.tenLop = %s AND namhoc.maNamHoc = phanlop.maNamHoc and namhoc.tenNamHoc =%s AND hocsinh.maHocSinh = phanlop.maHocSinh"
+               val = (lop,namhoc)
                query.execute(sqlChucVu,val)
                rows = query.fetchall()
                for row in rows:

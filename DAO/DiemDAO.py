@@ -7,7 +7,7 @@ from DTO.DiemDTO import DiemDTO
 class DiemDAO:
      def __init__(self) -> None:
           pass
-     def getList(self,monhoc,hocky,tenlop):
+     def getList(self,monhoc,hocky,namhoc,tenlop):
           list = []
           try : 
                mydb = mysql.connector.connect(
@@ -17,8 +17,8 @@ class DiemDAO:
                     database ="studentmanager"
                )
                query = mydb.cursor()
-               sqlChucVu  = "SELECT hs.MaHocSinh,hs.TenHocSinh, IFNULL(dm.Diem, 0) , IFNULL(d15p.Diem, 0) ,IFNULL(dgk.Diem, 0),IFNULL(dt.Diem, 0) FROM HocSinh hs LEFT JOIN PhanLop pl ON hs.MaHocSinh = pl.MaHocSinh LEFT JOIN Lop l ON pl.MaLop = l.MaLop LEFT JOIN MonHoc mh ON mh.tenMonHoc = %s LEFT JOIN hocky hk ON hk.tenHocKy = %s LEFT JOIN Diem dm ON hs.MaHocSinh = dm.MaHocSinh AND dm.MaMonHoc = mh.maMonHoc AND dm.MaHocKy = hk.maHocKy AND dm.MaLop = l.maLop AND dm.MaLoaiDiem = 'LD003' LEFT JOIN Diem d15p ON hs.MaHocSinh = d15p.MaHocSinh AND d15p.MaMonHoc = mh.maMonHoc AND d15p.MaHocKy = hk.maHocKy AND d15p.MaLop = l.maLop AND d15p.MaLoaiDiem = 'LD001' LEFT JOIN Diem dgk ON hs.MaHocSinh = dgk.MaHocSinh AND dgk.MaMonHoc =  mh.maMonHoc AND dgk.MaHocKy =  hk.maHocKy AND dgk.MaLop = l.maLop AND dgk.MaLoaiDiem = 'LD002' LEFT JOIN Diem dt ON hs.MaHocSinh = dt.MaHocSinh AND dt.MaMonHoc = mh.maMonHoc AND dt.MaHocKy = hK.maHocKy AND dt.MaLop = l.maLop AND dt.MaLoaiDiem = 'LD004' WHERE l.TenLop = %s ORDER BY hs.MaHocSinh"
-               val = (monhoc,hocky,tenlop)
+               sqlChucVu  = "SELECT hs.MaHocSinh,hs.TenHocSinh, IFNULL(dm.Diem, 0) , IFNULL(d15p.Diem, 0) ,IFNULL(dgk.Diem, 0),IFNULL(dt.Diem, 0) FROM HocSinh hs LEFT JOIN PhanLop pl ON hs.MaHocSinh = pl.MaHocSinh LEFT JOIN Lop l ON pl.MaLop = l.MaLop LEFT JOIN MonHoc mh ON mh.tenMonHoc = %s LEFT JOIN hocky hk ON hk.tenHocKy = %s LEFT JOIN namhoc nh ON nh.tenNamHoc = %s LEFT JOIN Diem dm ON hs.MaHocSinh = dm.MaHocSinh AND dm.MaMonHoc = mh.maMonHoc AND dm.MaHocKy = hk.maHocKy AND dm.MaLop = l.maLop AND dm.maNamHoc = nh.maNamHoc AND dm.MaLoaiDiem = 'LD003' LEFT JOIN Diem d15p ON hs.MaHocSinh = d15p.MaHocSinh AND d15p.MaMonHoc = mh.maMonHoc AND d15p.MaHocKy = hk.maHocKy AND d15p.MaLop = l.maLop AND d15p.maNamHoc = nh.maNamHoc AND d15p.MaLoaiDiem = 'LD001' LEFT JOIN Diem dgk ON hs.MaHocSinh = dgk.MaHocSinh AND dgk.MaMonHoc =  mh.maMonHoc AND dgk.MaHocKy =  hk.maHocKy AND dgk.MaLop = l.maLop AND dgk.maNamHoc = nh.maNamHoc AND dgk.MaLoaiDiem = 'LD002' LEFT JOIN Diem dt ON hs.MaHocSinh = dt.MaHocSinh AND dt.MaMonHoc = mh.maMonHoc AND dt.MaHocKy = hK.maHocKy AND dt.MaLop = l.maLop AND dt.maNamHoc = nh.maNamHoc AND dt.MaLoaiDiem = 'LD004' WHERE l.TenLop = %s AND l.maNamHoc = nh.maNamHoc ORDER BY hs.MaHocSinh"
+               val = (monhoc,hocky,namhoc,tenlop)
                query.execute(sqlChucVu,val)
                rows = query.fetchall()
                for row in rows:

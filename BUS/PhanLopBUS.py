@@ -12,14 +12,14 @@ class PhanLopBUS:
           return phanlop.getlist()
      def getKhoi(self,year):
           return PhanLopDAO.getKhoi(self,year)
-     def getLop(self,khoi):
-          return PhanLopDAO.getLop(self,khoi)
+     def getLop(self,khoi,namhoc):
+          return PhanLopDAO.getLop(self,khoi,namhoc)
      def getHocSinh(self,year):
           return PhanLopDAO.getHocSinh(self,year)
      def insert(self,dd:PhanLopDTO):
           return PhanLopDAO.insert(self,dd)
      def delete(self,ma):
           return PhanLopDAO.delete(ma)
-     def getlisths(self,lop):
-          return PhanLopDAO.getlistHS(self,lop)
+     def getlisths(self,lop,namhoc):
+          return PhanLopDAO.getlistHS(self,lop,namhoc)
      

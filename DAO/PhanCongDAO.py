@@ -54,7 +54,7 @@ class PhanCongDAO:
                query.close()
                mydb.close()
           return list
-     def getMonHoc(self,mon):
+     def getMonHoc(self,nam,mon):
           list = []
           try : 
                mydb = mysql.connector.connect(
@@ -64,8 +64,8 @@ class PhanCongDAO:
                     database ="studentmanager"
                )
                query = mydb.cursor()
-               sqlChucVu  = "SELECT monhoc.tenMonHoc FROM monhoc WHERE NOT EXISTS ( SELECT * FROM phancong,lop WHERE phancong.maMonHoc = monhoc.maMonHoc AND phancong.maLop = lop.maLop AND lop.tenLop = %s )"
-               val = (mon,)
+               sqlChucVu  = "SELECT monhoc.tenMonHoc FROM monhoc WHERE NOT EXISTS ( SELECT * FROM phancong,lop,namhoc WHERE phancong.maMonHoc = monhoc.maMonHoc AND phancong.maLop = lop.maLop AND phancong.maNamHoc = namhoc.maNamHoc And namhoc.tenNamHoc =%s AND lop.tenLop = %s )"
+               val = (nam,mon)
                query.execute(sqlChucVu,val)
                rows = query.fetchall()
                for row in rows:

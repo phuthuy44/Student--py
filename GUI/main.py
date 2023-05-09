@@ -116,7 +116,7 @@ class TrangChu(QtWidgets.QMainWindow):
           LabelTenNguoiDung = nguoiDung.getUsername(tenDangNhap)
           self.tenNguoiDung.setText(LabelTenNguoiDung[0])
           self.role = nguoiDung.get_role_code(tenDangNhap)
-          if self.role == 'CV001' or self.role =='CV002':
+          if self.role == 'CV001':
                self.btnHocSinh.clicked.connect(self.stackHocSinh)
                #self.btnGVPC.clicked.connect(self.stackGVPC)
                self.btnGiaoVien.clicked.connect(self.stackGiaoVien)    
@@ -221,7 +221,7 @@ class TrangChu(QtWidgets.QMainWindow):
      def displayListHocSinh(self):
           phanlop = PhanLopBUS()
           #self.cBoxLop.get()
-          list = phanlop.getlisths(self.cboxlistLop.currentText())
+          list = phanlop.getlisths(self.cboxlistLop.currentText(),self.cboxlistNH.currentText())
           self.tablelistHocSinhInLop.setRowCount(len(list))
           for i,row in enumerate(list): 
                for j,val in enumerate(row): 
@@ -321,7 +321,7 @@ class TrangChu(QtWidgets.QMainWindow):
           phanlop = PhanLopBUS()
           self.cBoxLop.clear()
           self.cboxlistLop.clear()
-          lop = phanlop.getLop(khoi)
+          lop = phanlop.getLop(khoi,self.cBoxNH.currentText())
           for lops in lop:
                self.cBoxLop.addItem(lops)
                self.cboxlistLop.addItem(lops)
@@ -335,7 +335,7 @@ class TrangChu(QtWidgets.QMainWindow):
           khoi = KhoiBUS()
           maKhoi = khoi.getma(cbBoxKhoi)
           lop = LopHocBUS()
-          maLop = lop.getma(cBoxLop)
+          maLop = lop.getma(cBoxLop,maNamHoc)
           hocsinh = HocSinhBUS()
           maHocSinh = hocsinh.getma(cBoxHocSinh)
           addPhanLop = PhanLopDTO(maNamHoc,maKhoi,maLop,maHocSinh)
@@ -690,10 +690,10 @@ class TrangChu(QtWidgets.QMainWindow):
           for lop in pc:
                self.cboxLopPC.addItem(lop)
                self.cboxlistLop_2.addItem(lop)
-     def phancong_monhoc_combobox(self,lop):
+     def phancong_monhoc_combobox(self,lophoc):
           phancong = PhanCongBUS()
           self.cboxMonHocPC.clear()
-          pc = phancong.getMon(lop)
+          pc = phancong.getMon(self.cboxNHInPC.currentText(),lophoc)
           for lop in pc:
                self.cboxMonHocPC.addItem(lop)
      def phancong_giaovien_combobox(self,mon):
@@ -755,7 +755,7 @@ class TrangChu(QtWidgets.QMainWindow):
           monhoc = MonHocBUS()
           giaovien = GiaoVienBUS()
           maNamHoc = namhoc.getma(self.cboxNHInPC.currentText())
-          maLop = lop.getma(self.cboxLopPC.currentText())
+          maLop = lop.getma(self.cboxLopPC.currentText(),maNamHoc)
           maMonHoc = monhoc.getMamon(self.cboxMonHocPC.currentText())
           maGiaoVien = giaovien.getma(self.cboxGiaoVien.currentText())
           addPhanCong = PhanCongDTO(maNamHoc,maLop,maMonHoc,maGiaoVien)
@@ -779,10 +779,13 @@ class TrangChu(QtWidgets.QMainWindow):
                          # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
                          ma = self.tablePhanCong.item(row, col).text()
                          lop = self.tablePhanCong.item(row, 1).text()
+                         nam = self.tablePhanCong.item(row, 0).text()
                          gv = GiaoVienBUS()
                          lophoc = LopHocBUS()
+                         namhoc = NamHocBUS()
+                         getNam = namhoc.getma(nam)
                          getma = gv.getma(ma)
-                         getlop = lophoc.getma(lop)
+                         getlop = lophoc.getma(lop,getNam)
                          ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa lịch phân công của giáo viên {ma} ra khỏi lớp {lop}?", QMessageBox.Yes| QMessageBox.Cancel)
                
                          if ret == QMessageBox.Yes:
@@ -1444,22 +1447,39 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackLop(self):
           self.stackedWidget.setCurrentIndex(5)
           #khoi
-          self.btnThemKhoi.clicked.connect(self.addKhoi)
-          self.btnCapNhatKhoi.clicked.connect(self.updateKhoi)
-          self.btnXoaKhoi.clicked.connect(self.deleteKhoi)
-          self.pushButton_71.clicked.connect(self.clear)
-          #lop
-          self.btnThemLopHoc.clicked.connect(self.addLop)
-          self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
-          self.btnXoaLopHoc.clicked.connect(self.deleteLop)
-          self.CboxNamHoc.currentTextChanged.connect(self.update_teacher_combobox)
-          self.pushButton_70.clicked.connect(self.clear)
-          self.btnTimLH.clicked.connect(self.findLH)
-          self.cboxMaLH.activated.connect(self.findSortLH)
-          self.cBoxTenLop.activated.connect(self.findSortTenLop)
-          self.btnExportExOFLH.clicked.connect(self.exportExcelLH)
-
-                    
+          nguoiDung = NguoiDungBUS()
+          tenDangNhap = global_username
+          self.role = nguoiDung.get_role_code(tenDangNhap)
+          if self.role == 'CV001':
+               self.btnThemKhoi.clicked.connect(self.addKhoi)
+               self.btnCapNhatKhoi.clicked.connect(self.updateKhoi)
+               self.btnXoaKhoi.clicked.connect(self.deleteKhoi)
+               self.pushButton_71.clicked.connect(self.clear)
+               #lop
+               self.btnThemLopHoc.clicked.connect(self.addLop)
+               self.btnCapNhatLopHoc.clicked.connect(self.updateLop)
+               self.btnXoaLopHoc.clicked.connect(self.deleteLop)
+               self.CboxNamHoc.currentTextChanged.connect(self.update_teacher_combobox)
+               self.pushButton_70.clicked.connect(self.clear)
+               self.btnTimLH.clicked.connect(self.findLH)
+               self.cboxMaLH.activated.connect(self.findSortLH)
+               self.cBoxTenLop.activated.connect(self.findSortTenLop)
+               self.btnExportExOFLH.clicked.connect(self.exportExcelLH)
+          else: 
+               self.btnThemKhoi.setEnabled(False)
+               self.btnCapNhatKhoi.setEnabled(False)
+               self.btnXoaKhoi.setEnabled(False)
+               self.pushButton_71.setEnabled(False)
+               #lop
+               self.btnThemLopHoc.setEnabled(False)
+               self.btnCapNhatLopHoc.setEnabled(False)
+               self.btnXoaLopHoc.setEnabled(False)
+               self.CboxNamHoc.currentTextChanged.connect(self.update_teacher_combobox)
+               self.pushButton_70.clicked.connect(self.clear)
+               self.btnTimLH.clicked.connect(self.findLH)
+               self.cboxMaLH.activated.connect(self.findSortLH)
+               self.cBoxTenLop.activated.connect(self.findSortTenLop)
+               self.btnExportExOFLH.clicked.connect(self.exportExcelLH)       
           self.loadlistlop()
           #self.displayInforInTabLopHoc()
      def update_teacher_combobox(self, year):
@@ -1662,7 +1682,7 @@ class TrangChu(QtWidgets.QMainWindow):
                               else:
                                    QMessageBox.warning(self, "Lỗi", "Xóa dữ liệu không thành công!")
           else:
-                    QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
+               QMessageBox.warning(self,"Cảnh báo","Bạn chưa chọn đối tượng cần xóa!")
      
      def addKhoi(self):
           khoi = KhoiBUS()
@@ -1939,7 +1959,7 @@ class TrangChu(QtWidgets.QMainWindow):
           nguoiDung = NguoiDungBUS()
           tenDangNhap = global_username
           self.role = nguoiDung.get_role_code(tenDangNhap)
-          if self.role == ' CV001':
+          if self.role == 'CV001':
           #monhoc
                self.btnThemMonHoc.clicked.connect(self.addMonHoc)
                self.btnCapNhatMonHoc.clicked.connect(self.updateMonHoc)
@@ -2051,16 +2071,16 @@ class TrangChu(QtWidgets.QMainWindow):
      def Diem_TenHocSinh_combobox(self,lop):
           hocsinh = HocSinhBUS()
           self.comboBox_8.clear()
-          lisths = hocsinh.getTenHS(lop)
+          lisths = hocsinh.getTenHS(self.comboBox_5.currentText(),lop)
           for hs in lisths:
                self.comboBox_8.addItem(hs)
      def Display_Hsinh_Diem(self):
-          #cboxNamHocDiem = self.comboBox_4.currentText()
+          cboxNamHocDiem = self.comboBox_4.currentText()
           cboxMonHoc = self.comboBox_3.currentText()
           cboxHocKy = self.comboBox_2.currentText()
           cboxLop = self.comboBox.currentText()
           diem = DiemBUS()
-          list = diem.getHsDiem(cboxMonHoc,cboxHocKy,cboxLop)
+          list = diem.getHsDiem(cboxMonHoc,cboxHocKy,cboxNamHocDiem,cboxLop)
           self.tableListHsDiem.setRowCount(len(list))
           for i, row in enumerate(list):
                for j,val in enumerate(row):
@@ -2110,7 +2130,7 @@ class TrangChu(QtWidgets.QMainWindow):
                maMonHoc = monhoc.getMamon(self.comboBox_3.currentText())
                maHocKy = hocky.getma(self.comboBox_2.currentText())
                maNamHoc = namhoc.getma(self.comboBox_4.currentText())
-               maLop = lophoc.getma(self.comboBox.currentText())
+               maLop = lophoc.getma(self.comboBox.currentText(),maNamHoc)
 
                for loaiDiem, diemSo in [('LD003', diemMieng), ('LD001', diem15phut), ('LD002', diemGiuaKy), ('LD004', diemThi)]:
                     diemDTO = DiemDTO(maHocSinh, maMonHoc, maHocKy, maNamHoc, maLop, loaiDiem, diemSo)
@@ -2239,11 +2259,11 @@ class TrangChu(QtWidgets.QMainWindow):
                     if mon.inser(addMon):
                     # Hiển thị thông báo lỗi nếu truy vấn không thành công
                          print("Inserted record:", addMon.idMH, addMon.tenMH, addMon.soTiet,addMon.heSo)
-                         QMessageBox.warning(self, "Lỗi", "Thêm dữ liệu thành công!")
+                         QMessageBox.warning(self, "Thông báo", "Thêm dữ liệu thành công!")
                          self.loadlistMonHoc()
                          self.clear()
                     else:
-                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+                         QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
      def updateMonHoc(self):
           mon = MonHocBUS()
           numRows = self.tableMonHoc.rowCount()

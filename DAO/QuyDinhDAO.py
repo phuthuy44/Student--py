@@ -52,3 +52,48 @@ class QuyDinhDAO:
                query.close()
                mydb.close()
           return False
+     def updateDiem(self,dd:QuyDinhDTO):
+          sqlInsert ="UPDATE quydinh SET tuoiCanDuoi = %s, tuoiCanTren =%s,siSoCanDuoi =%s,siSoCanTren=%s,diemDat=%s"
+          #id = self.CheckgetID()  # generate new unique ID
+          val = (dd.tuoiCD,dd.tuoiCT,dd.siSoCD,dd.siSOCT,dd.diemDat)
+          try:
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               query.execute(sqlInsert,val)
+               print(sqlInsert,val)
+               mydb.commit()
+               return True
+
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally :
+               query.close()
+               mydb.close()
+          return False
+     def checkExist(dd:QuyDinhDTO):
+          sqlCheckExist = "SELECT COUNT(*) FROM quydinh"
+          #val = ()
+          try:
+               mydb = mysql.connector.connect(
+               host ="localhost",
+            user ="root",
+            password ="",
+            database ="studentmanager"
+        )
+               query = mydb.cursor()
+               query.execute(sqlCheckExist)
+               count = query.fetchone()[0]
+               if count > 0:
+                    return True
+               else:     
+                    return False
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally:
+               query.close()
+               mydb.close()

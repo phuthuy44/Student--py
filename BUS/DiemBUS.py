@@ -7,8 +7,8 @@ from DTO.DiemDTO import DiemDTO
 class DiemBUS:
      def __init__(self):
           pass
-     def getHsDiem(self,monhoc,hocky,lophoc):
-          return DiemDAO.getList(self,monhoc,hocky,lophoc)
+     def getHsDiem(self,monhoc,hocky,namhoc,tenlop):
+          return DiemDAO.getList(self,monhoc,hocky,namhoc,tenlop)
      def getLopDiem(self,namhoc):
           return DiemDAO.getLop(self,namhoc)
      #def insertDiem(self,dd:DiemDTO):
