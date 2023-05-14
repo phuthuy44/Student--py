@@ -48,6 +48,9 @@ from BUS.DiemBUS import DiemBUS
 from DTO.DiemDTO import DiemDTO
 from BUS.NguoiDungBUS import NguoiDungBUS
 from DTO.NguoiDungDTO import NguoiDungDTO
+from BUS.DiemTBMonHocBUS import DiemTBMonHocBUS
+from DTO.KQMHDTO import KQMHDTO
+from BUS.BaoCaoBUS import BaoCaoBUS
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -128,6 +131,7 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnMonHoc.clicked.connect(self.stackMonHoc)
                self.btnKetQua.clicked.connect(self.stackKetQua)
                self.btnHocPhi.clicked.connect(self.stackHocPhi)
+               self.btnBaoCao.clicked.connect(self.stackBaoCao)
           elif self.role =='CV004':
                self.btnMonHoc.clicked.connect(self.stackMonHoc)
                self.btnHocSinh.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
@@ -149,6 +153,46 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnHKNH.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnKetQua.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnHocSinh.clicked.connect(lambda:QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+     def stackBaoCao(self):
+          self.stackedWidget.setCurrentIndex(10)
+          self.comboBox_10.currentTextChanged.connect(self.BaoCao_lop_loadlist)
+          self.btnMH_HK.clicked.connect(self.display_BaoCao)
+          self.loadlistBaoCao()
+     def loadlistBaoCao(self):
+          namhoc = NamHocBUS()
+          list = namhoc.getlistNH()
+          self.comboBox_10.clear()
+          for row in list:
+               self.comboBox_10.addItem(row[1]) #cboxnamhoc
+          hocky = HocKyBUS()
+          self.comboBox_12.clear()
+          list = hocky.getlistHocKy()
+          for row in list:
+               self.comboBox_12.addItem(row[1])
+     def BaoCao_lop_loadlist(self,namhoc):
+          diem = DiemBUS()
+          self.comboBox_11.clear() #cboxLopHoc
+          listLop = diem.getLopDiem(namhoc)
+          for lops in listLop:
+               self.comboBox_11.addItem(lops)
+     def display_BaoCao(self):
+          baocao = BaoCaoBUS()
+          comboBox_10 = self.comboBox_10.currentText()
+          comboBox_11 = self.comboBox_11.currentText()
+          comboBox_12 = self.comboBox_12.currentText()
+          listTiLe = baocao.getListHSDiem(comboBox_11,comboBox_12,comboBox_10)
+          self.tableLH_MH.setRowCount(len(listTiLe))
+          for i, row in enumerate(listTiLe):
+               for j,val in enumerate(row):
+                    self.tableLH_MH.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableLH_MH.rowCount() 
+          for i in range(numRows):
+               self.tableLH_MH.item(i, 0).setFlags(self.tableLH_MH.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLH_MH.item(i, 1).setFlags(self.tableLH_MH.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLH_MH.item(i, 2).setFlags(self.tableLH_MH.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLH_MH.item(i, 3).setFlags(self.tableLH_MH.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+          
+
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
           #HocSinh
@@ -321,9 +365,11 @@ class TrangChu(QtWidgets.QMainWindow):
           phanlop = PhanLopBUS()
           self.cBoxLop.clear()
           self.cboxlistLop.clear()
-          lop = phanlop.getLop(khoi,self.cBoxNH.currentText())
-          for lops in lop:
+          lop1 = phanlop.getLop(khoi,self.cBoxNH.currentText())
+          lop2 = phanlop.getLop(khoi,self.cboxlistNH.currentText())
+          for lops in lop1:
                self.cBoxLop.addItem(lops)
+          for lops in lop2:
                self.cboxlistLop.addItem(lops)
      def insertPhanLop(self):
           cBoxNH = self.cBoxNH.currentText()
@@ -2090,12 +2136,14 @@ class TrangChu(QtWidgets.QMainWindow):
                self.tableListHsDiem.item(i, 0).setFlags(self.tableListHsDiem.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableListHsDiem.item(i, 1).setFlags(self.tableListHsDiem.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
      def display_list_Hsinh(self):
+          ketquaMH = DiemTBMonHocBUS()
           cboxHocKy = self.comboBox_7.currentText()
           cboxLop = self.comboBox_6.currentText()
           cboxHS= self.comboBox_8.currentText()
           diem = DiemBUS()
           listDiemHS = diem.getListHSDiem(cboxHocKy, cboxLop, cboxHS)
           self.tableListDiemHS.setRowCount(len(listDiemHS))
+          flag = True
           for i, row in enumerate(listDiemHS):
                for j,val in enumerate(row):
                     self.tableListDiemHS.setItem(i, j, QTableWidgetItem(str(val)))
@@ -2108,6 +2156,32 @@ class TrangChu(QtWidgets.QMainWindow):
                self.tableListDiemHS.item(i, 4).setFlags(self.tableListDiemHS.item(i, 4).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableListDiemHS.item(i, 5).setFlags(self.tableListDiemHS.item(i, 5).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableListDiemHS.item(i, 6).setFlags(self.tableListDiemHS.item(i, 6).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListDiemHS.item(i, 7).setFlags(self.tableListDiemHS.item(i, 7).flags() & ~QtCore.Qt.ItemIsEditable)
+          for row in range(numRows):
+               cboxnamhoc = self.comboBox_5.currentText()
+               getMaHocSinh = self.tableListDiemHS.item(row, 0).text()
+               lophoc = LopHocBUS()
+               monhoc = MonHocBUS()
+               getMaMonHoc = monhoc.getMamon(self.tableListDiemHS.item(row, 2).text())
+               hocky = HocKyBUS()
+               getMaHocKy = hocky.getma(cboxHocKy)
+               namhoc = NamHocBUS()
+               getMaNH = namhoc.getma(cboxnamhoc)
+               getMaLopHoc = lophoc.getma(cboxLop,getMaNH)
+
+               diemMieng = self.tableListDiemHS.item(row, 3).text()
+               diem15phut = self.tableListDiemHS.item(row, 4).text()
+               diemGiuaKy = self.tableListDiemHS.item(row, 5).text()
+               diemThi = self.tableListDiemHS.item(row, 6).text()
+               diemTBMon = self.tableListDiemHS.item(row, 7).text()
+               ketQuaMonHoc = KQMHDTO(getMaHocSinh,getMaLopHoc,getMaNH,getMaMonHoc,getMaHocKy,diemMieng,diem15phut,diemGiuaKy,diemThi,diemTBMon)
+               if not ketquaMH.insertDiem(ketQuaMonHoc):
+                    flag = False
+          if flag :
+               print("Thêm thành thông")
+          else: 
+               print("Không thành công")
+          
      def insertDiem(self):
           diem = DiemBUS()
           monhoc = MonHocBUS()
@@ -2671,14 +2745,17 @@ class TrangChu(QtWidgets.QMainWindow):
           if selected and len(selected) >= 2: 
                maPhi = selected[0].text()
                tenPhi = selected[1].text()
+               soTien = selected[2].text()
                self.lineListMaPhi.setText(maPhi)
                self.lineListTenKhoanPhi.setText(tenPhi)
+               self.lineTienDong.setText(soTien)
      def addKhoanPhi(self):
           #lineMaPhi
           phi = CacKhoanPhiBUS()
           lineTenKhoanPhi = self.lineTenMaPhi.text()
+          lineTienPhi = self.lineTienPhi.text()
           #maPhi = self.maPhi
-          addphi = CacKhoanPhi(None, lineTenKhoanPhi)
+          addphi = CacKhoanPhi(None, lineTenKhoanPhi,lineTienPhi)
           if len(lineTenKhoanPhi)==0:
                QMessageBox.warning(self,"Cảnh báo","Bạn chưa nhập dữ liệu")
           else: 
@@ -2693,6 +2770,7 @@ class TrangChu(QtWidgets.QMainWindow):
                          print("Inserted record:", addphi.idCacKhoanPhi, addphi.tenPhi)
                          QMessageBox.information(self,"Thông báo",f"Thêm phí có tên {lineTenKhoanPhi} vào danh sách thành công!")
                          self.loadlistPhi()
+                         self.lineTienPhi.clear()
                          self.clear()
                     else: 
                          QMessageBox.warning(self,"Lỗi","Thêm vào danh sách không thành công!")
@@ -2703,7 +2781,8 @@ class TrangChu(QtWidgets.QMainWindow):
           for i in range(numRows):
                maPhi= self.tableKhoanPhi.item(i,0).text()
                tenPhi = self.tableKhoanPhi.item(i,1).text()
-               updatephi = CacKhoanPhi(maPhi,tenPhi)
+               tienPhi = self.tableKhoanPhi.item(i,2).text()
+               updatephi = CacKhoanPhi(maPhi,tenPhi,tienPhi)
                
                if not phi.updateListPhi(updatephi):
                     flag = False

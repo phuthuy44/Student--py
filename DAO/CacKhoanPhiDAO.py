@@ -21,7 +21,7 @@ class CacKhoanPhiDAO:
                query.execute(sqlPhi)
                rows = query.fetchall()
                for row in rows:
-                    phi= (row[0],row[1])
+                    phi= (row[0],row[1],row[2])
                     list.append(phi)
                print(list)
           except mysql.connector.errors.InternalError as e:
@@ -31,8 +31,8 @@ class CacKhoanPhiDAO:
                mydb.close()
           return list
      def updatePhi(dd: CacKhoanPhi):
-          sqlCapNhat = "UPDATE cackhoanphi SET tenPhi = %s WHERE maPhi =%s"
-          data = (dd.tenPhi,dd.idCacKhoanPhi)
+          sqlCapNhat = "UPDATE cackhoanphi SET soTien = %s , tenPhi = %s WHERE maPhi =%s"
+          data = (dd.soTien,dd.tenPhi,dd.idCacKhoanPhi)
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",
@@ -143,9 +143,9 @@ class CacKhoanPhiDAO:
                mydb.close()
           return False
      def insertPhi(self,dd:CacKhoanPhi):
-          sqlInsert ="INSERT INTO cackhoanphi (maPhi, tenPhi) VALUES (%s, %s)"
+          sqlInsert ="INSERT INTO cackhoanphi (maPhi, tenPhi,soTien) VALUES (%s, %s,%s)"
           idPhi = self.CheckgetID()  # generate new unique ID
-          val = (idPhi, dd.tenPhi)
+          val = (idPhi, dd.tenPhi,dd.soTien)
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",
