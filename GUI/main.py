@@ -51,6 +51,7 @@ from DTO.NguoiDungDTO import NguoiDungDTO
 from BUS.DiemTBMonHocBUS import DiemTBMonHocBUS
 from DTO.KQMHDTO import KQMHDTO
 from BUS.BaoCaoBUS import BaoCaoBUS
+from DTO.KetQuaLopHocMonHocDTO import KetQuaLopHocMonHocDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -177,6 +178,11 @@ class TrangChu(QtWidgets.QMainWindow):
                self.comboBox_11.addItem(lops)
      def display_BaoCao(self):
           baocao = BaoCaoBUS()
+          lophoc = LopHocBUS()
+          namhoc = NamHocBUS()
+          monhoc = MonHocBUS()
+          hocky = HocKyBUS()
+          flag = True
           comboBox_10 = self.comboBox_10.currentText()
           comboBox_11 = self.comboBox_11.currentText()
           comboBox_12 = self.comboBox_12.currentText()
@@ -191,7 +197,32 @@ class TrangChu(QtWidgets.QMainWindow):
                self.tableLH_MH.item(i, 1).setFlags(self.tableLH_MH.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableLH_MH.item(i, 2).setFlags(self.tableLH_MH.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableLH_MH.item(i, 3).setFlags(self.tableLH_MH.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
-          
+          '''listTileHocky = baocao.getListHocKyLop(comboBox_11,comboBox_12,comboBox_10)
+          self.tableLH_HK.setRowCount(len(listTileHocky))
+          for i, row in enumerate(listTileHocky):
+               for j,val in enumerate(row):
+                    self.tableLH_HK.setItem(i, j, QTableWidgetItem(str(val)))
+          num = self.tableLH_HK.rowCount() 
+          for i in range(num):
+               self.tableLH_HK.item(i, 0).setFlags(self.tableLH_HK.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLH_HK.item(i, 1).setFlags(self.tableLH_HK.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLH_HK.item(i, 2).setFlags(self.tableLH_HK.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableLH_HK.item(i, 3).setFlags(self.tableLH_HK.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)'''
+          for row in range(numRows):
+               getNamHoc = namhoc.getma(comboBox_10)
+               getMaLop = lophoc.getma(comboBox_11,getNamHoc)
+               getMonHoc = monhoc.getMamon(self.tableLH_MH.item(row, 0).text())
+               getHocKy = hocky.getma(comboBox_12)
+               getTiLeDat = self.tableLH_MH.item(row, 3).text()
+               getdata = KetQuaLopHocMonHocDTO(getMaLop,getNamHoc,getMonHoc,getHocKy,getTiLeDat)
+               if not baocao.insertDiem(getdata):
+                    flag = False
+          if flag:
+               print("Thêm thành công!")
+          else:
+               print("Thêm không thành công !")
+                    
+
 
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
