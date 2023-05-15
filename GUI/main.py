@@ -2060,6 +2060,10 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnExportExOFLH_2.clicked.connect(self.exportListDiem)
 
                self.btnLuuListDiemhs.clicked.connect(self.insertDiem)
+
+               self.btnDisplayListDiemHS_2.clicked.connect(self.display_list_lop_hocsinh_monhoc)
+               self.comboBox_9.currentTextChanged.connect(self.Diem_lopHoc2_combobox)
+               self.btnExportExOFLH_3.clicked.connect(self.exportListDiem_MonHoc)
           elif self.role == 'CV004':
                self.comboBox_4.currentTextChanged.connect(self.Diem_lopHoc_combobox)
                self.comboBox_5.currentTextChanged.connect(self.Diem_lopHoc1_combobox)
@@ -2069,7 +2073,11 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnDisplayListDiemHS.clicked.connect(self.display_list_Hsinh)
                self.btnExportExOFLH_2.clicked.connect(self.exportListDiem)
                self.btnLuuListDiemhs.clicked.connect(self.insertDiem)
-               
+
+               self.btnDisplayListDiemHS_2.clicked.connect(self.display_list_lop_hocsinh_monhoc)
+               self.comboBox_9.currentTextChanged.connect(self.Diem_lopHoc2_combobox)
+               self.btnExportExOFLH_3.clicked.connect(self.exportListDiem_MonHoc)
+
                self.btnThemMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnCapNhatMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnXoaMonHoc.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
@@ -2114,37 +2122,49 @@ class TrangChu(QtWidgets.QMainWindow):
           namhoc = NamHocBUS()
           self.comboBox_4.clear() #cboxNamHoc
           self.comboBox_5.clear()
+          self.comboBox_9.clear()
           list = namhoc.getlistNH()
           for row in list : 
                self.comboBox_4.addItem(row[1])
                self.comboBox_5.addItem(row[1])
+               self.comboBox_9.addItem(row[1])
           hocky = HocKyBUS()
           self.comboBox_2.clear()
           self.comboBox_7.clear()
+          self.comboBox_19.clear()
           list = hocky.getlistHocKy()
           for row in list:
                self.comboBox_2.addItem(row[1])
                self.comboBox_7.addItem(row[1])
+               self.comboBox_19.addItem(row[1])
           
           monhoc = MonHocBUS()
           self.comboBox_3.clear()
+          self.comboBox_20.clear()
           list = monhoc.getListMonHoc()
           for row in list:
                self.comboBox_3.addItem(row[1])
+               self.comboBox_20.addItem(row[1])
      def Diem_lopHoc_combobox(self,namhoc):
           diem = DiemBUS()
           self.comboBox.clear() #cboxLopHoc
-          self.comboBox_6.clear()
+          self.comboBox_18.clear()
           listLop = diem.getLopDiem(namhoc)
           for lops in listLop:
                self.comboBox.addItem(lops)
-               self.comboBox_6.addItem(lops)
+               self.comboBox_18.addItem(lops)
      def Diem_lopHoc1_combobox(self,namhoc):
           diem = DiemBUS()
           self.comboBox_6.clear()
           listLop = diem.getLopDiem(namhoc)
           for lops in listLop:
                self.comboBox_6.addItem(lops)
+     def Diem_lopHoc2_combobox(self,namhoc):
+          diem = DiemBUS()
+          self.comboBox_18.clear()#LOPHOC
+          listLop = diem.getLopDiem(namhoc)
+          for lops in listLop:
+               self.comboBox_18.addItem(lops)
      def Diem_TenHocSinh_combobox(self,lop):
           hocsinh = HocSinhBUS()
           self.comboBox_8.clear()
@@ -2212,7 +2232,66 @@ class TrangChu(QtWidgets.QMainWindow):
                print("Thêm thành thông")
           else: 
                print("Không thành công")
-          
+     def display_list_lop_hocsinh_monhoc(self):
+          comboBox_9 = self.comboBox_9.currentText() #namhoc
+          comboBox_18 = self.comboBox_18.currentText()#lophoc
+          comboBox_19 = self.comboBox_19.currentText()#hocky
+          comboBox_20 = self.comboBox_20.currentText()#monhoc
+          diemTBHK = DiemTBMonHocBUS()
+          listDiemTB_Lop = diemTBHK.getListDiem_MonHoc(comboBox_19,comboBox_18,comboBox_9,comboBox_20)
+          self.table_ListDiem_MonHoc_Lop.setRowCount(len(listDiemTB_Lop))
+          flag = True
+          for i, row in enumerate(listDiemTB_Lop):
+               for j,val in enumerate(row):
+                    self.table_ListDiem_MonHoc_Lop.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.table_ListDiem_MonHoc_Lop.rowCount() 
+          for i in range(numRows):
+               self.table_ListDiem_MonHoc_Lop.item(i, 0).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 1).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 2).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 3).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 4).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 4).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 5).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 5).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 6).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 6).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 7).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 7).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.table_ListDiem_MonHoc_Lop.item(i, 8).setFlags(self.table_ListDiem_MonHoc_Lop.item(i, 8).flags() & ~QtCore.Qt.ItemIsEditable)
+     def exportListDiem_MonHoc(self):
+          columnHeader = []
+          #Tạo danh sách tiêu đề cột 
+          for j in range(self.table_ListDiem_MonHoc_Lop.model().columnCount()):
+               columnHeader.append(self.table_ListDiem_MonHoc_Lop.horizontalHeaderItem(j).text())
+               df = pd.DataFrame(columns = columnHeader)
+          for row in range(self.table_ListDiem_MonHoc_Lop.rowCount()):
+               for col in range(self.table_ListDiem_MonHoc_Lop.columnCount()):
+                    item = self.table_ListDiem_MonHoc_Lop.item(row,col)
+                    if item is None:
+                         df.at[row, columnHeader[col]] = ''
+                    else:            
+                         df.at[row,columnHeader[col]] = item.text()
+          t = time.localtime()
+          currentTime = time.strftime("%H-%M-%S",t)
+          tenLop = self.comboBox_18.currentText()
+          namhoc = self.comboBox_9.currentText()
+          hocky = self.comboBox_19.currentText()
+          monhoc = self.comboBox_20.currentText()
+          tenFile = r"FileExcel\BangDiem\{}\NamHoc_{}\Lop_{}\{}_{}.xlsx".format(monhoc,namhoc,tenLop,hocky,currentTime)
+          path = os.path.dirname(tenFile)
+
+          # Kiểm tra nếu thư mục không tồn tại thì tạo mới
+          if not os.path.exists(path):
+               os.makedirs(path)
+          df.to_excel(tenFile,index = False)
+          if(columnHeader != " "):
+               QMessageBox.information(self,"Thông báo","Xuất ra tệp excel thành công!")
+               dir_path = os.getcwd()
+               #excel =os.startfile('Excel.Application')
+               os.startfile(os.path.join(dir_path,tenFile))
+              # excel.Visible = True 
+               print('Excel file exported!') 
+               
+          else:
+               QMessageBox.warning(self,"Lỗi","Xuất ra tệp excel không thành công!")                                    
+
      def insertDiem(self):
           diem = DiemBUS()
           monhoc = MonHocBUS()

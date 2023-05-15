@@ -403,7 +403,7 @@ background-color: rgb(255, 255, 255);
 }</string>
     </property>
     <property name="currentIndex">
-     <number>10</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_2">
@@ -6856,7 +6856,7 @@ border-radius:5px;
        </rect>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -8130,7 +8130,7 @@ QPushButton:hover{
       </widget>
       <widget class="QWidget" name="tab_13">
        <attribute name="title">
-        <string>Xem điểm</string>
+        <string>Xem điểm theo học sinh</string>
        </attribute>
        <widget class="QTableWidget" name="tableListDiemHS">
         <property name="geometry">
@@ -8494,6 +8494,390 @@ background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba
           <string>Xuất Excel</string>
          </property>
         </widget>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_27">
+       <attribute name="title">
+        <string>Xem điểm theo môn học</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_21">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>10</y>
+          <width>811</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox{
+font: 14pt &quot;Tahoma&quot;;
+border-radius:5px;
+border:0.5px solid rgb(0, 93, 45);
+color:rgb(0, 93, 45);
+}
+</string>
+        </property>
+        <property name="title">
+         <string>THÔNG TIN ĐIỂM SỐ</string>
+        </property>
+        <widget class="QComboBox" name="comboBox_9">
+         <property name="geometry">
+          <rect>
+           <x>150</x>
+           <y>30</y>
+           <width>261</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_18">
+         <property name="geometry">
+          <rect>
+           <x>150</x>
+           <y>100</y>
+           <width>261</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_17">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>40</y>
+           <width>101</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Năm học</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_18">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>40</y>
+           <width>101</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Học kỳ</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_19">
+         <property name="geometry">
+          <rect>
+           <x>540</x>
+           <y>30</y>
+           <width>261</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_19">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>110</y>
+           <width>101</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Lớp</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_20">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>110</y>
+           <width>101</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Môn học</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_20">
+         <property name="geometry">
+          <rect>
+           <x>540</x>
+           <y>100</y>
+           <width>261</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btnDisplayListDiemHS_2">
+         <property name="geometry">
+          <rect>
+           <x>250</x>
+           <y>160</y>
+           <width>141</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+color: rgb(0, 0, 0);
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid blue;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+	background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 85, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+</string>
+         </property>
+         <property name="text">
+          <string>Hiển thị </string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btnExportExOFLH_3">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>160</y>
+           <width>121</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid red;
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 170, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 85, 0, 255), stop:1 rgba(255, 255, 255, 255));
+}
+</string>
+         </property>
+         <property name="text">
+          <string>Xuất Excel</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QTableWidget" name="table_ListDiem_MonHoc_Lop">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>230</y>
+          <width>1201</width>
+          <height>491</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid gray;
+border- radius:2px;
+color: rgb(0, 0, 0);
+font: 75 14pt &quot;Tahoma&quot;;
+background-color: rgb(207, 255, 223);</string>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>133</number>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Mã học sinh</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Tên học sinh</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ngày sinh</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Giới tính</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm miệng</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm 15 phút</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm 45 phút</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm Thi</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm TBHK</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
        </widget>
       </widget>
      </widget>
@@ -11363,7 +11747,7 @@ background-color: rgb(207, 255, 223);</string>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_26">
        <attribute name="title">
@@ -11631,6 +12015,303 @@ background-color: rgb(207, 255, 223);</string>
        <attribute name="title">
         <string>Kết quả cả năm học</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_20">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>10</y>
+          <width>771</width>
+          <height>141</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox{
+border-radius: 5px;
+	font: 14pt &quot;Tahoma&quot;;
+border:0.5px solid rgb(0, 93, 45);
+color:rgb(0, 93, 45);
+}
+</string>
+        </property>
+        <property name="title">
+         <string>KẾT QUẢ CẢ NĂM HỌC</string>
+        </property>
+        <widget class="QComboBox" name="comboBox_16">
+         <property name="geometry">
+          <rect>
+           <x>120</x>
+           <y>40</y>
+           <width>221</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_15">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>81</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 75 14pt &quot;Tahoma&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Năm học</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_16">
+         <property name="geometry">
+          <rect>
+           <x>390</x>
+           <y>50</y>
+           <width>81</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 75 14pt &quot;Tahoma&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Lớp học </string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_17">
+         <property name="geometry">
+          <rect>
+           <x>500</x>
+           <y>40</y>
+           <width>221</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 16pt &quot;Tahoma&quot;;
+border:2px solid black;
+color: black;
+background-color: rgb(255, 255, 255);
+border-radius:5px;
+</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btnMH_HK_2">
+         <property name="geometry">
+          <rect>
+           <x>300</x>
+           <y>90</y>
+           <width>141</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton{
+color: rgb(0, 0, 0);
+font: 16pt &quot;Tahoma&quot;;
+border-radius:15px;
+border:1px solid blue;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+QPushButton:hover{
+	font: 18pt &quot;Tahoma&quot;;
+	background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 85, 255, 255), stop:1 rgba(255, 255, 255, 255));
+}
+</string>
+         </property>
+         <property name="text">
+          <string>Hiển thị </string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>170</y>
+          <width>1201</width>
+          <height>541</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid gray;
+border- radius:2px;
+color: rgb(0, 0, 0);
+font: 75 14pt &quot;Tahoma&quot;;
+background-color: rgb(207, 255, 223);</string>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>119</number>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Mã học sinh</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Tên học sinh</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ngày sinh</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Giới tính</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Học lực</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Hạnh kiểm</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Kết quả</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm TBHK1</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Điểm TBHK2</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>ĐIỂM TBCN</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+       </widget>
       </widget>
      </widget>
     </widget>
