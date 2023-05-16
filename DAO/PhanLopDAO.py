@@ -125,9 +125,9 @@ class PhanLopDAO:
                query.close()
                mydb.close()
           return False
-     def delete(ma):
-          sql = "DELETE FROM phanlop WHERE phanlop.maHocSinh = %s"
-          val = (ma,)
+     def delete(ma,namhoc):
+          sql = "DELETE FROM phanlop WHERE phanlop.maHocSinh = %s and phanlop.maNamHoc = %s"
+          val = (ma,namhoc)
           try:
                mydb = mysql.connector.connect(
                     host ="localhost",

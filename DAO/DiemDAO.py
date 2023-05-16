@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 import mysql.connector
 from DTO.DiemDTO import DiemDTO
 class DiemDAO:
-     def __init__(self) -> None:
+     def __init__(self):
           pass
      def getList(self,monhoc,hocky,namhoc,tenlop):
           list = []

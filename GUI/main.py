@@ -52,6 +52,9 @@ from BUS.DiemTBMonHocBUS import DiemTBMonHocBUS
 from DTO.KQMHDTO import KQMHDTO
 from BUS.BaoCaoBUS import BaoCaoBUS
 from DTO.KetQuaLopHocMonHocDTO import KetQuaLopHocMonHocDTO
+from BUS.PhieuThanhToanBUS import PhieuThanhToanBUS
+from DTO.PhieuThanhToanCTDTO import PhieuThanhToanCTDTO
+from DTO.PhieuThanhToanDTO import PhieuThanhToanDTO
 from PyQt5 import QtWidgets,uic,QtGui,QtCore
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QPixmap,QIcon,QImage
@@ -144,6 +147,7 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnHKNH.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnNhanVien.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnKetQua.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnBaoCao.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
           elif self.role =='CV003':
                self.btnHocPhi.clicked.connect(self.stackHocPhi)
                self.btnDangXuat.clicked.connect(self.DangXuat)
@@ -154,6 +158,7 @@ class TrangChu(QtWidgets.QMainWindow):
                self.btnHKNH.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnKetQua.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
                self.btnHocSinh.clicked.connect(lambda:QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
+               self.btnBaoCao.clicked.connect(lambda: QMessageBox.warning(self, "Cảnh báo", "Bạn không có quyền truy cập chức năng này!"))
      def stackBaoCao(self):
           self.stackedWidget.setCurrentIndex(10)
           self.comboBox_10.currentTextChanged.connect(self.BaoCao_lop_loadlist)
@@ -226,27 +231,31 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackHocSinh(self):
           self.stackedWidget.setCurrentIndex(1)
+          nguoiDung = NguoiDungBUS()
+          tenDangNhap = global_username
+          self.role = nguoiDung.get_role_code(tenDangNhap)
+          if self.role == 'CV001':
           #HocSinh
-          self.btnThemHocSinh.clicked.connect(self.addHocSinh)
-          self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
-          self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
-          self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
-          self.pushButton_82.clicked.connect(self.clear)
-          self.btnTimKiemHS.clicked.connect(self.findHS)
-          self.cboxSortGV_HS.activated.connect(self.findSortHS)
-          self.cboxGTofHS.activated.connect(self.findGioiTinhOfHS)
-          self.btnExportExcelHS.clicked.connect(self.exportExcelHS)
-          #PhanLop
-          self.cBoxNH.currentTextChanged.connect(self.load_khoi_combocbox)
-          self.cbBoxKhoi.currentTextChanged.connect(self.load_lop_combobox)
-          self.btnThemHocSinhIntoList.clicked.connect(self.insertPhanLop)
-          self.cBoxNH.currentTextChanged.connect(self.load_HS_combocbox)
-          self.btnXoaHocSinhRemoveList.clicked.connect(self.deletePhanLop)
-          #Danh sach
-          self.cboxlistNH.currentTextChanged.connect(self.load_khoi_combocbox)
-          self.cboxlistKhoi.currentTextChanged.connect(self.load_lop_combobox)
-          self.btnDisplayListHS.clicked.connect(self.displayListHocSinh)
-          self.btnExportPhanLop.clicked.connect(self.ExportPhanLop)
+               self.btnThemHocSinh.clicked.connect(self.addHocSinh)
+               self.btnCapNhatHocSinh.clicked.connect(self.updateHocSinh)
+               self.btnXoaHocSinh.clicked.connect(self.deleteHocSinh)
+               self.btnLayAnhOfHocSinh.clicked.connect(self.imageHocSinh)
+               self.pushButton_82.clicked.connect(self.clear)
+               self.btnTimKiemHS.clicked.connect(self.findHS)
+               self.cboxSortGV_HS.activated.connect(self.findSortHS)
+               self.cboxGTofHS.activated.connect(self.findGioiTinhOfHS)
+               self.btnExportExcelHS.clicked.connect(self.exportExcelHS)
+               #PhanLop
+               self.cBoxNH.currentTextChanged.connect(self.load_khoi_combocbox)
+               self.cbBoxKhoi.currentTextChanged.connect(self.load_lop_combobox)
+               self.btnThemHocSinhIntoList.clicked.connect(self.insertPhanLop)
+               self.cBoxNH.currentTextChanged.connect(self.load_HS_combocbox)
+               self.btnXoaHocSinhRemoveList.clicked.connect(self.deletePhanLop)
+               #Danh sach
+               self.cboxlistNH.currentTextChanged.connect(self.load_khoi_combocbox)
+               self.cboxlistKhoi.currentTextChanged.connect(self.load_lop_combobox)
+               self.btnDisplayListHS.clicked.connect(self.displayListHocSinh)
+               self.btnExportPhanLop.clicked.connect(self.ExportPhanLop)
           self.loadlistHS()
           #self.displayInforInTabPhanLop()
           '''# populate the widget with the data from the database
@@ -436,14 +445,17 @@ class TrangChu(QtWidgets.QMainWindow):
                          # Kiểm tra xem ô đầu tiên (cột mã chức vụ) đã được chọn hay chưa
                          ma = self.tableListHocSinh.item(row, col).text()
                          lop = self.tableListHocSinh.item(row, 2).text()
+                         namhoc = self.tableListHocSinh.item(row, 0).text()
                          hs = HocSinhBUS()
+                         nh = NamHocBUS()
                          getma = hs.getma(ma)
+                         getNamHoc = nh.getma(namhoc)
                          ret = QMessageBox.question(self, 'MessageBox', f"Bạn muốn xóa học sinh {ma} ra khỏi lớp {lop}?", QMessageBox.Yes| QMessageBox.Cancel)
                
                          if ret == QMessageBox.Yes:
                               phanlop=PhanLopBUS()
                               #self.tableChucVu.removeRow(row)
-                              if phanlop.delete(getma):
+                              if phanlop.delete(getma,getNamHoc):
                                    for col in range(self.tableListHocSinh.columnCount()):
                                         item = self.tableListHocSinh.takeItem(row, col)
                                         del item
@@ -1419,11 +1431,15 @@ class TrangChu(QtWidgets.QMainWindow):
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
           #Tao tai khoan
-          self.cboxChucVuList.currentTextChanged.connect(self.comboBox_TenNguoiDung)
-          self.cboxTenNguoiDung.currentTextChanged.connect(self.comboBox_tenDangNhap)
-          self.btnThemNguoiDung.clicked.connect(self.insertNguoiDung)
-          self.btnUpdateNguoiDung.clicked.connect(self.updateNguoiDung)
-          self.btnDeleteNguoiDung.clicked.connect(self.deleteNguoiDung)
+          nguoiDung = NguoiDungBUS()
+          tenDangNhap = global_username
+          self.role = nguoiDung.get_role_code(tenDangNhap)
+          if self.role == 'CV001':
+               self.cboxChucVuList.currentTextChanged.connect(self.comboBox_TenNguoiDung)
+               self.cboxTenNguoiDung.currentTextChanged.connect(self.comboBox_tenDangNhap)
+               self.btnThemNguoiDung.clicked.connect(self.insertNguoiDung)
+               self.btnUpdateNguoiDung.clicked.connect(self.updateNguoiDung)
+               self.btnDeleteNguoiDung.clicked.connect(self.deleteNguoiDung)
           self.loadlistNguoiDung()
      def loadlistNguoiDung(self):
           #taotaikhoan
@@ -2302,7 +2318,7 @@ class TrangChu(QtWidgets.QMainWindow):
           #maNamHoc = namhoc.getma(self.comboBox_4.currentText())
           lophoc = LopHocBUS()
           #maLop = lophoc.getma(self.comboBox.currentText())
-          flag = False
+          flag = True
     
           for row in range(self.tableListHsDiem.rowCount()):
                maHocSinh = self.tableListHsDiem.item(row, 0).text()
@@ -2320,9 +2336,7 @@ class TrangChu(QtWidgets.QMainWindow):
                     diemDTO = DiemDTO(maHocSinh, maMonHoc, maHocKy, maNamHoc, maLop, loaiDiem, diemSo)
                     print("Insert điểm cho học sinh", maHocSinh)
                     if not diem.insertDiem(diemDTO):
-                         break
-               else:
-                    flag = True
+                         flag = False
     
           if flag:
                QMessageBox.information(self, "Thông báo", "Lưu dữ liệu thành công!")
@@ -2817,14 +2831,16 @@ class TrangChu(QtWidgets.QMainWindow):
 
      def stackHocPhi(self):
           self.stackedWidget.setCurrentIndex(9)
-          maPhieu = "HD" + str(random.randint(0, 9999)).zfill(5)
-          self.lineMaPhieu.setText(maPhieu)
-          self.maPhieu = maPhieu
           self.btnThemKhoanPhi.clicked.connect(self.addKhoanPhi)
           self.btnCapNhatKhoanPhi.clicked.connect(self.updateKhoanPhi)
           self.btnXoaKhoanPhi.clicked.connect(self.deleteKhoanPhi)
           self.btnClearPhi.clicked.connect(self.clear)
           self.btnTimKiemPhi.clicked.connect(self.findPhi)
+          self.btnThemPhiIntoPhieu.clicked.connect(self.addPhiIntoPhieu)
+          self.btnRemovePhieu.clicked.connect(self.RemovePhieu)
+          self.tableListPhieu.cellChanged.connect(self.updateThanhToan)          
+          self.comboBox_14.currentTextChanged.connect(self.HocPhi_lopHoc_combobox)
+          self.comboBox_15.currentTextChanged.connect(self.load_HS_HP_combocbox)
           self.loadlistPhi()
      def loadlistPhi(self):
           phi = CacKhoanPhiBUS()
@@ -2840,6 +2856,18 @@ class TrangChu(QtWidgets.QMainWindow):
           for i in range(numRows):
                self.tableKhoanPhi.item(i, 0).setFlags(self.tableKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableKhoanPhi.item(i, 0).setBackground(QtGui.QColor(200, 200, 150))     
+          phieu = PhieuThanhToanBUS()
+          self.lineMaPhieu.setText(str(PhieuThanhToanBUS.CheckgetID(self)))
+          self.comboBox_13.clear()#nhanvien
+          getMaNhanVien = phieu.getNhanVien()
+          for row in getMaNhanVien:
+               self.comboBox_13.addItem(row)
+          namhoc = NamHocBUS()
+          self.comboBox_14.clear()#namhoc
+          getNamHoc = namhoc.getlistNH()
+          for row in getNamHoc :
+               self.comboBox_14.addItem(row[1])
+          
           self.tableListKhoanPhi.setRowCount(len(listPhi))
           self.tableListKhoanPhi.setColumnCount(len(listPhi[0]))
           for i, row in enumerate(listPhi):
@@ -2848,8 +2876,21 @@ class TrangChu(QtWidgets.QMainWindow):
           numRows = self.tableListKhoanPhi.rowCount()
           for i in range(numRows):
                self.tableListKhoanPhi.item(i, 0).setFlags(self.tableListKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
-               self.tableListKhoanPhi.item(i, 1).setFlags(self.tableListKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListKhoanPhi.item(i, 1).setFlags(self.tableListKhoanPhi.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListKhoanPhi.item(i, 2).setFlags(self.tableListKhoanPhi.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
           self.tableListKhoanPhi.itemSelectionChanged.connect(self.displayItemData)    
+     def HocPhi_lopHoc_combobox(self,namhoc):
+          diem = DiemBUS()
+          self.comboBox_15.clear()#LOPHOC
+          listLop = diem.getLopDiem(namhoc)
+          for lops in listLop:
+               self.comboBox_15.addItem(lops)
+     def load_HS_HP_combocbox(self,lop):
+          phieu = PhieuThanhToanBUS()
+          self.comboBox_21.clear()
+          hs = phieu.getHocSinh(self.comboBox_14.currentText(),lop)
+          for khois in hs:
+               self.comboBox_21.addItem(khois)
      def displayItemData(self):     
           selected = self.tableListKhoanPhi.selectedItems()
           if selected and len(selected) >= 2: 
@@ -2859,6 +2900,44 @@ class TrangChu(QtWidgets.QMainWindow):
                self.lineListMaPhi.setText(maPhi)
                self.lineListTenKhoanPhi.setText(tenPhi)
                self.lineTienDong.setText(soTien)
+     def addPhiIntoPhieu(self):
+          selectedPhi = [self.lineListMaPhi.text(), self.lineListTenKhoanPhi.text(), self.lineTienDong.text()]
+          # Kiểm tra xem phi đã tồn tại trong bảng hay chưa
+          exists = False
+          for row in range(self.tableListPhieu.rowCount()):
+               maPhi = self.tableListPhieu.item(row, 0).text()
+               tenPhi = self.tableListPhieu.item(row, 1).text()
+               if maPhi == selectedPhi[0] and tenPhi == selectedPhi[1]:
+                    exists = True
+                    break
+
+          # Thêm phi vào bảng tableListPhieu hoặc hiển thị thông báo lỗi
+          if exists:
+               QMessageBox.warning(self, "Lỗi", "Loại phí này đã có trong danh sách")
+          else:
+               rowPosition = self.tableListPhieu.rowCount()
+               self.tableListPhieu.insertRow(rowPosition)
+               for i, value in enumerate(selectedPhi):
+                         item = QtWidgets.QTableWidgetItem(str(value))
+                         self.tableListPhieu.setItem(rowPosition, i, item)   
+          numRows = self.tableListPhieu.rowCount()
+          for i in range(numRows):
+               self.tableListPhieu.item(i, 0).setFlags(self.tableListPhieu.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhieu.item(i, 1).setFlags(self.tableListPhieu.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableListPhieu.item(i, 2).setFlags(self.tableListPhieu.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+          self.updateThanhToan()  
+     def RemovePhieu(self):
+          row = self.tableListPhieu.currentRow()
+          self.tableListPhieu.removeRow(row)
+          self.tableListPhieu.itemSelectionChanged.connect(self.updateThanhToan)  
+          self.updateThanhToan()  
+     def updateThanhToan(self):
+          total = 0
+          for row in range(self.tableListPhieu.rowCount()):
+               item = self.tableListPhieu.item(row, 2)
+               if item is not None:
+                    total += int(item.text())
+          self.lineThanhToan.setText(str(total))
      def addKhoanPhi(self):
           #lineMaPhi
           phi = CacKhoanPhiBUS()

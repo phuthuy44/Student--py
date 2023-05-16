@@ -18,8 +18,8 @@ class PhanLopBUS:
           return PhanLopDAO.getHocSinh(self,year)
      def insert(self,dd:PhanLopDTO):
           return PhanLopDAO.insert(self,dd)
-     def delete(self,ma):
-          return PhanLopDAO.delete(ma)
+     def delete(self,ma,namhoc):
+          return PhanLopDAO.delete(ma,namhoc)
      def getlisths(self,lop,namhoc):
           return PhanLopDAO.getlistHS(self,lop,namhoc)
      
