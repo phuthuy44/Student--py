@@ -1428,6 +1428,9 @@ class TrangChu(QtWidgets.QMainWindow):
           self.cboxlistLop.clear()
           self.cboxlistNH_2.clear()
           self.cboxlistLop_2.clear()
+          self.lineEdit_86.clear()
+          self.tableListPhieu.setRowCount(0)
+          self.lineThanhToan.clear()
      def stackQuyen(self):
           self.stackedWidget.setCurrentIndex(4)
           #Tao tai khoan
@@ -2841,6 +2844,7 @@ class TrangChu(QtWidgets.QMainWindow):
           self.tableListPhieu.cellChanged.connect(self.updateThanhToan)          
           self.comboBox_14.currentTextChanged.connect(self.HocPhi_lopHoc_combobox)
           self.comboBox_15.currentTextChanged.connect(self.load_HS_HP_combocbox)
+          self.btnLuuPhieuThanhToan.clicked.connect(self.insertPhieuThanhToan)
           self.loadlistPhi()
      def loadlistPhi(self):
           phi = CacKhoanPhiBUS()
@@ -2878,7 +2882,45 @@ class TrangChu(QtWidgets.QMainWindow):
                self.tableListKhoanPhi.item(i, 0).setFlags(self.tableListKhoanPhi.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableListKhoanPhi.item(i, 1).setFlags(self.tableListKhoanPhi.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
                self.tableListKhoanPhi.item(i, 2).setFlags(self.tableListKhoanPhi.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
-          self.tableListKhoanPhi.itemSelectionChanged.connect(self.displayItemData)    
+          self.tableListKhoanPhi.itemSelectionChanged.connect(self.displayItemData)   
+          #display phieuThanhToan
+          listPhieu = phieu.getlistPhieu()
+          self.tableCacPhieuThanhToan.setRowCount(len(listPhieu))
+          for i,row in enumerate(listPhieu):
+               for j,val in enumerate(row):
+                    self.tableCacPhieuThanhToan.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableCacPhieuThanhToan.rowCount() 
+          for i in range(numRows):
+               self.tableCacPhieuThanhToan.item(i, 0).setFlags(self.tableCacPhieuThanhToan.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCacPhieuThanhToan.item(i, 1).setFlags(self.tableCacPhieuThanhToan.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCacPhieuThanhToan.item(i, 2).setFlags(self.tableCacPhieuThanhToan.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCacPhieuThanhToan.item(i, 3).setFlags(self.tableCacPhieuThanhToan.item(i, 3).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCacPhieuThanhToan.item(i, 4).setFlags(self.tableCacPhieuThanhToan.item(i, 4).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCacPhieuThanhToan.item(i, 5).setFlags(self.tableCacPhieuThanhToan.item(i, 5).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCacPhieuThanhToan.item(i, 6).setFlags(self.tableCacPhieuThanhToan.item(i, 6).flags() & ~QtCore.Qt.ItemIsEditable)
+          self.tableCacPhieuThanhToan.itemSelectionChanged.connect(self.displayItemDataPhi)   
+     def displayItemDataPhi(self):
+          selectedRows = self.tableCacPhieuThanhToan.selectedIndexes()
+          if len(selectedRows) == 0:
+               return
+          selectedRow = selectedRows[0].row()
+          # Lấy mã phiếu thanh toán tương ứng
+          maPhieu = self.tableCacPhieuThanhToan.item(selectedRow, 0).text()
+          phieu = PhieuThanhToanBUS()
+          listPhi = [phi for phi in phieu.getlistPhi((maPhieu))]
+           # Hiển thị danh sách các phí trong bảng phí
+          row_count = len(listPhi)
+          #sử dụng phương thức setRowCount() và setVerticalHeaderLabels() để cập nhật số lượng hàng và nhãn cho hàng dọc của bảng phí.
+          self.tableCTPhieuThanhToan.setRowCount(row_count)
+          for i,row in enumerate(listPhi):
+               for j,val in enumerate(row):
+                    self.tableCTPhieuThanhToan.setItem(i, j, QTableWidgetItem(str(val)))
+          numRows = self.tableCTPhieuThanhToan.rowCount()
+          for i in range(numRows):
+               self.tableCTPhieuThanhToan.item(i, 0).setFlags(self.tableCTPhieuThanhToan.item(i, 0).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCTPhieuThanhToan.item(i, 1).setFlags(self.tableCTPhieuThanhToan.item(i, 1).flags() & ~QtCore.Qt.ItemIsEditable)
+               self.tableCTPhieuThanhToan.item(i, 2).setFlags(self.tableCTPhieuThanhToan.item(i, 2).flags() & ~QtCore.Qt.ItemIsEditable)
+
      def HocPhi_lopHoc_combobox(self,namhoc):
           diem = DiemBUS()
           self.comboBox_15.clear()#LOPHOC
@@ -2938,6 +2980,39 @@ class TrangChu(QtWidgets.QMainWindow):
                if item is not None:
                     total += int(item.text())
           self.lineThanhToan.setText(str(total))
+     def insertPhieuThanhToan(self):
+          maPhieu = self.lineMaPhieu.text()
+          comboBox_13 = self.comboBox_13.currentText()#manhanvien
+          comboBox_14 = self.comboBox_14.currentText() #namhoc
+          namhoc = NamHocBUS()
+          getMaNamHoc = namhoc.getma(comboBox_14)
+          comboBox_15 = self.comboBox_15.currentText()
+          lophoc = LopHocBUS()
+          getLopHoc = lophoc.getma(comboBox_15,getMaNamHoc)
+          comboBox_21 = self.comboBox_21.currentText()
+          dateDongTien = self.dateDongTien.date().toPyDate()
+          date = dateDongTien.strftime("%Y-%m-%d")
+          lineEdit_86 = self.lineEdit_86.text()#nguoiDong
+          lineThanhToan = self.lineThanhToan.text()
+          addPhieu = PhieuThanhToanDTO(None,comboBox_13,comboBox_21,getLopHoc,date,lineEdit_86,lineThanhToan )
+          phieu = PhieuThanhToanBUS()
+          flag = True
+          if phieu.insertPhieuThanhToan(addPhieu):
+               # Lưu thông tin về các phí đã được chọn vào bảng chi tiết thanh toán
+               for row in range(self.tableListPhieu.rowCount()):
+                    item = self.tableListPhieu.item(row, 0)
+                    if item is not None:
+                         maPhi = item.text()
+                         addPhieuCT = PhieuThanhToanCTDTO(maPhieu,maPhi)
+                         if not phieu.insertPhieuTTCT(addPhieuCT):
+                              flag = False
+          if flag :
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách thành công!")
+               self.loadlistPhi()
+               self.clear()
+
+          else:
+               QMessageBox.information(self,"Thông báo","Thêm vào danh sách không thành công!")
      def addKhoanPhi(self):
           #lineMaPhi
           phi = CacKhoanPhiBUS()

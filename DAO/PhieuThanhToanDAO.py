@@ -100,3 +100,50 @@ class PhieuThanhToanDAO :
                query.close()
                mydb.close()
           return list
+     def getlistPhieu(self):
+          list = []
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               sqlChucVu  = "SELECT phieuthanhtoan.maPhieu,phieuthanhtoan.maNhanVien,phieuthanhtoan.maHocSinh,lop.tenLop,phieuthanhtoan.ngayDong,phieuthanhtoan.nguoiDong,phieuthanhtoan.thanhToan FROM phieuthanhtoan,lop WHERE phieuthanhtoan.maLop = LOP.maLop "
+               query.execute(sqlChucVu)
+               rows = query.fetchall()
+               for row in rows:
+                    chucvu = (row[0],row[1],row[2],row[3],row[4],row[5],row[6])
+                    list.append(chucvu)
+               print(list)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return list
+     def getlistPhi(self,phieu):
+          list = []
+          try : 
+               mydb = mysql.connector.connect(
+                    host ="localhost",
+                    user ="root",
+                    password ="",
+                    database ="studentmanager"
+               )
+               query = mydb.cursor()
+               sqlChucVu  = "SELECT cackhoanphi.maPhi,cackhoanphi.tenPhi,cackhoanphi.soTien FROM cackhoanphi,ctphieuthanhtoan,phieuthanhtoan where ctphieuthanhtoan.maPhieu = phieuthanhtoan.maPhieu AND ctphieuthanhtoan.maPhi = cackhoanphi.maPhi AND phieuthanhtoan.maPhieu = %s "
+               val = (phieu,)
+               query.execute(sqlChucVu,val)
+               rows = query.fetchall()
+               for row in rows:
+                    chucvu = (row[0],row[1],row[2])
+                    list.append(chucvu)
+               print(list)
+          except mysql.connector.errors.InternalError as e:
+               print("Error executing MySQL query:", e)
+          finally : 
+               query.close()
+               mydb.close()
+          return list

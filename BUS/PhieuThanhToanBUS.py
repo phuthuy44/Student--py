@@ -19,3 +19,7 @@ class PhieuThanhToanBUS:
           return PhieuThanhToanDAO.getnhanvien(self)
      def getHocSinh(self,year,lop):
           return PhieuThanhToanDAO.getHocSinh(self,year,lop)
+     def getlistPhieu(self):
+          return PhieuThanhToanDAO.getlistPhieu(self)
+     def getlistPhi(self,phieu):
+          return PhieuThanhToanDAO.getlistPhi(self,phieu)
